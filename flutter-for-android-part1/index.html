@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>[翻译] Flutter for Android part 1 | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="learn,android,flutter,dart," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风!</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2018-03-01
+    </span>
+    
+      <span>
+        | <a href="/categories/learn/"><i class="fa fa-bookmark"></i>learn</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    [翻译] Flutter for Android part 1
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p><a href="https://flutter.io/flutter-for-android/" target="_blank" rel="external">https://flutter.io/flutter-for-android/</a></p>
+</blockquote>
+<p>[toc]</p>
+<h1 id="View"><a href="#View" class="headerlink" title="View"></a>View</h1><h2 id="在-Flutter-里什么等价于-View"><a href="#在-Flutter-里什么等价于-View" class="headerlink" title="在 Flutter 里什么等价于 View"></a>在 Flutter 里什么等价于 View</h2><p>View 是一切 Android 控件的基石。无论是 Button， Toolbar 或者 Input 都是 View。Flutter 中的 View 是 Widget，但有几点不同。首先，widget 的生命周期只有一帧，flutter 框架会为每一帧都创建一个 widget 实例树。相比之下， View 绘制之后只有 invalidate 方法被调用才会再次绘制。</p>
+<h2 id="如何更新-Widgets"><a href="#如何更新-Widgets" class="headerlink" title="如何更新 Widgets"></a>如何更新 Widgets</h2><p>Android 中，我们直接修改 view 即可更新。但是 Flutter 的 Widget 是不可变的，不能直接修改，只能修改 Widget 的状态来更新。<br>这也是 Stateful 和 Stateless Widget 这两个概念的由来。StatelessWidget 就是一个没有状态信息的 widget 。</p>
+<p>当你所需的用户界面不依赖对象里的任何配置信息时，可以选择使用 StatelessWidget。</p>
+<p>比如 Android 里的这样一个场景，一个只显示 logo 的 ImageView ，运行时 logo 也不变这种的。</p>
+<p>再比如，要是你想根据一个 http 请求的返回结果动态的对 UI 进行修改，你就得用 StatefulWidget 了，然后告诉 Flutter 框架状态更新了，他就会自己处理后面的事了。</p>
+<p>需要注意，本质上 Stateless 和 Stateful 还是会在每一帧重建的。不同的是 StatefulWidget 有一个 State 对象保存状态数据并在新的一帧中恢复。</p>
+<p>如果你对此还有疑惑，请记住：如果 widget 可以改变(比如响应用户操作) 就是 stateful 的。child widget 是 Stateful 并不意味他的 parent widget 就是 Stateful 的，一切都要看当前 widget 是否响应变化。</p>
+<p>看看具体代码，Text widget 一个普通的 StatelessWidget 。看源码就知道 Text Widget 是 StatelessWidget 的子类。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> Text(</div><div class="line">  <span class="string">'I like Flutter!'</span>,</div><div class="line">  style: <span class="keyword">new</span> TextStyle(fontWeight: FontWeight.bold),</div><div class="line">);</div></pre></td></tr></table></figure>
+<p>可以看到 Text 并没有相关的状态信息，除了构造函数传入的参数就啥都没有了。</p>
+<p>那你想了啊，我要是想点个按钮让那段字变一下怎么整？</p>
+<p>用 StatelessWidget 包一下 Text 就行啦：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="string">'package:flutter/material.dart'</span>;</div><div class="line"></div><div class="line"><span class="keyword">void</span> main() &#123;</div><div class="line">  runApp(<span class="keyword">new</span> SampleApp());</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SampleApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  <span class="comment">// This widget is the root of your application.</span></div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> MaterialApp(</div><div class="line">      title: <span class="string">'Sample App'</span>,</div><div class="line">      theme: <span class="keyword">new</span> ThemeData(</div><div class="line">        primarySwatch: Colors.blue,</div><div class="line">      ),</div><div class="line">      home: <span class="keyword">new</span> SampleAppPage(),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SampleAppPage</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</div><div class="line">  SampleAppPage(&#123;Key key&#125;) : <span class="keyword">super</span>(key: key);</div><div class="line"></div><div class="line">  <span class="meta">@override</span></div><div class="line">  _SampleAppPageState createState() =&gt; <span class="keyword">new</span> _SampleAppPageState();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">_SampleAppPageState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">SampleAppPage</span>&gt; </span>&#123;</div><div class="line">  <span class="comment">// Default placeholder text</span></div><div class="line">  <span class="built_in">String</span> textToShow = <span class="string">"I Like Flutter"</span>;</div><div class="line"></div><div class="line">  <span class="keyword">void</span> _updateText() &#123;</div><div class="line">    setState(() &#123;</div><div class="line">      <span class="comment">// update the text</span></div><div class="line">      textToShow = <span class="string">"Flutter is Awesome!"</span>;</div><div class="line">    &#125;);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Scaffold(</div><div class="line">      appBar: <span class="keyword">new</span> AppBar(</div><div class="line">        title: <span class="keyword">new</span> Text(<span class="string">"Sample App"</span>),</div><div class="line">      ),</div><div class="line">      body: <span class="keyword">new</span> Center(child: <span class="keyword">new</span> Text(textToShow)),</div><div class="line">      floatingActionButton: <span class="keyword">new</span> FloatingActionButton(</div><div class="line">        onPressed: _updateText,</div><div class="line">        tooltip: <span class="string">'Update Text'</span>,</div><div class="line">        child: <span class="keyword">new</span> Icon(Icons.update),</div><div class="line">      ),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="怎么写布局？还用-xml-嘛？"><a href="#怎么写布局？还用-xml-嘛？" class="headerlink" title="怎么写布局？还用 xml 嘛？"></a>怎么写布局？还用 xml 嘛？</h2><p>没有 xml，我们直接写 widget tree。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@override</span></div><div class="line">Widget build(BuildContext context) &#123;</div><div class="line">  <span class="keyword">return</span> <span class="keyword">new</span> Scaffold(</div><div class="line">    appBar: <span class="keyword">new</span> AppBar(</div><div class="line">      title: <span class="keyword">new</span> Text(<span class="string">"Sample App"</span>),</div><div class="line">    ),</div><div class="line">    body: <span class="keyword">new</span> Center(</div><div class="line">      child: <span class="keyword">new</span> MaterialButton(</div><div class="line">        onPressed: () &#123;&#125;,</div><div class="line">        child: <span class="keyword">new</span> Text(<span class="string">'Hello'</span>),</div><div class="line">        padding: <span class="keyword">new</span> EdgeInsets.only(left: <span class="number">10.0</span>, right: <span class="number">10.0</span>),</div><div class="line">      ),</div><div class="line">    ),</div><div class="line">  );</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>You can view all the layouts that Flutter has to offer here: <a href="https://flutter.io/widgets/layout/" target="_blank" rel="external">https://flutter.io/widgets/layout/</a></p>
+<h2 id="如何对-layout-组件进行增删"><a href="#如何对-layout-组件进行增删" class="headerlink" title="如何对 layout 组件进行增删"></a>如何对 layout 组件进行增删</h2><p>Android 里用 parent 的<code>addChild</code> 或 <code>removeChild</code>方法对child 进行增删。但是 Flutter 的 widget 是不可变的，这些方法都没有，创建 widget 树时你可以用一个函数返回 widget，再通过传入的参数判断怎么显示 widget。</p>
+<p>栗子：<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="string">'package:flutter/material.dart'</span>;</div><div class="line"></div><div class="line"><span class="keyword">void</span> main() &#123;</div><div class="line">  runApp(<span class="keyword">new</span> SampleApp());</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SampleApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  <span class="comment">// This widget is the root of your application.</span></div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> MaterialApp(</div><div class="line">      title: <span class="string">'Sample App'</span>,</div><div class="line">      theme: <span class="keyword">new</span> ThemeData(</div><div class="line">        primarySwatch: Colors.blue,</div><div class="line">      ),</div><div class="line">      home: <span class="keyword">new</span> SampleAppPage(),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SampleAppPage</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</div><div class="line">  SampleAppPage(&#123;Key key&#125;) : <span class="keyword">super</span>(key: key);</div><div class="line"></div><div class="line">  <span class="meta">@override</span></div><div class="line">  _SampleAppPageState createState() =&gt; <span class="keyword">new</span> _SampleAppPageState();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">_SampleAppPageState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">SampleAppPage</span>&gt; </span>&#123;</div><div class="line">  <span class="comment">// Default value for toggle</span></div><div class="line">  <span class="built_in">bool</span> toggle = <span class="keyword">true</span>;</div><div class="line">  <span class="keyword">void</span> _toggle() &#123;</div><div class="line">    setState(() &#123;</div><div class="line">      toggle = !toggle;</div><div class="line">    &#125;);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  _getToggleChild() &#123;</div><div class="line">    <span class="keyword">if</span> (toggle) &#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">new</span> Text(<span class="string">'Toggle One'</span>);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">new</span> MaterialButton(onPressed: () &#123;&#125;, child: <span class="keyword">new</span> Text(<span class="string">'Toggle Two'</span>));</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Scaffold(</div><div class="line">      appBar: <span class="keyword">new</span> AppBar(</div><div class="line">        title: <span class="keyword">new</span> Text(<span class="string">"Sample App"</span>),</div><div class="line">      ),</div><div class="line">      body: <span class="keyword">new</span> Center(</div><div class="line">        child: _getToggleChild(),</div><div class="line">      ),</div><div class="line">      floatingActionButton: <span class="keyword">new</span> FloatingActionButton(</div><div class="line">        onPressed: _toggle,</div><div class="line">        tooltip: <span class="string">'Update Text'</span>,</div><div class="line">        child: <span class="keyword">new</span> Icon(Icons.update),</div><div class="line">      ),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="怎么用-widget-写动画啊，像-View-animate-那样吗"><a href="#怎么用-widget-写动画啊，像-View-animate-那样吗" class="headerlink" title="怎么用 widget 写动画啊，像 View.animate() 那样吗"></a>怎么用 widget 写动画啊，像 View.animate() 那样吗</h2><p>Flutter 提供了 animation library 实现动画。</p>
+<p>Andorid 中，我们通过 xml 或是直接调用 View 的 <code>animate()</code> 方法创建动画，而 Flutter 是将 widget 包装到一个 Animation 之中。</p>
+<p>和 Android 一样， Flutter 也提供 AnimationController 和一个Interpolator (继承自 Animation 类)，比如 CurvedAnimation。使用时将 controller 和 Animation 传入 AnimationWidget ，之后调用 controller 启动动画。</p>
+<p>一个 fade 动画：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="string">'package:flutter/material.dart'</span>;</div><div class="line"></div><div class="line"><span class="keyword">void</span> main() &#123;</div><div class="line">  runApp(<span class="keyword">new</span> FadeAppTest());</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">FadeAppTest</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  <span class="comment">// This widget is the root of your application.</span></div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> MaterialApp(</div><div class="line">      title: <span class="string">'Fade Demo'</span>,</div><div class="line">      theme: <span class="keyword">new</span> ThemeData(</div><div class="line">        primarySwatch: Colors.blue,</div><div class="line">      ),</div><div class="line">      home: <span class="keyword">new</span> MyFadeTest(title: <span class="string">'Fade Demo'</span>),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyFadeTest</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</div><div class="line">  MyFadeTest(&#123;Key key, <span class="keyword">this</span>.title&#125;) : <span class="keyword">super</span>(key: key);</div><div class="line">  <span class="keyword">final</span> <span class="built_in">String</span> title;</div><div class="line">  <span class="meta">@override</span></div><div class="line">  _MyFadeTest createState() =&gt; <span class="keyword">new</span> _MyFadeTest();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">_MyFadeTest</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">MyFadeTest</span>&gt; <span class="title">with</span> <span class="title">TickerProviderStateMixin</span> </span>&#123;</div><div class="line">  AnimationController controller;</div><div class="line">  CurvedAnimation curve;</div><div class="line"></div><div class="line">  <span class="meta">@override</span></div><div class="line">  <span class="keyword">void</span> initState() &#123;</div><div class="line">    controller = <span class="keyword">new</span> AnimationController(duration: <span class="keyword">const</span> <span class="built_in">Duration</span>(milliseconds: <span class="number">2000</span>), vsync: <span class="keyword">this</span>);</div><div class="line">    curve = <span class="keyword">new</span> CurvedAnimation(parent: controller, curve: Curves.easeIn);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Scaffold(</div><div class="line">      appBar: <span class="keyword">new</span> AppBar(</div><div class="line">        title: <span class="keyword">new</span> Text(widget.title),</div><div class="line">      ),</div><div class="line">      body: <span class="keyword">new</span> Center(</div><div class="line">          child: <span class="keyword">new</span> Container(</div><div class="line">              child: <span class="keyword">new</span> FadeTransition(</div><div class="line">                  opacity: curve,</div><div class="line">                  child: <span class="keyword">new</span> FlutterLogo(</div><div class="line">                    size: <span class="number">100.0</span>,</div><div class="line">                  )))),</div><div class="line">      floatingActionButton: <span class="keyword">new</span> FloatingActionButton(</div><div class="line">        tooltip: <span class="string">'Fade'</span>,</div><div class="line">        child: <span class="keyword">new</span> Icon(Icons.brush),</div><div class="line">        onPressed: () &#123;</div><div class="line">          controller.forward();</div><div class="line">        &#125;,</div><div class="line">      ),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>See <a href="https://flutter.io/widgets/animation/" target="_blank" rel="external">https://flutter.io/widgets/animation/</a> and <a href="https://flutter.io/tutorials/animation" target="_blank" rel="external">https://flutter.io/tutorials/animation</a> for more specific details.</p>
+<h2 id="如何使用-Canvas-进行-draw-paint"><a href="#如何使用-Canvas-进行-draw-paint" class="headerlink" title="如何使用 Canvas 进行 draw/paint"></a>如何使用 Canvas 进行 draw/paint</h2><p>Android 中，使用 Canvas 即可绘制自定义图形。<br>Flutter 提供两个类 CustomPaint 和 CustomPainter 帮助你进行绘制，</p>
+<p>来自 StackOverFlow 的热门问题，实现一个画板：<br><a href="https://stackoverflow.com/questions/46241071/create-signature-area-for-mobile-app-in-dart-flutter" target="_blank" rel="external">https://stackoverflow.com/questions/46241071/create-signature-area-for-mobile-app-in-dart-flutter</a></p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="string">'package:flutter/material.dart'</span>;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SignaturePainter</span> <span class="keyword">extends</span> <span class="title">CustomPainter</span> </span>&#123;</div><div class="line">  SignaturePainter(<span class="keyword">this</span>.points);</div><div class="line">  <span class="keyword">final</span> <span class="built_in">List</span>&lt;Offset&gt; points;</div><div class="line">  <span class="keyword">void</span> paint(Canvas canvas, Size size) &#123;</div><div class="line">    <span class="keyword">var</span> paint = <span class="keyword">new</span> Paint()</div><div class="line">      ..color = Colors.black</div><div class="line">      ..strokeCap = StrokeCap.round</div><div class="line">      ..strokeWidth = <span class="number">5.0</span>;</div><div class="line">    <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; points.length - <span class="number">1</span>; i++) &#123;</div><div class="line">      <span class="keyword">if</span> (points[i] != <span class="keyword">null</span> &amp;&amp; points[i + <span class="number">1</span>] != <span class="keyword">null</span>)</div><div class="line">        canvas.drawLine(points[i], points[i + <span class="number">1</span>], paint);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="built_in">bool</span> shouldRepaint(SignaturePainter other) =&gt; other.points != points;</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Signature</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</div><div class="line">  SignatureState createState() =&gt; <span class="keyword">new</span> SignatureState();</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SignatureState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">Signature</span>&gt; </span>&#123;</div><div class="line">  <span class="built_in">List</span>&lt;Offset&gt; _points = &lt;Offset&gt;[];</div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> GestureDetector(</div><div class="line">      onPanUpdate: (DragUpdateDetails details) &#123;</div><div class="line">        setState(() &#123;</div><div class="line">          RenderBox referenceBox = context.findRenderObject();</div><div class="line">          Offset localPosition =</div><div class="line">          referenceBox.globalToLocal(details.globalPosition);</div><div class="line">          _points = <span class="keyword">new</span> <span class="built_in">List</span>.from(_points)..add(localPosition);</div><div class="line">        &#125;);</div><div class="line">      &#125;,</div><div class="line">      onPanEnd: (DragEndDetails details) =&gt; _points.add(<span class="keyword">null</span>),</div><div class="line">      child: <span class="keyword">new</span> CustomPaint(painter: <span class="keyword">new</span> SignaturePainter(_points)),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">DemoApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  Widget build(BuildContext context) =&gt; <span class="keyword">new</span> Scaffold(body: <span class="keyword">new</span> Signature());</div><div class="line">&#125;</div><div class="line"><span class="keyword">void</span> main() =&gt; runApp(<span class="keyword">new</span> MaterialApp(home: <span class="keyword">new</span> DemoApp()));</div></pre></td></tr></table></figure>
+<h2 id="如何自定义-Widgets"><a href="#如何自定义-Widgets" class="headerlink" title="如何自定义 Widgets"></a>如何自定义 Widgets</h2><p>安卓怎么自定义 View 大家都很熟了，不多说。<br>Flutter  里自定义一个 widget 往往不是直接继承，而是通过组合小的 widget。</p>
+<p>我们来实现一个 CustomButton ，直接在构造函数传入一个 label。这里将其与一个 RaisedButton 组合，而不是继承一个 RaisedButton，再重写实现新的方法。<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">CustomButton</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  <span class="keyword">final</span> <span class="built_in">String</span> label;</div><div class="line">  CustomButton(<span class="keyword">this</span>.label);</div><div class="line"></div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> RaisedButton(onPressed: () &#123;&#125;, child: <span class="keyword">new</span> Text(label));</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>使用<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Center(</div><div class="line">      child: <span class="keyword">new</span> CustomButton(<span class="string">"Hello"</span>),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="Intents"><a href="#Intents" class="headerlink" title="Intents"></a>Intents</h1><h2 id="Flutter-里什么等价于-Intent"><a href="#Flutter-里什么等价于-Intent" class="headerlink" title="Flutter 里什么等价于  Intent"></a>Flutter 里什么等价于  Intent</h2><p>Android 使用 Intent 主要是用来切换 Activity，和调用外部组件。 Flutter 里没有 Intent 的概念，但必要时仍可以通过  Flutter 提供的方法调用 native 层发送 Intent。</p>
+<p>Flutter 使用 router 绘制新的 widget 从而达到切换 screen 的需求。这里有两个核心概念，同时也是 Flutter 提供用来管理多个 screen 的类：Router 和 Navigator。Router 是一个应用中对应 screen 或 page 的抽象（想想 Activity），Navigator 是一个用来管理 router 的  widget。Navigator  通过对 router 进行 push/pop  操作帮助用户在 screen 之间切换。</p>
+<p>Flutter  中，可以将一个 Map<a href="name:String,router:Router" target="_blank" rel="external">name:String,router:Router</a> 传给顶级 MaterialApp 实例：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> main() &#123;</div><div class="line">  runApp(<span class="keyword">new</span> MaterialApp(</div><div class="line">    home: <span class="keyword">new</span> MyAppHome(), <span class="comment">// becomes the route named '/'</span></div><div class="line">    routes: &lt;<span class="built_in">String</span>, WidgetBuilder&gt; &#123;</div><div class="line">      <span class="string">'/a'</span>: (BuildContext context) =&gt; <span class="keyword">new</span> MyPage(title: <span class="string">'page A'</span>),</div><div class="line">      <span class="string">'/b'</span>: (BuildContext context) =&gt; <span class="keyword">new</span> MyPage(title: <span class="string">'page B'</span>),</div><div class="line">      <span class="string">'/c'</span>: (BuildContext context) =&gt; <span class="keyword">new</span> MyPage(title: <span class="string">'page C'</span>),</div><div class="line">    &#125;,</div><div class="line">  ));</div><div class="line">&#125;</div><div class="line">```  </div><div class="line"></div><div class="line">就可以通过 Navigator 根据 router 的名字对 router 进行操作。</div><div class="line">```dart</div><div class="line">Navigator.of(context).pushNamed(<span class="string">'/b'</span>);</div></pre></td></tr></table></figure>
+<p>Intent 的其他使用场景(比如启动相机，选择文件)，则需要创建中间层与 native 进行交互(或是用别人写好的库)。</p>
+<p>See [Flutter Plugins] to learn how to build a native platform integration.</p>
+<h2 id="Flutter-如何处理外部程序发来的-Intent"><a href="#Flutter-如何处理外部程序发来的-Intent" class="headerlink" title="Flutter 如何处理外部程序发来的 Intent"></a>Flutter 如何处理外部程序发来的 Intent</h2><p>Flutter 可以直接与 Android 层交互，获取共享的数据，从而处理外部发来的 Intent。</p>
+<p>看例子：<br>基本流程就是先在 Android 端接收 text，然后等待 Flutter 通过 MethodChannel 请求将数据发送给它。</p>
+<p>我们先在  AndroidManifest.xml 注册</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">activity</span></span></div><div class="line"><span class="tag">       <span class="attr">android:name</span>=<span class="string">".MainActivity"</span></span></div><div class="line"><span class="tag">       <span class="attr">android:launchMode</span>=<span class="string">"singleTop"</span></span></div><div class="line"><span class="tag">       <span class="attr">android:theme</span>=<span class="string">"@style/LaunchTheme"</span></span></div><div class="line"><span class="tag">       <span class="attr">android:configChanges</span>=<span class="string">"orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection"</span></span></div><div class="line"><span class="tag">       <span class="attr">android:hardwareAccelerated</span>=<span class="string">"true"</span></span></div><div class="line"><span class="tag">       <span class="attr">android:windowSoftInputMode</span>=<span class="string">"adjustResize"</span>&gt;</span></div><div class="line">       <span class="comment">&lt;!-- This keeps the window background of the activity showing</span></div><div class="line"><span class="comment">            until Flutter renders its first frame. It can be removed if</span></div><div class="line"><span class="comment">            there is no splash screen (such as the default splash screen</span></div><div class="line"><span class="comment">            defined in @style/LaunchTheme). --&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">meta-data</span></span></div><div class="line"><span class="tag">           <span class="attr">android:name</span>=<span class="string">"io.flutter.app.android.SplashScreenUntilFirstFrame"</span></span></div><div class="line"><span class="tag">           <span class="attr">android:value</span>=<span class="string">"true"</span> /&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></div><div class="line">           <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.MAIN"</span>/&gt;</span></div><div class="line">           <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.LAUNCHER"</span>/&gt;</span></div><div class="line">       <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></div><div class="line">           <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.SEND"</span> /&gt;</span></div><div class="line">           <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.DEFAULT"</span> /&gt;</span></div><div class="line">           <span class="tag">&lt;<span class="name">data</span> <span class="attr">android:mimeType</span>=<span class="string">"text/plain"</span> /&gt;</span></div><div class="line">       <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">activity</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>MainActivity 中，我们先从 intent 中取出数据，等待 Flutter 请求</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.yourcompany.shared;</div><div class="line"></div><div class="line"><span class="keyword">import</span> android.content.Intent;</div><div class="line"><span class="keyword">import</span> android.os.Bundle;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.nio.ByteBuffer;</div><div class="line"></div><div class="line"><span class="keyword">import</span> io.flutter.app.FlutterActivity;</div><div class="line"><span class="keyword">import</span> io.flutter.plugin.common.ActivityLifecycleListener;</div><div class="line"><span class="keyword">import</span> io.flutter.plugin.common.MethodCall;</div><div class="line"><span class="keyword">import</span> io.flutter.plugin.common.MethodChannel;</div><div class="line"><span class="keyword">import</span> io.flutter.plugins.GeneratedPluginRegistrant;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">FlutterActivity</span> </span>&#123;</div><div class="line">    String sharedText;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">        GeneratedPluginRegistrant.registerWith(<span class="keyword">this</span>);</div><div class="line">        Intent intent = getIntent();</div><div class="line">        String action = intent.getAction();</div><div class="line">        String type = intent.getType();</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (Intent.ACTION_SEND.equals(action) &amp;&amp; type != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">if</span> (<span class="string">"text/plain"</span>.equals(type)) &#123;</div><div class="line">                handleSendText(intent); <span class="comment">// Handle text being sent</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">new</span> MethodChannel(getFlutterView(), <span class="string">"app.channel.shared.data"</span>).setMethodCallHandler(<span class="keyword">new</span> MethodChannel.MethodCallHandler() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onMethodCall</span><span class="params">(MethodCall methodCall, MethodChannel.Result result)</span> </span>&#123;</div><div class="line">                <span class="keyword">if</span> (methodCall.method.contentEquals(<span class="string">"getSharedText"</span>)) &#123;</div><div class="line">                    result.success(sharedText);</div><div class="line">                    sharedText = <span class="keyword">null</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">handleSendText</span><span class="params">(Intent intent)</span> </span>&#123;</div><div class="line">        sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>最后，当 Flutter 渲染 view 时请求数据</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="string">'package:flutter/material.dart'</span>;</div><div class="line"><span class="keyword">import</span> <span class="string">'package:flutter/services.dart'</span>;</div><div class="line"></div><div class="line"><span class="keyword">void</span> main() &#123;</div><div class="line">  runApp(<span class="keyword">new</span> SampleApp());</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SampleApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  <span class="comment">// This widget is the root of your application.</span></div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> MaterialApp(</div><div class="line">      title: <span class="string">'Sample Shared App Handler'</span>,</div><div class="line">      theme: <span class="keyword">new</span> ThemeData(</div><div class="line">        primarySwatch: Colors.blue,</div><div class="line">      ),</div><div class="line">      home: <span class="keyword">new</span> SampleAppPage(),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SampleAppPage</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</div><div class="line">  SampleAppPage(&#123;Key key&#125;) : <span class="keyword">super</span>(key: key);</div><div class="line"></div><div class="line">  <span class="meta">@override</span></div><div class="line">  _SampleAppPageState createState() =&gt; <span class="keyword">new</span> _SampleAppPageState();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">_SampleAppPageState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">SampleAppPage</span>&gt; </span>&#123;</div><div class="line">  <span class="keyword">static</span> <span class="keyword">const</span> platform = <span class="keyword">const</span> MethodChannel(<span class="string">'app.channel.shared.data'</span>);</div><div class="line">  <span class="built_in">String</span> dataShared = <span class="string">"No data"</span>;</div><div class="line"></div><div class="line">  <span class="meta">@override</span></div><div class="line">  <span class="keyword">void</span> initState() &#123;</div><div class="line">    <span class="keyword">super</span>.initState();</div><div class="line">    getSharedText();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Scaffold(body: <span class="keyword">new</span> Center(child: <span class="keyword">new</span> Text(dataShared)));</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  getSharedText() <span class="keyword">async</span> &#123;</div><div class="line">    <span class="keyword">var</span> sharedData = <span class="keyword">await</span> platform.invokeMethod(<span class="string">"getSharedText"</span>);</div><div class="line">    <span class="keyword">if</span> (sharedData != <span class="keyword">null</span>) &#123;</div><div class="line">      setState(() &#123;</div><div class="line">        dataShared = sharedData;</div><div class="line">      &#125;);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="那么-startActivityForResult"><a href="#那么-startActivityForResult" class="headerlink" title="那么 startActivityForResult?"></a>那么 startActivityForResult?</h2><p>Flutter 可以使用 Navigator 获取一个 router 返回的数据。直接 await 一个 push 的返回值。如下：<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Map</span> coordinates = <span class="keyword">await</span> Navigator.of(context).pushNamed(<span class="string">'/location'</span>);</div></pre></td></tr></table></figure></p>
+<p>在位置选择 router 里，当用户操作完毕，就可以带着返回值 pop<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Navigator.of(context).pop(&#123;<span class="string">"lat"</span>:<span class="number">43.821757</span>,<span class="string">"long"</span>:<span class="number">-79.226392</span>&#125;);</div></pre></td></tr></table></figure></p>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#View"><span class="toc-text">View</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#在-Flutter-里什么等价于-View"><span class="toc-text">在 Flutter 里什么等价于 View</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何更新-Widgets"><span class="toc-text">如何更新 Widgets</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#怎么写布局？还用-xml-嘛？"><span class="toc-text">怎么写布局？还用 xml 嘛？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何对-layout-组件进行增删"><span class="toc-text">如何对 layout 组件进行增删</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#怎么用-widget-写动画啊，像-View-animate-那样吗"><span class="toc-text">怎么用 widget 写动画啊，像 View.animate() 那样吗</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何使用-Canvas-进行-draw-paint"><span class="toc-text">如何使用 Canvas 进行 draw/paint</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何自定义-Widgets"><span class="toc-text">如何自定义 Widgets</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Intents"><span class="toc-text">Intents</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Flutter-里什么等价于-Intent"><span class="toc-text">Flutter 里什么等价于  Intent</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Flutter-如何处理外部程序发来的-Intent"><span class="toc-text">Flutter 如何处理外部程序发来的 Intent</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#那么-startActivityForResult"><span class="toc-text">那么 startActivityForResult?</span></a></li></ol></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/flutter-for-android-part1/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/android/"><i class="fa fa-tags"></i>android</a>
+     
+      <a href="/tags/flutter/"><i class="fa fa-tags"></i>flutter</a>
+     
+      <a href="/tags/dart/"><i class="fa fa-tags"></i>dart</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2020 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/flutter-for-android-part-2/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/kotlin-iterator-sequence/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

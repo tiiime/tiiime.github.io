@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>[翻译] Flutter for Android part 3 | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="learn,android,flutter,dart," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风!</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2018-03-03
+    </span>
+    
+      <span>
+        | <a href="/categories/learn/"><i class="fa fa-bookmark"></i>learn</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    [翻译] Flutter for Android part 3
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p><a href="https://flutter.io/flutter-for-android/#working-with-text" target="_blank" rel="external">https://flutter.io/flutter-for-android/#working-with-text</a></p>
+</blockquote>
+<h1 id="Working-with-Text"><a href="#Working-with-Text" class="headerlink" title="Working with Text"></a>Working with Text</h1><h2 id="如何自定义-Text-widgets-字体"><a href="#如何自定义-Text-widgets-字体" class="headerlink" title="如何自定义 Text widgets 字体"></a>如何自定义 Text widgets 字体</h2><p>Android 开发中(比如 Android O)，你要创建好字体资源文件，并将它赋值给 Textview 的 FontFamily 属性。</p>
+<p>Flutter 需要两个步骤：</p>
+<ol>
+<li>首先将字体文件复制到项目(最佳实践是创建一个 asset 文件夹扔里边)</li>
+<li><p>然后在 pubspec.yaml 配置文件中声明使用</p>
+ <figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="attr">fonts:</span></div><div class="line"><span class="attr">   - family:</span> <span class="string">MyCustomFont</span></div><div class="line"><span class="attr">     fonts:</span></div><div class="line"><span class="attr">       - asset:</span> <span class="string">fonts/MyCustomFont.ttf</span></div><div class="line"><span class="attr">       - style:</span> <span class="string">italic</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>最后在代码中实用</p>
+ <figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@override</span></div><div class="line">Widget build(BuildContext context) &#123;</div><div class="line">  <span class="keyword">return</span> <span class="keyword">new</span> Scaffold(</div><div class="line">    appBar: <span class="keyword">new</span> AppBar(</div><div class="line">      title: <span class="keyword">new</span> Text(<span class="string">"Sample App"</span>),</div><div class="line">    ),</div><div class="line">    body: <span class="keyword">new</span> Center(</div><div class="line">      child: <span class="keyword">new</span> Text(</div><div class="line">        <span class="string">'This is a custom font text'</span>,</div><div class="line">        style: <span class="keyword">new</span> TextStyle(fontFamily: <span class="string">'MyCustomFont'</span>),</div><div class="line">      ),</div><div class="line">    ),</div><div class="line">  );</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="如何为-Text-widgets-设置样式"><a href="#如何为-Text-widgets-设置样式" class="headerlink" title="如何为 Text widgets 设置样式"></a>如何为 Text widgets 设置样式</h2><p>能设的样式那可多了去了<br>TextWidget 的 style 属性接受一个 TextStyle 对象，比如下面这些属性：</p>
+<ul>
+<li>color</li>
+<li>decoration</li>
+<li>decorationColor</li>
+<li>decorationStyle</li>
+<li>fontFamily</li>
+<li>fontSize</li>
+<li>fontStyle</li>
+<li>fontWeight</li>
+<li>hashCode</li>
+<li>height</li>
+<li>inherit</li>
+<li>letterSpacing</li>
+<li>textBaseline</li>
+<li>wordSpacing</li>
+</ul>
+<h1 id="Form-Input"><a href="#Form-Input" class="headerlink" title="Form Input"></a>Form Input</h1><h2 id="什么对应-Input-的-“hint”"><a href="#什么对应-Input-的-“hint”" class="headerlink" title="什么对应 Input 的 “hint”"></a>什么对应 Input 的 “hint”</h2><p> 构造一个 InputDecoration 对象传给Text Widget 的 decoration 属性<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">body: <span class="keyword">new</span> Center(</div><div class="line">  child: <span class="keyword">new</span> TextField(</div><div class="line">    decoration: <span class="keyword">new</span> InputDecoration(hintText: <span class="string">"This is a hint"</span>),</div><div class="line">  )</div><div class="line">)</div></pre></td></tr></table></figure></p>
+<h2 id="如何显示验证错误提示"><a href="#如何显示验证错误提示" class="headerlink" title="如何显示验证错误提示"></a>如何显示验证错误提示</h2><p>错误提示我们也用 InputDecoration 实现。当然你可不想界面刚出来就提示错误对吧，我们得在用户输入错误数据后再显示错误提示，只要动态的更新 InputDecoration 即可实现。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="string">'package:flutter/material.dart'</span>;</div><div class="line"></div><div class="line"><span class="keyword">void</span> main() &#123;</div><div class="line">  runApp(<span class="keyword">new</span> SampleApp());</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SampleApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  <span class="comment">// This widget is the root of your application.</span></div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> MaterialApp(</div><div class="line">      title: <span class="string">'Sample App'</span>,</div><div class="line">      theme: <span class="keyword">new</span> ThemeData(</div><div class="line">        primarySwatch: Colors.blue,</div><div class="line">      ),</div><div class="line">      home: <span class="keyword">new</span> SampleAppPage(),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SampleAppPage</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</div><div class="line">  SampleAppPage(&#123;Key key&#125;) : <span class="keyword">super</span>(key: key);</div><div class="line"></div><div class="line">  <span class="meta">@override</span></div><div class="line">  _SampleAppPageState createState() =&gt; <span class="keyword">new</span> _SampleAppPageState();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">_SampleAppPageState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">SampleAppPage</span>&gt; </span>&#123;</div><div class="line">  <span class="built_in">String</span> _errorText;</div><div class="line"></div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Scaffold(</div><div class="line">      appBar: <span class="keyword">new</span> AppBar(</div><div class="line">        title: <span class="keyword">new</span> Text(<span class="string">"Sample App"</span>),</div><div class="line">      ),</div><div class="line">      body: <span class="keyword">new</span> Center(</div><div class="line">        child: <span class="keyword">new</span> TextField(</div><div class="line">          onSubmitted: (<span class="built_in">String</span> text) &#123;</div><div class="line">            setState(() &#123;</div><div class="line">              <span class="keyword">if</span> (!isEmail(text)) &#123;</div><div class="line">                _errorText = <span class="string">'Error: This is not an email'</span>;</div><div class="line">              &#125; <span class="keyword">else</span> &#123;</div><div class="line">                _errorText = <span class="keyword">null</span>;</div><div class="line">              &#125;</div><div class="line">            &#125;);</div><div class="line">          &#125;,</div><div class="line">          decoration: <span class="keyword">new</span> InputDecoration(hintText: <span class="string">"This is a hint"</span>, errorText: _getErrorText()),</div><div class="line">        ),</div><div class="line">      ),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  _getErrorText() &#123;</div><div class="line">    <span class="keyword">return</span> _errorText;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="built_in">bool</span> isEmail(<span class="built_in">String</span> em) &#123;</div><div class="line">    <span class="built_in">String</span> emailRegexp =</div><div class="line">        <span class="string">r'^(([^&lt;&gt;()[\]\\.,;:\s@\"]+(\.[^&lt;&gt;()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]&#123;2,&#125;))$'</span>;</div><div class="line"></div><div class="line">    <span class="built_in">RegExp</span> regExp = <span class="keyword">new</span> <span class="built_in">RegExp</span>(p);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> regExp.hasMatch(em);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="Flutter-Plugins"><a href="#Flutter-Plugins" class="headerlink" title="Flutter Plugins"></a>Flutter Plugins</h1><h2 id="如何访问-GPS-传感器"><a href="#如何访问-GPS-传感器" class="headerlink" title="如何访问 GPS 传感器"></a>如何访问 GPS 传感器</h2><p>To access the GPS sensor you can use the community plugin  <a href="https://pub.dartlang.org/packages/location" target="_blank" rel="external">https://pub.dartlang.org/packages/location</a></p>
+<h2 id="如何访问-Camera"><a href="#如何访问-Camera" class="headerlink" title="如何访问 Camera"></a>如何访问 Camera</h2><p>A popular community plugin to access the camera is  <a href="https://pub.dartlang.org/packages/image_picker" target="_blank" rel="external">https://pub.dartlang.org/packages/image_picker</a></p>
+<h2 id="如何使用-Facebook-登录"><a href="#如何使用-Facebook-登录" class="headerlink" title="如何使用 Facebook 登录"></a>如何使用 Facebook 登录</h2><p>To access Facebook Connect functionality you can use  <a href="https://pub.dartlang.org/packages/flutter_facebook_connect" target="_blank" rel="external">https://pub.dartlang.org/packages/flutter_facebook_connect</a>  .</p>
+<h2 id="如何自己实现-native-集成"><a href="#如何自己实现-native-集成" class="headerlink" title="如何自己实现 native 集成"></a>如何自己实现 native 集成</h2><p>If there is platform specific functionality that Flutter or its community Plugins are missing then you can build your own following this tutorial<a href="https://flutter.io/developing-packages/" target="_blank" rel="external">https://flutter.io/developing-packages/</a>  .</p>
+<p>总的来说，Flutter plugin 框架用起来很像 Android 里的 EventBus：你发送一个消息，等待 receiver 处理完毕，再将结果传回给你，只不过 Flutter 的 receiver 变成了 iOS 或是 Android。</p>
+<h2 id="如何使用-NDK"><a href="#如何使用-NDK" class="headerlink" title="如何使用 NDK"></a>如何使用 NDK</h2><p>得自定义 plugin，先和你的 android 应用通信，等待它去执行 jni 方法，再把结果传回来。</p>
+<h1 id="Themes"><a href="#Themes" class="headerlink" title="Themes"></a>Themes</h1><h2 id="如何为-Material-styled-应用设置主题"><a href="#如何为-Material-styled-应用设置主题" class="headerlink" title="如何为 Material-styled 应用设置主题"></a>如何为 Material-styled 应用设置主题</h2><p>Flutter 已经为我们实现好了 MaterialDesign，并设置好了大部分样式。Android 里使用 AndroidManifest.xml 控制主题样式，而 Flutter 的主题是在顶级 Widget 里声明的。<br>你可以将一个 MaterialApp 对象声明为整个应用的入口。它包含一系列实现 MaterialDesign 所需的组件。继承自 WidgetsApp，并实现了 Material 相关的功能。</p>
+<p>不需要 MaterialDesign 的话，直接使用 WidgetsApp 即可。</p>
+<p>构建 MaterialApp 时，传入定义好的 ThemeData 即可指定样式：<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SampleApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> MaterialApp(</div><div class="line">      title: <span class="string">'Sample App'</span>,</div><div class="line">      theme: <span class="keyword">new</span> ThemeData(</div><div class="line">        primarySwatch: Colors.blue,</div><div class="line">        textSelectionColor: Colors.red</div><div class="line">      ),</div><div class="line">      home: <span class="keyword">new</span> SampleAppPage(),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="Databases-and-local-storage"><a href="#Databases-and-local-storage" class="headerlink" title="Databases and local storage"></a>Databases and local storage</h1><h2 id="如何访问-Shared-Preferences"><a href="#如何访问-Shared-Preferences" class="headerlink" title="如何访问 Shared Preferences ?"></a>如何访问 Shared Preferences ?</h2><p>使用 Shared Preferences plugin  <a href="https://pub.dartlang.org/packages/shared_preferences" target="_blank" rel="external">Shared_Preferences</a></p>
+<p>除了 Android 使用的 SharePreferences，给他还提供 iOS 的 NSUserDefaults。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="string">'package:flutter/material.dart'</span>;</div><div class="line"><span class="keyword">import</span> <span class="string">'package:shared_preferences/shared_preferences.dart'</span>;</div><div class="line"></div><div class="line"><span class="keyword">void</span> main() &#123;</div><div class="line">  runApp(</div><div class="line">    <span class="keyword">new</span> MaterialApp(</div><div class="line">      home: <span class="keyword">new</span> Scaffold(</div><div class="line">        body: <span class="keyword">new</span> Center(</div><div class="line">          child: <span class="keyword">new</span> RaisedButton(</div><div class="line">            onPressed: _incrementCounter,</div><div class="line">            child: <span class="keyword">new</span> Text(<span class="string">'Increment Counter'</span>),</div><div class="line">          ),</div><div class="line">        ),</div><div class="line">      ),</div><div class="line">    ),</div><div class="line">  );</div><div class="line">&#125;</div><div class="line"></div><div class="line">_incrementCounter() <span class="keyword">async</span> &#123;</div><div class="line">  SharedPreferences prefs = <span class="keyword">await</span> SharedPreferences.getInstance();</div><div class="line">  <span class="built_in">int</span> counter = (prefs.getInt(<span class="string">'counter'</span>) ?? <span class="number">0</span>) + <span class="number">1</span>;</div><div class="line">  <span class="built_in">print</span>(<span class="string">'Pressed $counter times.'</span>);</div><div class="line">  prefs.setInt(<span class="string">'counter'</span>, counter);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="如何访问-SQLite"><a href="#如何访问-SQLite" class="headerlink" title="如何访问 SQLite ?"></a>如何访问 SQLite ?</h2><p>使用 SQFlite plugin  <a href="https://pub.dartlang.org/packages/sqflite" target="_blank" rel="external">SQFlite</a></p>
+<h1 id="Notifications"><a href="#Notifications" class="headerlink" title="Notifications"></a>Notifications</h1><h2 id="如何发送-Notifications"><a href="#如何发送-Notifications" class="headerlink" title="如何发送 Notifications"></a>如何发送 Notifications</h2><p>广告时间 ： Firebase_Messaging plugin  <a href="https://github.com/flutter/plugins/tree/master/packages/firebase_messaging" target="_blank" rel="external">Firebase_Messaging</a></p>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Working-with-Text"><span class="toc-text">Working with Text</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何自定义-Text-widgets-字体"><span class="toc-text">如何自定义 Text widgets 字体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何为-Text-widgets-设置样式"><span class="toc-text">如何为 Text widgets 设置样式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Form-Input"><span class="toc-text">Form Input</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么对应-Input-的-“hint”"><span class="toc-text">什么对应 Input 的 “hint”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何显示验证错误提示"><span class="toc-text">如何显示验证错误提示</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Flutter-Plugins"><span class="toc-text">Flutter Plugins</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何访问-GPS-传感器"><span class="toc-text">如何访问 GPS 传感器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何访问-Camera"><span class="toc-text">如何访问 Camera</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何使用-Facebook-登录"><span class="toc-text">如何使用 Facebook 登录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何自己实现-native-集成"><span class="toc-text">如何自己实现 native 集成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何使用-NDK"><span class="toc-text">如何使用 NDK</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Themes"><span class="toc-text">Themes</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何为-Material-styled-应用设置主题"><span class="toc-text">如何为 Material-styled 应用设置主题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Databases-and-local-storage"><span class="toc-text">Databases and local storage</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何访问-Shared-Preferences"><span class="toc-text">如何访问 Shared Preferences ?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何访问-SQLite"><span class="toc-text">如何访问 SQLite ?</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Notifications"><span class="toc-text">Notifications</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何发送-Notifications"><span class="toc-text">如何发送 Notifications</span></a></li></ol></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/flutter-for-android-part-3/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/android/"><i class="fa fa-tags"></i>android</a>
+     
+      <a href="/tags/flutter/"><i class="fa fa-tags"></i>flutter</a>
+     
+      <a href="/tags/dart/"><i class="fa fa-tags"></i>dart</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2020 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/clockwise-matrix/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/flutter-for-android-part-2/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

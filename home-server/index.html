@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>home-server | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="折腾,nginx,ddns,https," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风!</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2020-07-12
+    </span>
+    
+      <span>
+        | <a href="/categories/折腾/"><i class="fa fa-bookmark"></i>折腾</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    home-server
+  </h1>
+  
+  <article class="passage-article">
+    <h2 id="DDNS"><a href="#DDNS" class="headerlink" title="DDNS"></a>DDNS</h2><p>自动更新公网IP: 使用 <a href="https://github.com/TimothyYe/godns" target="_blank" rel="external">godns</a> 这个项目，定时检查公网 IP，自动更新，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run -d --name godns --restart=always -v /path/to/config.json:/usr/local/godns/config.json timothyye/godns:latest</div></pre></td></tr></table></figure>
+<p>更多配置参数可以看文档 <strong>PS: SUB_DOMAIN 需要手动在域名商添加 A 记录</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"># example config:</div><div class="line"># 替换 $ID，$TOKEN，$DOMAIN，$SUB_DOMAIN</div><div class="line">&#123;</div><div class="line">  <span class="attr">"provider"</span>: <span class="string">"DNSPod"</span>,</div><div class="line">  <span class="attr">"login_token"</span>: <span class="string">"$ID,$TOKEN"</span>,</div><div class="line">  <span class="attr">"domains"</span>: [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"domain_name"</span>: <span class="string">"$DOMAIN"</span>,</div><div class="line">      <span class="attr">"sub_domains"</span>: [</div><div class="line">        <span class="string">"$SUB_DOMAIN"</span></div><div class="line">      ]</div><div class="line">    &#125;</div><div class="line">  ],</div><div class="line">  <span class="attr">"ip_url"</span>: <span class="string">"https://myip.biturl.top"</span>,</div><div class="line">  <span class="attr">"interval"</span>: <span class="number">300</span>,</div><div class="line">  <span class="attr">"user_agent"</span>: <span class="string">"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML，like Gecko) Chrome/38.0.2125.111 Safari/537.36"</span>,</div><div class="line">  <span class="attr">"ip_interface"</span>: <span class="string">"eth0"</span>,</div><div class="line">  <span class="attr">"socks5_proxy"</span>: <span class="string">""</span>,</div><div class="line">  <span class="attr">"notify"</span>: &#123;</div><div class="line">    <span class="attr">"enabled"</span>: <span class="literal">false</span>,</div><div class="line">    <span class="attr">"smtp_server"</span>: <span class="string">""</span>,</div><div class="line">    <span class="attr">"smtp_username"</span>: <span class="string">""</span>,</div><div class="line">    <span class="attr">"smtp_password"</span>: <span class="string">""</span>,</div><div class="line">    <span class="attr">"smtp_port"</span>: <span class="number">25</span>,</div><div class="line">    <span class="attr">"send_to"</span>: <span class="string">""</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="HTTPS-证书-amp-amp-nginx-反代"><a href="#HTTPS-证书-amp-amp-nginx-反代" class="headerlink" title="HTTPS 证书 &amp;&amp; nginx 反代"></a>HTTPS 证书 &amp;&amp; nginx 反代</h2><p>HTTPS 证书使用 <a href="https://github.com/acmesh-official/acme.sh" target="_blank" rel="external">acme.sh</a> 自动申请，更新。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"> 先申请一下证书证书</span></div><div class="line">docker-compose run acme.sh --issue --dns dns_dp -d *.domain.com</div><div class="line"></div><div class="line"><span class="meta">#</span><span class="bash"> 以后就直接</span></div><div class="line">docker-compose up -d</div></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># /home-proxy/docker-compose.yml</span></div><div class="line"><span class="comment"># docker-compose up -d</span></div><div class="line"><span class="comment"># 替换 $DNSPOD_ID, $DNSPOD_KEY, $NGINX_80, $NGINX_443</span></div><div class="line"><span class="attr">version:</span> <span class="string">'3'</span></div><div class="line"><span class="attr">services:</span></div><div class="line">  <span class="string">acme.sh:</span></div><div class="line"><span class="attr">    image:</span> <span class="string">neilpang/acme.sh</span></div><div class="line"><span class="attr">    volumes:</span></div><div class="line"><span class="bullet">      -</span> <span class="string">"./acme.sh:/acme.sh:z"</span></div><div class="line"><span class="attr">    environment:</span></div><div class="line"><span class="bullet">      -</span> <span class="string">DP_Id=$DNSPOD_ID</span></div><div class="line"><span class="bullet">      -</span> <span class="string">DP_Key=$DNSPOD_KEY</span></div><div class="line"><span class="attr">    command:</span> <span class="string">daemon</span></div><div class="line"></div><div class="line"><span class="attr">  nginx:</span></div><div class="line"><span class="attr">    image:</span> <span class="string">nginx</span></div><div class="line"><span class="attr">    ports:</span></div><div class="line"><span class="bullet">      -</span> <span class="string">"$NGINX_80:80"</span></div><div class="line"><span class="bullet">      -</span> <span class="string">"$NGINX_443:443"</span></div><div class="line"><span class="attr">    volumes:</span></div><div class="line"><span class="bullet">      -</span> <span class="string">"./acme.sh:/etc/nginx/certs"</span></div><div class="line"><span class="bullet">      -</span> <span class="string">"./nginx/conf.d/:/etc/nginx/conf.d:z"</span></div><div class="line"><span class="bullet">      -</span> <span class="string">"./nginx/log/:/var/log/nginx/:z"</span></div><div class="line"><span class="attr">    environment:</span></div><div class="line"><span class="bullet">      -</span> <span class="string">ENV=production</span></div></pre></td></tr></table></figure>
+<p>nginx 配置<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"> /home-proxy/nginx/conf.d/proxy.conf</span></div><div class="line"><span class="meta">#</span><span class="bash"> 替换 domain.com, <span class="variable">$SERVICE_IP</span>, <span class="variable">$PORT</span></span></div><div class="line">server &#123;</div><div class="line">    listen 80;</div><div class="line">    server_name *.domain.com;</div><div class="line">    return 301 https://$host$request_uri;</div><div class="line">&#125;</div><div class="line">server &#123;</div><div class="line"></div><div class="line">    listen      443 ssl http2;</div><div class="line">    server_name xxx.domain.com;</div><div class="line"></div><div class="line">    location / &#123;</div><div class="line">        proxy_pass https://$SERVICE_IP:$PORT;</div><div class="line">        proxy_set_header Upgrade $http_upgrade;</div><div class="line">        proxy_set_header Connection "upgrade"; </div><div class="line">        proxy_set_header X-Real-IP $remote_addr;</div><div class="line">        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</div><div class="line">        proxy_set_header Host $http_host;</div><div class="line">        proxy_set_header X-NginX-Proxy true;</div><div class="line">        proxy_ssl_server_name on;</div><div class="line">        proxy_ssl_name $host;</div><div class="line">    &#125;</div><div class="line">    ssl_certificate         /etc/nginx/certs/*.domain.com/fullchain.cer;</div><div class="line">    ssl_certificate_key     /etc/nginx/certs/*.domain.com/*.domain.com.key;</div><div class="line">&#125;</div><div class="line">...</div></pre></td></tr></table></figure></p>
+<h2 id="路由器端口转发"><a href="#路由器端口转发" class="headerlink" title="路由器端口转发"></a>路由器端口转发</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">                    +----------------+</div><div class="line">                    |                |</div><div class="line">                    |     光猫        |</div><div class="line">                    |                |</div><div class="line">                    +-------+--------+</div><div class="line">                            |</div><div class="line">                            v</div><div class="line">                    +-------+--------+</div><div class="line">                    |                |</div><div class="line">                    |     路由器      |</div><div class="line">                    |                |</div><div class="line">                    +-------+--------+ </div><div class="line">                            |                  </div><div class="line">      +---------------------+------------------+</div><div class="line">      |                     |                  |</div><div class="line">      |                     v                  |</div><div class="line">+-----v-----+        +------+------+    +------v------+</div><div class="line">|           |        |             |    |             |</div><div class="line">|   nginx   |        |   service   |    |   service   |</div><div class="line">|           |        |             |    |             |</div><div class="line">+-----------+        +-------------+    +-------------+</div></pre></td></tr></table></figure>
+<p>联通光猫开启 DMZ，流量转给路由器。路由器开启端口转发，交给 nginx (联通屏蔽 80/443，自行选择安全端口)，最后由 nginx 分发到各 service。带小绿锁的公网 home server 就配好了。</p>
+<p>唯一的遗憾就是每次输域名都要自带端口，自用的话问题不大，公网直连回家还是很快的，舒服。</p>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><ul>
+<li><a href="https://www.daxiaju.club/2019/08/07/nginx-acme-docker/" target="_blank" rel="external">https://www.daxiaju.club/2019/08/07/nginx-acme-docker/</a></li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#DDNS"><span class="toc-text">DDNS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTPS-证书-amp-amp-nginx-反代"><span class="toc-text">HTTPS 证书 && nginx 反代</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#路由器端口转发"><span class="toc-text">路由器端口转发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-text">Ref</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/home-server/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/nginx/"><i class="fa fa-tags"></i>nginx</a>
+     
+      <a href="/tags/ddns/"><i class="fa fa-tags"></i>ddns</a>
+     
+      <a href="/tags/https/"><i class="fa fa-tags"></i>https</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2020 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/kindle-prc-export/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

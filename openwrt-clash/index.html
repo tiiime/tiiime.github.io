@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>OpenWrt clash 网关 | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="折腾,openwrt,clash," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风!</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2020-03-06
+    </span>
+    
+      <span>
+        | <a href="/categories/折腾/"><i class="fa fa-bookmark"></i>折腾</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    OpenWrt clash 网关
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p>记录下自己的路由器配置。这个方案用了几个月了，大部分时间没啥问题。</p>
+</blockquote>
+<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><ul>
+<li>OpenWrt</li>
+<li>Clash: 主要自带 geoip，不用自己折腾太多规则</li>
+<li>Clash 控制面板: <a href="https://github.com/haishanh/yacd" target="_blank" rel="external">https://github.com/haishanh/yacd</a></li>
+</ul>
+<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><p>搭一个 OpenWrt 做网关转发流量，通过 iptable 把流量交给 clash<br>OpenWrt 只做透明代理</p>
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><h3 id="配置-OpenWrt"><a href="#配置-OpenWrt" class="headerlink" title="配置 OpenWrt"></a>配置 OpenWrt</h3><p>给 OpenWrt 一个静态 ip<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">vim /etc/config/network</div><div class="line"></div><div class="line">config interface &apos;loopback&apos;</div><div class="line">        option ifname &apos;lo&apos;</div><div class="line">        option proto &apos;static&apos;</div><div class="line">        option ipaddr &apos;127.0.0.1&apos;</div><div class="line">        option netmask &apos;255.0.0.0&apos;</div><div class="line"></div><div class="line">config globals &apos;globals&apos;</div><div class="line">        option ula_prefix &apos;fda4:2477:ac44::/48&apos;</div><div class="line"></div><div class="line">config interface &apos;lan&apos;</div><div class="line">        option type &apos;bridge&apos;</div><div class="line">        option ifname &apos;eth0&apos;</div><div class="line">        option proto &apos;static&apos;</div><div class="line">        option ipaddr &apos;192.168.1.xxx&apos;</div><div class="line">        option netmask &apos;255.255.255.0&apos;</div><div class="line">        option ip6assign &apos;60&apos;</div><div class="line">        option gateway &apos;192.168.1.1&apos;</div><div class="line">        list dns &apos;192.168.1.1&apos;</div></pre></td></tr></table></figure></p>
+<h3 id="配置-Clash"><a href="#配置-Clash" class="headerlink" title="配置 Clash"></a>配置 Clash</h3><ol>
+<li>下个最新版 clash</li>
+</ol>
+<p><a href="https://github.com/Dreamacro/clash/releases" target="_blank" rel="external">https://github.com/Dreamacro/clash/releases</a><br>下载自己需要的版本<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 配置文件 config.yaml 和 clash 都扔里就行</span></div><div class="line">mkdir /root/clash/</div><div class="line"></div><div class="line"><span class="comment"># Country.mmdb 最近总是下载失败, 可以试着跑一下 看看有没有啥问题</span></div><div class="line"><span class="built_in">cd</span> /root/clash/</div><div class="line">./clash -d .</div></pre></td></tr></table></figure></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># config.yaml</span></div><div class="line"><span class="attr">port:</span> <span class="number">58652</span></div><div class="line"><span class="attr">socks-port:</span> <span class="number">58653</span></div><div class="line"><span class="comment"># 透明代理端口</span></div><div class="line"><span class="attr">redir-port:</span> <span class="number">58654</span></div><div class="line"></div><div class="line"><span class="attr">allow-lan:</span> <span class="literal">true</span></div><div class="line"></div><div class="line"><span class="attr">mode:</span> <span class="string">Rule</span></div><div class="line"></div><div class="line"><span class="attr">log-level:</span> <span class="string">info</span></div><div class="line"></div><div class="line"><span class="comment"># 控制面板端口</span></div><div class="line"><span class="attr">external-controller:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">:xxxx</span></div><div class="line"></div><div class="line"><span class="attr">dns:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  listen:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">:53</span></div><div class="line"><span class="attr">  ipv6:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  enhance-mode:</span> <span class="string">redir-host</span></div><div class="line"><span class="attr">  nameserver:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">'tls://dns.rubyfish.cn:853'</span></div><div class="line"><span class="bullet">    -</span> <span class="string">'tls://1.1.1.1:853'</span></div><div class="line"><span class="bullet">    -</span> <span class="string">'tcp://1.1.1.1'</span></div><div class="line"><span class="bullet">    -</span> <span class="string">'tls://dns.google'</span></div><div class="line"><span class="bullet">    -</span> <span class="number">119.29</span><span class="number">.29</span><span class="number">.29</span></div><div class="line"></div><div class="line"><span class="attr">Proxy:</span></div><div class="line">  <span class="comment"># 自己发挥</span></div><div class="line"><span class="attr">  - name:</span> <span class="string">Socks5Proxy</span></div><div class="line"><span class="attr">    type:</span> <span class="string">socks5</span></div><div class="line"><span class="attr">    server:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></div><div class="line"><span class="attr">    port:</span> <span class="number">1080</span></div><div class="line"><span class="string">Proxy</span> <span class="attr">Group:</span></div><div class="line"><span class="attr">  - name:</span> <span class="string">Proxy</span></div><div class="line"><span class="attr">    type:</span> <span class="string">select</span></div><div class="line"><span class="attr">    proxies:</span></div><div class="line"><span class="bullet">      -</span> <span class="string">Socks5Proxy</span></div><div class="line"><span class="attr">Rule:</span></div><div class="line"></div><div class="line">   <span class="comment"># GeoIP China</span></div><div class="line"><span class="bullet">  -</span> <span class="string">GEOIP,CN,Direct</span></div><div class="line"><span class="bullet">  -</span> <span class="string">MATCH,Proxy</span></div></pre></td></tr></table></figure>
+<ol start="2">
+<li>没啥问题给 clash 写个 service 自启</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">vim /etc/init.d/clash</div><div class="line">service clash <span class="built_in">enable</span></div><div class="line">service clash start</div></pre></td></tr></table></figure>
+<p><code>/etc/init.d/clash</code> 文件内容复制下边这个<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">#!/bin/sh /etc/rc.common</div><div class="line"># Example script</div><div class="line"># Copyright (C) 2007 OpenWrt.org</div><div class="line"></div><div class="line">USE_PROCD=1</div><div class="line">START=95</div><div class="line"></div><div class="line">start_service() &#123;</div><div class="line">        procd_open_instance</div><div class="line">        procd_set_param respawn</div><div class="line">        procd_set_param stderr 1</div><div class="line">        procd_set_param stdout 1</div><div class="line">        procd_set_param command /root/clash/clash -d /root/clash/</div><div class="line">        procd_close_instance</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="配置-OpenWrt-iptable"><a href="#配置-OpenWrt-iptable" class="headerlink" title="配置 OpenWrt iptable"></a>配置 OpenWrt iptable</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># /etc/firewall.user</div><div class="line">iptables -t nat -N clash</div><div class="line">iptables -t nat -A clash -d 192.168/16 -j RETURN</div><div class="line">iptables -t nat -A PREROUTING -p tcp -j clash</div><div class="line">iptables -t nat -A clash -p tcp -j REDIRECT --to-ports 58654</div><div class="line"></div><div class="line">iptables -t nat -A PREROUTING -p udp -m udp --dport 53 -j DNAT --to-destination 192.168.1.xxx:53</div></pre></td></tr></table></figure>
+<h3 id="客户端设备"><a href="#客户端设备" class="headerlink" title="客户端设备"></a>客户端设备</h3><p>我的设备都是手动配的网关和 DNS，有时需要切下代理，打开 <a href="http://yacd.haishan.me/" target="_blank" rel="external">http://yacd.haishan.me/</a> 这个面板基本够用了</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><ol>
+<li>时不时的不能打开 google.com， 但是 google.com.hk 没问题，应该是 clash dns 的问题  </li>
+<li>微信语音视频不通，zoom 音频不通，怀疑是 udp 问题，不清楚</li>
+<li>clash dns 总是出问题，现在没啥动力，忍了</li>
+</ol>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><ul>
+<li><a href="https://github.com/Dreamacro/clash" target="_blank" rel="external">https://github.com/Dreamacro/clash</a></li>
+<li><a href="https://github.com/Dreamacro/clash/issues/158" target="_blank" rel="external">https://github.com/Dreamacro/clash/issues/158</a></li>
+<li>…</li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#工具"><span class="toc-text">工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方案"><span class="toc-text">方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置文件"><span class="toc-text">配置文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#配置-OpenWrt"><span class="toc-text">配置 OpenWrt</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置-Clash"><span class="toc-text">配置 Clash</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置-OpenWrt-iptable"><span class="toc-text">配置 OpenWrt iptable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端设备"><span class="toc-text">客户端设备</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#问题"><span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-text">Ref</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/openwrt-clash/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/openwrt/"><i class="fa fa-tags"></i>openwrt</a>
+     
+      <a href="/tags/clash/"><i class="fa fa-tags"></i>clash</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2020 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/kindle-prc-export/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/kotlin-dsl/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>
