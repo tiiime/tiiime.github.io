@@ -69,7 +69,7 @@
 
 
   
-<meta name="generator" content="Hexo 6.3.0"></head>
+<meta name="generator" content="Hexo 5.4.0"></head>
   <body>
     <header class="site-header">
   <div class="site-header-brand">
@@ -175,56 +175,21 @@
 <li><strong>Source</strong> for read.</li>
 <li><strong>Sink</strong> for write. </li>
 </ul>
-<pre class="line-numbers language-none"><code class="language-none">public interface Sink extends Closeable, Flushable &#123;
-  void write(Buffer source, long byteCount) throws IOException;
-  @Override void flush() throws IOException;
-  Timeout timeout();
-  @Override void close() throws IOException;
-&#125;
-
-public interface Source extends Closeable &#123;
-  long read(Buffer sink, long byteCount) throws IOException;
-  Timeout timeout();
-  @Override void close() throws IOException;
-&#125;
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public interface Sink extends Closeable, Flushable &#123;</span><br><span class="line">  void write(Buffer source, long byteCount) throws IOException;</span><br><span class="line">  @Override void flush() throws IOException;</span><br><span class="line">  Timeout timeout();</span><br><span class="line">  @Override void close() throws IOException;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public interface Source extends Closeable &#123;</span><br><span class="line">  long read(Buffer sink, long byteCount) throws IOException;</span><br><span class="line">  Timeout timeout();</span><br><span class="line">  @Override void close() throws IOException;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>读写过程中又需要介质承载数据 </p>
 <ul>
 <li><strong>Buffer</strong></li>
 <li><strong>ByteString</strong></li>
 </ul>
-<pre class="line-numbers language-none"><code class="language-none">public final class Buffer implements BufferedSource, BufferedSink, Cloneable&#123;
-	...
-&#125;
-public class ByteString implements Serializable, Comparable&lt;ByteString&gt; &#123;
-	...
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public final class Buffer implements BufferedSource, BufferedSink, Cloneable&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br><span class="line">public class ByteString implements Serializable, Comparable&lt;ByteString&gt; &#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="Buffer-amp-ByteString"><a href="#Buffer-amp-ByteString" class="headerlink" title="Buffer &amp; ByteString"></a>Buffer &amp; ByteString</h4><p>Okio 使用 <code>Buffer</code> 和 <code>ByteString</code> 承载数据.</p>
 <ul>
 <li><strong>ByteString</strong> is an immutable sequence of bytes. </li>
 <li><strong>Buffer</strong>  is a mutable sequence of bytes.</li>
 </ul>
 <p>这两个类使用类了一些比较聪明的方法实现, 可以节省系统资源.<br>Buffer 内部使用一个 segment 的双向链表保存数据, 这样当你移动 buffer 内的数据时实际上只是重新分配 segment 而不是拷贝数据.</p>
-<h4 id="BufferedSink-amp-BufferedSource"><a href="#BufferedSink-amp-BufferedSource" class="headerlink" title="BufferedSink &amp; BufferedSource"></a>BufferedSink &amp; BufferedSource</h4><p>Buffer 实现了两个接口 <code>BufferedSink</code> 和 <code>BufferedSource</code> 以便读写数据.<br>查看这两个接口, 只是在 <code>Sink</code> 和 <code>Source</code> 之上又进行一层封装, 添加了读写特点定类型等等方法.<br>Buffer 完整的实现了这些功能.<br><pre class="line-numbers language-none"><code class="language-none">public interface BufferedSink extends Sink &#123; 
-	..
-	BufferedSink writeUtf8(String string) throws IOException;
-	BufferedSink writeByte(int b) throws IOException;
-	..
-&#125;
-public interface BufferedSource extends Source &#123; 
-	..
-	byte readByte() throws IOException;
-	short readShort() throws IOException;
-	..
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></p>
-<h4 id="层层递进的链式操作"><a href="#层层递进的链式操作" class="headerlink" title="层层递进的链式操作"></a>层层递进的链式操作</h4><pre class="line-numbers language-none"><code class="language-none">File file &#x3D; &#x2F;&#x2F; ...
-Sink fileSink &#x3D; Okio.sink(file);
-Sink gzipSink &#x3D; new GzipSink(fileSink);
-BufferedSink bufferedSink &#x3D; Okio.buffer(gzipSink);
-
-bufferedSink.writeUtf8(&quot;Hello, hello, hello!&quot;);
-
-bufferedSink.close();<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="BufferedSink-amp-BufferedSource"><a href="#BufferedSink-amp-BufferedSource" class="headerlink" title="BufferedSink &amp; BufferedSource"></a>BufferedSink &amp; BufferedSource</h4><p>Buffer 实现了两个接口 <code>BufferedSink</code> 和 <code>BufferedSource</code> 以便读写数据.<br>查看这两个接口, 只是在 <code>Sink</code> 和 <code>Source</code> 之上又进行一层封装, 添加了读写特点定类型等等方法.<br>Buffer 完整的实现了这些功能.<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public interface BufferedSink extends Sink &#123; </span><br><span class="line">	..</span><br><span class="line">	BufferedSink writeUtf8(String string) throws IOException;</span><br><span class="line">	BufferedSink writeByte(int b) throws IOException;</span><br><span class="line">	..</span><br><span class="line">&#125;</span><br><span class="line">public interface BufferedSource extends Source &#123; </span><br><span class="line">	..</span><br><span class="line">	byte readByte() throws IOException;</span><br><span class="line">	short readShort() throws IOException;</span><br><span class="line">	..</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="层层递进的链式操作"><a href="#层层递进的链式操作" class="headerlink" title="层层递进的链式操作"></a>层层递进的链式操作</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">File file = // ...</span><br><span class="line">Sink fileSink = Okio.sink(file);</span><br><span class="line">Sink gzipSink = new GzipSink(fileSink);</span><br><span class="line">BufferedSink bufferedSink = Okio.buffer(gzipSink);</span><br><span class="line"></span><br><span class="line">bufferedSink.writeUtf8(&quot;Hello, hello, hello!&quot;);</span><br><span class="line"></span><br><span class="line">bufferedSink.close();</span><br></pre></td></tr></table></figure>
 <p>可以看到 Okio 轻松地将 <code>Hello, hello, hello!</code> 这段字符串经过种种变换后写入到文件中, Exciting! </p>
 <h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul>
 <li><a target="_blank" rel="noopener" href="https://github.com/square/okio">https://github.com/square/okio</a></li>

@@ -69,7 +69,7 @@
 
 
   
-<meta name="generator" content="Hexo 6.3.0"></head>
+<meta name="generator" content="Hexo 5.4.0"></head>
   <body>
     <header class="site-header">
   <div class="site-header-brand">
@@ -184,26 +184,7 @@
 <h2 id="List-容器"><a href="#List-容器" class="headerlink" title="List 容器"></a>List 容器</h2><h4 id="AbstractList"><a href="#AbstractList" class="headerlink" title="AbstractList"></a>AbstractList</h4><p>AbstractList 是继承了 List 接口的抽象类，实现了 List 一些通用的方法。 对于需要随机访问数据的场景应优先选择实现它。</p>
 <h4 id="AbstractSequentialList"><a href="#AbstractSequentialList" class="headerlink" title="AbstractSequentialList"></a>AbstractSequentialList</h4><p>与 AbstractList 相似，只不过 AbstractSequentialList 更适用于实现连续访问数据的场景。</p>
 <h4 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h4><p>ArrayList 继承了 AbstractList，相对于数组来说，ArrayList 内部封装了一个 Object[],大体上操作没有太多区别，不同的是 ArrayList 可以动态的扩展大小，原理是当内部数组满了后新建一个当前 Object[] 大小 1.5 倍的数组，将原来内容拷贝到新的数组内。关于性能方面，因为 ArrayList 保存的是 Object 对象，在 get 时需要一次类型转换操作，如果数据量很大，性能上的差异会凸显出来。</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// Positional Access Operations</span>
-
-<span class="token annotation punctuation">@SuppressWarnings</span><span class="token punctuation">(</span><span class="token string">"unchecked"</span><span class="token punctuation">)</span>
-<span class="token class-name">E</span> <span class="token function">elementData</span><span class="token punctuation">(</span><span class="token keyword">int</span> index<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token class-name">E</span><span class="token punctuation">)</span> elementData<span class="token punctuation">[</span>index<span class="token punctuation">]</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token comment">/**
-* Returns the element at the specified position in this list.
-*
-* @param index index of the element to return
-* @return the element at the specified position in this list
-* @throws IndexOutOfBoundsException &#123;@inheritDoc&#125;
-*/</span>
-<span class="token keyword">public</span> <span class="token class-name">E</span> <span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">int</span> index<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  <span class="token function">rangeCheck</span><span class="token punctuation">(</span>index<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token keyword">return</span> <span class="token function">elementData</span><span class="token punctuation">(</span>index<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Positional Access Operations</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span></span><br><span class="line"><span class="function">E <span class="title">elementData</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (E) elementData[index];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Returns the element at the specified position in this list.</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> index index of the element to return</span></span><br><span class="line"><span class="comment">* <span class="doctag">@return</span> the element at the specified position in this list</span></span><br><span class="line"><span class="comment">* <span class="doctag">@throws</span> IndexOutOfBoundsException &#123;<span class="doctag">@inheritDoc</span>&#125;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">  rangeCheck(index);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> elementData(index);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <h4 id="LinkedList"><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h4><p>LinkedList 继承了 AbstractSequentialList ，内部数据储存部分使用的是链表。优点的话也就是链表这种数据结构的优点。</p>
 <hr>
 <h2 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h2><h4 id="AbstractMap"><a href="#AbstractMap" class="headerlink" title="AbstractMap"></a>AbstractMap</h4><p>继承了 Map 接口，为实现 Map 提供大体框架。</p>
@@ -213,22 +194,7 @@
 <hr>
 <h2 id="Set-容器"><a href="#Set-容器" class="headerlink" title="Set 容器"></a>Set 容器</h2><h4 id="AbstractSet"><a href="#AbstractSet" class="headerlink" title="AbstractSet"></a>AbstractSet</h4><p>提供实现 Set 接口的大体框架。它仅继承了 AbstractCollection ，实现 Set 接口。</p>
 <h4 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h4><p>继承自 AbstractSet，并实现 Set 接口。内部实现使用一个 HashMap 储存，不保证元素顺序，允许元素值为 null。</p>
-<h4 id="LinkedHashSet"><a href="#LinkedHashSet" class="headerlink" title="LinkedHashSet"></a>LinkedHashSet</h4><p>继承自 HashSet，翻开源文件代码却意外的少，原来它是调用了一个 HashSet 的构造函数。和 HashSet 相比较，LinkedHashSet 保证了元素插入的顺序；当一个元素 e 已经插入后再次调用<code>s.add(e)</code>，会在<code>s.contains(e)</code>判断时直接返回 true。<br><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">/**
-  * Constructs a new, empty linked hash set. (This package private
-  * constructor is only used by LinkedHashSet.) The backing
-  * HashMap instance is a LinkedHashMap with the specified initial
-  * capacity and the specified load factor.
-  *
-  * @param initialCapacity the initial capacity of the hash map
-  * @param loadFactor the load factor of the hash map
-  * @param dummy ignored (distinguishes this
-  * constructor from other int, float constructor.)
-  * @throws IllegalArgumentException if the initial capacity is less
-  * than zero, or if the load factor is nonpositive
-  */</span>
-  <span class="token class-name">HashSet</span><span class="token punctuation">(</span><span class="token keyword">int</span> initialCapacity<span class="token punctuation">,</span> <span class="token keyword">float</span> loadFactor<span class="token punctuation">,</span> <span class="token keyword">boolean</span> dummy<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LinkedHashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span>initialCapacity<span class="token punctuation">,</span> loadFactor<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></p>
+<h4 id="LinkedHashSet"><a href="#LinkedHashSet" class="headerlink" title="LinkedHashSet"></a>LinkedHashSet</h4><p>继承自 HashSet，翻开源文件代码却意外的少，原来它是调用了一个 HashSet 的构造函数。和 HashSet 相比较，LinkedHashSet 保证了元素插入的顺序；当一个元素 e 已经插入后再次调用<code>s.add(e)</code>，会在<code>s.contains(e)</code>判断时直接返回 true。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * Constructs a new, empty linked hash set. (This package private</span></span><br><span class="line"><span class="comment">  * constructor is only used by LinkedHashSet.) The backing</span></span><br><span class="line"><span class="comment">  * HashMap instance is a LinkedHashMap with the specified initial</span></span><br><span class="line"><span class="comment">  * capacity and the specified load factor.</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@param</span> initialCapacity the initial capacity of the hash map</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@param</span> loadFactor the load factor of the hash map</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@param</span> dummy ignored (distinguishes this</span></span><br><span class="line"><span class="comment">  * constructor from other int, float constructor.)</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@throws</span> IllegalArgumentException if the initial capacity is less</span></span><br><span class="line"><span class="comment">  * than zero, or if the load factor is nonpositive</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  HashSet(<span class="keyword">int</span> initialCapacity, <span class="keyword">float</span> loadFactor, <span class="keyword">boolean</span> dummy) &#123;</span><br><span class="line">    map = <span class="keyword">new</span> LinkedHashMap&lt;&gt;(initialCapacity, loadFactor);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
 <h4 id="TreeSet"><a href="#TreeSet" class="headerlink" title="TreeSet"></a>TreeSet</h4><p>首先，TreeSet 继承自 AbstractSet ，并且实现了 NavigableSet 接口。主要提供时间复杂度为 log(n) 的插入，删除和查找操作，插入的元素默认由小到大排列。需要 key 实现 Comparable 接口，或者在构造函数提供一个 Comparator。</p>
 <hr>
 <h4 id="关于-Dictionary-和-Vector"><a href="#关于-Dictionary-和-Vector" class="headerlink" title="关于 Dictionary 和 Vector"></a>关于 Dictionary 和 Vector</h4><p>Dictionary 和 Vector 都是早期Java提供的方法。</p>
@@ -247,51 +213,7 @@
 <li>内部数组的初始化和扩容方式</li>
 </ul>
 <hr>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">io<span class="token punctuation">.</span>github<span class="token punctuation">.</span>tiiime</span><span class="token punctuation">;</span>
-
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token operator">*</span></span><span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">&#123;</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token class-name">Iterable</span> iterable<span class="token punctuation">;</span>
-        <span class="token class-name">Collection</span> collection<span class="token punctuation">;</span>
-
-        <span class="token class-name">Map</span> map<span class="token punctuation">;</span>
-
-        <span class="token class-name">AbstractCollection</span> abstractCollection<span class="token punctuation">;</span>
-        <span class="token class-name">Set</span> set<span class="token punctuation">;</span>
-        <span class="token class-name">List</span> list<span class="token punctuation">;</span>
-        <span class="token class-name">Queue</span> queue<span class="token punctuation">;</span>
-
-        <span class="token class-name">AbstractList</span> abstractList<span class="token punctuation">;</span>
-        <span class="token class-name">AbstractSequentialList</span> abstractSequentialList<span class="token punctuation">;</span>
-        <span class="token class-name">AbstractSet</span> abstractSet<span class="token punctuation">;</span>
-        <span class="token class-name">AbstractMap</span> abstractMap<span class="token punctuation">;</span>
-
-        <span class="token class-name">ArrayList</span> arrayList<span class="token punctuation">;</span>
-        <span class="token class-name">LinkedList</span> linkedList<span class="token punctuation">;</span>
-        <span class="token class-name">LinkedHashMap</span> linkedHashMap<span class="token punctuation">;</span>
-        <span class="token class-name">LinkedHashSet</span> linkedHashSet<span class="token punctuation">;</span>
-
-        <span class="token class-name">HashMap</span> hashMap<span class="token punctuation">;</span>
-        <span class="token class-name">HashSet</span> hashSet<span class="token punctuation">;</span>
-
-        <span class="token class-name">SortedMap</span> sortedMap<span class="token punctuation">;</span>
-        <span class="token class-name">SortedSet</span> sortedSet<span class="token punctuation">;</span>
-
-        <span class="token class-name">NavigableMap</span> navigableMap<span class="token punctuation">;</span>
-        <span class="token class-name">NavigableSet</span> navigableSet<span class="token punctuation">;</span>
-
-        <span class="token class-name">TreeMap</span> treeMap<span class="token punctuation">;</span>
-        <span class="token class-name">TreeSet</span> treeSet<span class="token punctuation">;</span>
-
-        <span class="token class-name">Dictionary</span> dictionary<span class="token punctuation">;</span>
-        <span class="token class-name">Hashtable</span> hashtable<span class="token punctuation">;</span>
-        <span class="token class-name">Vector</span> vector<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> io.github.tiiime;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Iterable iterable;</span><br><span class="line">        Collection collection;</span><br><span class="line"></span><br><span class="line">        Map map;</span><br><span class="line"></span><br><span class="line">        AbstractCollection abstractCollection;</span><br><span class="line">        Set set;</span><br><span class="line">        List list;</span><br><span class="line">        Queue queue;</span><br><span class="line"></span><br><span class="line">        AbstractList abstractList;</span><br><span class="line">        AbstractSequentialList abstractSequentialList;</span><br><span class="line">        AbstractSet abstractSet;</span><br><span class="line">        AbstractMap abstractMap;</span><br><span class="line"></span><br><span class="line">        ArrayList arrayList;</span><br><span class="line">        LinkedList linkedList;</span><br><span class="line">        LinkedHashMap linkedHashMap;</span><br><span class="line">        LinkedHashSet linkedHashSet;</span><br><span class="line"></span><br><span class="line">        HashMap hashMap;</span><br><span class="line">        HashSet hashSet;</span><br><span class="line"></span><br><span class="line">        SortedMap sortedMap;</span><br><span class="line">        SortedSet sortedSet;</span><br><span class="line"></span><br><span class="line">        NavigableMap navigableMap;</span><br><span class="line">        NavigableSet navigableSet;</span><br><span class="line"></span><br><span class="line">        TreeMap treeMap;</span><br><span class="line">        TreeSet treeSet;</span><br><span class="line"></span><br><span class="line">        Dictionary dictionary;</span><br><span class="line">        Hashtable hashtable;</span><br><span class="line">        Vector vector;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <hr>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://kasiopea.matfyz.cz/doc/docs.oracle.com/javase/8/docs/api/java/util/Map.html">Java Doc Map</a></li>

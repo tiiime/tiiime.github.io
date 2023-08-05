@@ -69,7 +69,7 @@
 
 
   
-<meta name="generator" content="Hexo 6.3.0"></head>
+<meta name="generator" content="Hexo 5.4.0"></head>
   <body>
     <header class="site-header">
   <div class="site-header-brand">
@@ -159,13 +159,10 @@
   
   <article class="passage-article">
     <h3 id="UPDATE-2017-12-30"><a href="#UPDATE-2017-12-30" class="headerlink" title="UPDATE 2017.12.30"></a>UPDATE 2017.12.30</h3><p>测试了更多 case<br><a target="_blank" rel="noopener" href="https://github.com/robbyrussell/oh-my-zsh/pull/6489">https://github.com/robbyrussell/oh-my-zsh/pull/6489</a></p>
-<h3 id="Getting-started"><a href="#Getting-started" class="headerlink" title="Getting started"></a>Getting started</h3><p>声明一个命令补全<br><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#compdef foobar</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></p>
+<h3 id="Getting-started"><a href="#Getting-started" class="headerlink" title="Getting started"></a>Getting started</h3><p>声明一个命令补全<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#compdef foobar</span></span><br></pre></td></tr></table></figure></p>
 <h3 id="Utility-functions"><a href="#Utility-functions" class="headerlink" title="Utility functions"></a>Utility functions</h3><ol>
 <li><p><code>_describe</code> simple describe for command, check <a target="_blank" rel="noopener" href="https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/adb/_adb">oh-my-zsh/plugin/adb</a>.</p>
- <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#compdef cmd</span>
-<span class="token builtin class-name">local</span> <span class="token parameter variable">-a</span> options
-<span class="token assign-left variable">options</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token string">'-c:description for -c opt'</span> <span class="token string">'-d:description for -d opt'</span><span class="token punctuation">)</span>
-_describe <span class="token string">'values'</span> options<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+ <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#compdef cmd</span></span><br><span class="line"><span class="built_in">local</span> -a options</span><br><span class="line">options=(<span class="string">&#x27;-c:description for -c opt&#x27;</span> <span class="string">&#x27;-d:description for -d opt&#x27;</span>)</span><br><span class="line">_describe <span class="string">&#x27;values&#x27;</span> options</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <blockquote>
@@ -173,14 +170,13 @@ _describe <span class="token string">'values'</span> options<span aria-hidden="t
 </blockquote>
 <ol start="2">
 <li><p><code>_alternative</code>  like <code>_describe</code>,but you can run shell or call function for completion candidates.</p>
- <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">_alternative <span class="token string">'args:custom args:(a b c)'</span> <span class="token string">'files:filenames:_files'</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+ <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_alternative <span class="string">&#x27;args:custom args:(a b c)&#x27;</span> <span class="string">&#x27;files:filenames:_files&#x27;</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p><code>_arguments</code>, </p>
 <p> Basic option specifications take the form <code>-OPT[DESCRIPTION]</code>, e.g. like this:</p>
- <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">_arguments <span class="token string">'-s[sort output]'</span> <span class="token string">'--l[long output]'</span> <span class="token string">'-l[long output]'</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+ <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">_arguments <span class="string">&#x27;-s[sort output]&#x27;</span> <span class="string">&#x27;--l[long output]&#x27;</span> <span class="string">&#x27;-l[long output]&#x27;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p> Arguments for the option can be specified after the option description in this form <code>-OPT[DESCRIPTION]:MESSAGE:ACTION</code></p>
- <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">_arguments <span class="token string">'-f[input file]:filename:_files'</span> <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+ <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_arguments <span class="string">&#x27;-f[input file]:filename:_files&#x27;</span> </span><br></pre></td></tr></table></figure>
 </li>
 <li><p><code>_regex_arguments</code></p>
 </li>
@@ -193,17 +189,7 @@ _describe <span class="token string">'values'</span> options<span aria-hidden="t
 </ol>
 <h3 id="OK"><a href="#OK" class="headerlink" title="OK"></a>OK</h3><p>知道这些简单地命令, 已经能大概看懂部分插件的代码(比如现有 <a target="_blank" rel="noopener" href="https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/adb/_adb"><code>_adb</code></a> 中只有简单的基本命令提示).</p>
 <p>接下来就参照其他插件, 给 <code>-s</code> 加上补全逻辑就收工了.</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">_arguments <span class="token punctuation">\</span>
-	<span class="token string">'-s[devices]:specify device:->specify_device'</span> <span class="token punctuation">\</span>
-	<span class="token string">'*:: :->subcmds'</span> <span class="token operator">&amp;&amp;</span> <span class="token builtin class-name">return</span> <span class="token number">0</span>
-
-<span class="token keyword">case</span> <span class="token string">"<span class="token variable">$state</span>"</span> <span class="token keyword">in</span>
-	specify_device<span class="token punctuation">)</span>
-	_values  <span class="token string">'devices'</span> <span class="token variable"><span class="token variable">$(</span>adb devices<span class="token operator">|</span><span class="token function">awk</span> <span class="token string">'NR>1&amp;&amp; $1 ~ /^[a-zA-Z0-9].*$/ \
-		&#123;printf "%s[Device_%d:%s] ",$1,++i,$2 &#125;'</span><span class="token variable">)</span></span>
-	<span class="token builtin class-name">return</span>
-	<span class="token punctuation">;</span><span class="token punctuation">;</span>
-<span class="token keyword">esac</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">_arguments \</span><br><span class="line">	<span class="string">&#x27;-s[devices]:specify device:-&gt;specify_device&#x27;</span> \</span><br><span class="line">	<span class="string">&#x27;*:: :-&gt;subcmds&#x27;</span> &amp;&amp; <span class="built_in">return</span> 0</span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="string">&quot;<span class="variable">$state</span>&quot;</span> <span class="keyword">in</span></span><br><span class="line">	specify_device)</span><br><span class="line">	_values  <span class="string">&#x27;devices&#x27;</span> $(adb devices|awk <span class="string">&#x27;NR&gt;1&amp;&amp; $1 ~ /^[a-zA-Z0-9].*$/ \</span></span><br><span class="line"><span class="string">		&#123;printf &quot;%s[Device_%d:%s] &quot;,$1,++i,$2 &#125;&#x27;</span>)</span><br><span class="line">	<span class="built_in">return</span></span><br><span class="line">	;;</span><br><span class="line"><span class="keyword">esac</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://ooo.0o0.ooo/2017/06/05/5935141032510.png" alt="ok"></p>
 <p>–&gt; <a target="_blank" rel="noopener" href="https://github.com/tiiime/oh-my-zsh/blob/master/plugins/adb/_adb">https://github.com/tiiime/oh-my-zsh/blob/master/plugins/adb/_adb</a></p>
 <hr>

@@ -69,7 +69,7 @@
 
 
   
-<meta name="generator" content="Hexo 6.3.0"></head>
+<meta name="generator" content="Hexo 5.4.0"></head>
   <body>
     <header class="site-header">
   <div class="site-header-brand">
@@ -171,107 +171,18 @@
 <li>Clash 控制面板: <a target="_blank" rel="noopener" href="https://github.com/haishanh/yacd">https://github.com/haishanh/yacd</a></li>
 </ul>
 <h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><p>搭一个 OpenWrt 做网关转发流量，通过 iptable 把流量交给 clash<br>OpenWrt 只做透明代理</p>
-<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><h3 id="配置-OpenWrt"><a href="#配置-OpenWrt" class="headerlink" title="配置 OpenWrt"></a>配置 OpenWrt</h3><p>给 OpenWrt 一个静态 ip<br><pre class="line-numbers language-none"><code class="language-none">vim &#x2F;etc&#x2F;config&#x2F;network
-
-config interface &#39;loopback&#39;
-        option ifname &#39;lo&#39;
-        option proto &#39;static&#39;
-        option ipaddr &#39;127.0.0.1&#39;
-        option netmask &#39;255.0.0.0&#39;
-
-config globals &#39;globals&#39;
-        option ula_prefix &#39;fda4:2477:ac44::&#x2F;48&#39;
-
-config interface &#39;lan&#39;
-        option type &#39;bridge&#39;
-        option ifname &#39;eth0&#39;
-        option proto &#39;static&#39;
-        option ipaddr &#39;192.168.1.xxx&#39;
-        option netmask &#39;255.255.255.0&#39;
-        option ip6assign &#39;60&#39;
-        option gateway &#39;192.168.1.1&#39;
-        list dns &#39;192.168.1.1&#39;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></p>
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><h3 id="配置-OpenWrt"><a href="#配置-OpenWrt" class="headerlink" title="配置 OpenWrt"></a>配置 OpenWrt</h3><p>给 OpenWrt 一个静态 ip<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/config/network</span><br><span class="line"></span><br><span class="line">config interface &#x27;loopback&#x27;</span><br><span class="line">        option ifname &#x27;lo&#x27;</span><br><span class="line">        option proto &#x27;static&#x27;</span><br><span class="line">        option ipaddr &#x27;127.0.0.1&#x27;</span><br><span class="line">        option netmask &#x27;255.0.0.0&#x27;</span><br><span class="line"></span><br><span class="line">config globals &#x27;globals&#x27;</span><br><span class="line">        option ula_prefix &#x27;fda4:2477:ac44::/48&#x27;</span><br><span class="line"></span><br><span class="line">config interface &#x27;lan&#x27;</span><br><span class="line">        option type &#x27;bridge&#x27;</span><br><span class="line">        option ifname &#x27;eth0&#x27;</span><br><span class="line">        option proto &#x27;static&#x27;</span><br><span class="line">        option ipaddr &#x27;192.168.1.xxx&#x27;</span><br><span class="line">        option netmask &#x27;255.255.255.0&#x27;</span><br><span class="line">        option ip6assign &#x27;60&#x27;</span><br><span class="line">        option gateway &#x27;192.168.1.1&#x27;</span><br><span class="line">        list dns &#x27;192.168.1.1&#x27;</span><br></pre></td></tr></table></figure></p>
 <h3 id="配置-Clash"><a href="#配置-Clash" class="headerlink" title="配置 Clash"></a>配置 Clash</h3><ol>
 <li>下个最新版 clash</li>
 </ol>
-<p><a target="_blank" rel="noopener" href="https://github.com/Dreamacro/clash/releases">https://github.com/Dreamacro/clash/releases</a><br>下载自己需要的版本<br><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 配置文件 config.yaml 和 clash 都扔里就行</span>
-<span class="token function">mkdir</span> /root/clash/
-
-<span class="token comment"># Country.mmdb 最近总是下载失败, 可以试着跑一下 看看有没有啥问题</span>
-<span class="token builtin class-name">cd</span> /root/clash/
-./clash <span class="token parameter variable">-d</span> <span class="token builtin class-name">.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></p>
-<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token comment"># config.yaml</span>
-<span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">58652</span>
-<span class="token key atrule">socks-port</span><span class="token punctuation">:</span> <span class="token number">58653</span>
-<span class="token comment"># 透明代理端口</span>
-<span class="token key atrule">redir-port</span><span class="token punctuation">:</span> <span class="token number">58654</span>
-
-<span class="token key atrule">allow-lan</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
-
-<span class="token key atrule">mode</span><span class="token punctuation">:</span> Rule
-
-<span class="token key atrule">log-level</span><span class="token punctuation">:</span> info
-
-<span class="token comment"># 控制面板端口</span>
-<span class="token key atrule">external-controller</span><span class="token punctuation">:</span> 0.0.0.0<span class="token punctuation">:</span>xxxx
-
-<span class="token key atrule">dns</span><span class="token punctuation">:</span>
-  <span class="token key atrule">enable</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-  <span class="token key atrule">listen</span><span class="token punctuation">:</span> 0.0.0.0<span class="token punctuation">:</span><span class="token number">53</span>
-  <span class="token key atrule">ipv6</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-  <span class="token key atrule">enhance-mode</span><span class="token punctuation">:</span> redir<span class="token punctuation">-</span>host
-  <span class="token key atrule">nameserver</span><span class="token punctuation">:</span>
-    <span class="token punctuation">-</span> <span class="token string">'tls://dns.rubyfish.cn:853'</span>
-    <span class="token punctuation">-</span> <span class="token string">'tls://1.1.1.1:853'</span>
-    <span class="token punctuation">-</span> <span class="token string">'tcp://1.1.1.1'</span>
-    <span class="token punctuation">-</span> <span class="token string">'tls://dns.google'</span>
-    <span class="token punctuation">-</span> 119.29.29.29
-
-<span class="token key atrule">Proxy</span><span class="token punctuation">:</span>
-  <span class="token comment"># 自己发挥</span>
-  <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Socks5Proxy
-    <span class="token key atrule">type</span><span class="token punctuation">:</span> socks5
-    <span class="token key atrule">server</span><span class="token punctuation">:</span> 127.0.0.1
-    <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">1080</span>
-<span class="token key atrule">Proxy Group</span><span class="token punctuation">:</span>
-  <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Proxy
-    <span class="token key atrule">type</span><span class="token punctuation">:</span> select
-    <span class="token key atrule">proxies</span><span class="token punctuation">:</span>
-      <span class="token punctuation">-</span> Socks5Proxy
-<span class="token key atrule">Rule</span><span class="token punctuation">:</span>
-
-   <span class="token comment"># GeoIP China</span>
-  <span class="token punctuation">-</span> GEOIP<span class="token punctuation">,</span>CN<span class="token punctuation">,</span>Direct
-  <span class="token punctuation">-</span> MATCH<span class="token punctuation">,</span>Proxy<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><a target="_blank" rel="noopener" href="https://github.com/Dreamacro/clash/releases">https://github.com/Dreamacro/clash/releases</a><br>下载自己需要的版本<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置文件 config.yaml 和 clash 都扔里就行</span></span><br><span class="line">mkdir /root/clash/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Country.mmdb 最近总是下载失败, 可以试着跑一下 看看有没有啥问题</span></span><br><span class="line"><span class="built_in">cd</span> /root/clash/</span><br><span class="line">./clash -d .</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># config.yaml</span></span><br><span class="line"><span class="attr">port:</span> <span class="number">58652</span></span><br><span class="line"><span class="attr">socks-port:</span> <span class="number">58653</span></span><br><span class="line"><span class="comment"># 透明代理端口</span></span><br><span class="line"><span class="attr">redir-port:</span> <span class="number">58654</span></span><br><span class="line"></span><br><span class="line"><span class="attr">allow-lan:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="attr">mode:</span> <span class="string">Rule</span></span><br><span class="line"></span><br><span class="line"><span class="attr">log-level:</span> <span class="string">info</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 控制面板端口</span></span><br><span class="line"><span class="attr">external-controller:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">:xxxx</span></span><br><span class="line"></span><br><span class="line"><span class="attr">dns:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">listen:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">:53</span></span><br><span class="line">  <span class="attr">ipv6:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">enhance-mode:</span> <span class="string">redir-host</span></span><br><span class="line">  <span class="attr">nameserver:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;tls://dns.rubyfish.cn:853&#x27;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;tls://1.1.1.1:853&#x27;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;tcp://1.1.1.1&#x27;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;tls://dns.google&#x27;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="number">119.29</span><span class="number">.29</span><span class="number">.29</span></span><br><span class="line"></span><br><span class="line"><span class="attr">Proxy:</span></span><br><span class="line">  <span class="comment"># 自己发挥</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Socks5Proxy</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">socks5</span></span><br><span class="line">    <span class="attr">server:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">1080</span></span><br><span class="line"><span class="attr">Proxy Group:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Proxy</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">select</span></span><br><span class="line">    <span class="attr">proxies:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">Socks5Proxy</span></span><br><span class="line"><span class="attr">Rule:</span></span><br><span class="line"></span><br><span class="line">   <span class="comment"># GeoIP China</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">GEOIP,CN,Direct</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">MATCH,Proxy</span></span><br></pre></td></tr></table></figure>
 <ol start="2">
 <li>没啥问题给 clash 写个 service 自启</li>
 </ol>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">vim</span> /etc/init.d/clash
-<span class="token function">service</span> clash <span class="token builtin class-name">enable</span>
-<span class="token function">service</span> clash start<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<p><code>/etc/init.d/clash</code> 文件内容复制下边这个<br><pre class="line-numbers language-none"><code class="language-none">#!&#x2F;bin&#x2F;sh &#x2F;etc&#x2F;rc.common
-# Example script
-# Copyright (C) 2007 OpenWrt.org
-
-USE_PROCD&#x3D;1
-START&#x3D;95
-
-start_service() &#123;
-        procd_open_instance
-        procd_set_param respawn
-        procd_set_param stderr 1
-        procd_set_param stdout 1
-        procd_set_param command &#x2F;root&#x2F;clash&#x2F;clash -d &#x2F;root&#x2F;clash&#x2F;
-        procd_close_instance
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></p>
-<h3 id="配置-OpenWrt-iptable"><a href="#配置-OpenWrt-iptable" class="headerlink" title="配置 OpenWrt iptable"></a>配置 OpenWrt iptable</h3><pre class="line-numbers language-none"><code class="language-none"># &#x2F;etc&#x2F;firewall.user
-iptables -t nat -N clash
-iptables -t nat -A clash -d 192.168&#x2F;16 -j RETURN
-iptables -t nat -A PREROUTING -p tcp -j clash
-iptables -t nat -A clash -p tcp -j REDIRECT --to-ports 58654
-
-iptables -t nat -A PREROUTING -p udp -m udp --dport 53 -j DNAT --to-destination 192.168.1.xxx:53
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/init.d/clash</span><br><span class="line">service clash <span class="built_in">enable</span></span><br><span class="line">service clash start</span><br></pre></td></tr></table></figure>
+<p><code>/etc/init.d/clash</code> 文件内容复制下边这个<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh /etc/rc.common</span><br><span class="line"># Example script</span><br><span class="line"># Copyright (C) 2007 OpenWrt.org</span><br><span class="line"></span><br><span class="line">USE_PROCD=1</span><br><span class="line">START=95</span><br><span class="line"></span><br><span class="line">start_service() &#123;</span><br><span class="line">        procd_open_instance</span><br><span class="line">        procd_set_param respawn</span><br><span class="line">        procd_set_param stderr 1</span><br><span class="line">        procd_set_param stdout 1</span><br><span class="line">        procd_set_param command /root/clash/clash -d /root/clash/</span><br><span class="line">        procd_close_instance</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="配置-OpenWrt-iptable"><a href="#配置-OpenWrt-iptable" class="headerlink" title="配置 OpenWrt iptable"></a>配置 OpenWrt iptable</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># /etc/firewall.user</span><br><span class="line">iptables -t nat -N clash</span><br><span class="line">iptables -t nat -A clash -d 192.168/16 -j RETURN</span><br><span class="line">iptables -t nat -A PREROUTING -p tcp -j clash</span><br><span class="line">iptables -t nat -A clash -p tcp -j REDIRECT --to-ports 58654</span><br><span class="line"></span><br><span class="line">iptables -t nat -A PREROUTING -p udp -m udp --dport 53 -j DNAT --to-destination 192.168.1.xxx:53</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <h3 id="客户端设备"><a href="#客户端设备" class="headerlink" title="客户端设备"></a>客户端设备</h3><p>我的设备都是手动配的网关和 DNS，有时需要切下代理，打开 <a target="_blank" rel="noopener" href="http://yacd.haishan.me/">http://yacd.haishan.me/</a> 这个面板基本够用了</p>
 <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><ol>
 <li>时不时的不能打开 google.com， 但是 google.com.hk 没问题，应该是 clash dns 的问题  </li>
