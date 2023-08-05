@@ -69,7 +69,7 @@
 
 
   
-<meta name="generator" content="Hexo 5.4.2"></head>
+<meta name="generator" content="Hexo 6.3.0"></head>
   <body>
     <header class="site-header">
   <div class="site-header-brand">
@@ -162,15 +162,19 @@
   </h1>
   
   <article class="passage-article">
-    <p>几年前记录过关于 lnav 的<a href="../lnav-analysis-log">使用</a>，但是一直停留在 <code>filter-in</code> &#x2F; <code>filter-out</code> 这两个基础命令，最近研究 lnav 的 <a target="_blank" rel="noopener" href="https://docs.lnav.org/en/latest/formats.html">format</a>，解锁了 sql query 和 <code>filter-expr</code> 操作。</p>
+    <p>几年前记录过关于 lnav 的<a href="../lnav-analysis-log">使用</a>，但是一直停留在 <code>filter-in</code> / <code>filter-out</code> 这两个基础命令，最近研究 lnav 的 <a target="_blank" rel="noopener" href="https://docs.lnav.org/en/latest/formats.html">format</a>，解锁了 sql query 和 <code>filter-expr</code> 操作。</p>
 <p>先装一个 <a target="_blank" rel="noopener" href="https://lnav.org/">lnav</a>！</p>
 <ol>
-<li>安装 lnav.    <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install lnav</span><br></pre></td></tr></table></figure></li>
-<li>安装 lnav logcat format.   <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p ~/.lnav/format/</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">download https://github.com/aspiers/lnav-formats alogcat.json</span></span><br><span class="line">mv alogcat.json ~/.lnav/format/</span><br><span class="line">lnav -i ~/.lnav/format/alogcat.json</span><br></pre></td></tr></table></figure>
+<li>安装 lnav.    <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">brew <span class="token function">install</span> lnav<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>安装 lnav logcat format.   <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">mkdir</span> <span class="token parameter variable">-p</span> ~/.lnav/format/
+<span class="token comment"># download https://github.com/aspiers/lnav-formats alogcat.json</span>
+<span class="token function">mv</span> alogcat.json ~/.lnav/format/
+lnav <span class="token parameter variable">-i</span> ~/.lnav/format/alogcat.json<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 安装好之后就可以使用 <code>alogcat</code> 格式。</li>
-<li>SQL 查询使用.<br>打开一个 logcat 日志: <code>adb logcat  --pid=$(adb shell pidof -s com.android.chrome) | lnav</code>。<br>按 <code>;</code> 进入 sql 查询。<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> log_line,log_body <span class="keyword">FROM</span> alogcat <span class="keyword">WHERE</span> tag <span class="operator">=</span> <span class="string">&#x27;NetLogger&#x27;</span></span><br></pre></td></tr></table></figure></li>
-<li>导出 sql 查询内容到 csv.<br>按 <code>:</code> 进入命令模式。<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">writer-csv-to ~/path/to/file.csv</span><br></pre></td></tr></table></figure></li>
-<li>使用 filter-expr 过滤日志流.<br>在日志流内，也可以使用 filter-expr 对 format 描述的 field 进行过滤。<br>按 <code>:</code> 进入命令模式，用正则过滤掉垃圾日志.    <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:filter-expr :tag NOT REGEXP &#x27;WindowManager&#x27;</span><br></pre></td></tr></table></figure></li>
+<li>SQL 查询使用.<br>打开一个 logcat 日志: <code>adb logcat  --pid=$(adb shell pidof -s com.android.chrome) | lnav</code>。<br>按 <code>;</code> 进入 sql 查询。<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">SELECT</span> log_line<span class="token punctuation">,</span>log_body <span class="token keyword">FROM</span> alogcat <span class="token keyword">WHERE</span> tag <span class="token operator">=</span> <span class="token string">'NetLogger'</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>导出 sql 查询内容到 csv.<br>按 <code>:</code> 进入命令模式。<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">writer-csv-to ~/path/to/file.csv<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>使用 filter-expr 过滤日志流.<br>在日志流内，也可以使用 filter-expr 对 format 描述的 field 进行过滤。<br>按 <code>:</code> 进入命令模式，用正则过滤掉垃圾日志.    <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">:filter-expr :tag NOT REGEXP <span class="token string">'WindowManager'</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</li>
 </ol>
 
   </article>

@@ -69,7 +69,7 @@
 
 
   
-<meta name="generator" content="Hexo 5.4.2"></head>
+<meta name="generator" content="Hexo 6.3.0"></head>
   <body>
     <header class="site-header">
   <div class="site-header-brand">
@@ -176,31 +176,46 @@
 <li>替换 so，测试 frida</li>
 </ol>
 <h3 id="定位可疑调用位置"><a href="#定位可疑调用位置" class="headerlink" title="定位可疑调用位置"></a>定位可疑调用位置</h3><p>挑个看得顺眼的应用，并没有特别多逆向经验，直接根据原文，找 libmsaoaidsec.so 相关日志。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./stackplz --name com.zhihu.android stack --symbol strstr --regs --stack</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">stack_2022/12/08 06:21:05 StackMod      perf event ring buffer full, dropped 6 samples, libc.so + strstr                                                                                                            </span><br><span class="line">stack_2022/12/08 06:21:05 [libc.so + strstr] PID:10435, Comm:ZH_RxCachedThre, TID:10503, Regs:                                                                                                                      </span><br><span class="line">&#123;&quot;lr&quot;:&quot;0x6ed246da7c&quot;,&quot;pc&quot;:&quot;0x71f4897300&quot;,&quot;sp&quot;:&quot;0x6ed23447c0&quot;,&quot;x0&quot;:&quot;0x6ed23447d8&quot;,&quot;x1&quot;:&quot;0x6ed249804a&quot;,&quot;x10&quot;:&quot;0x1ea&quot;,&quot;x11&quot;:&quot;0x1&quot;,&quot;x12&quot;:&quot;0x6ed2343dda&quot;,&quot;x13&quot;:&quot;0xafbda102&quot;,&quot;x14&quot;:&quot;0x10&quot;,&quot;x15&quot;:&quot;0x0&quot;,&quot;x16&quot;:&quot;0x6ed2496ac0&quot;</span><br><span class="line">Stackinfo:                                                                                                                                </span><br><span class="line">  #00 pc 0000000000095300  /apex/com.android.runtime/lib64/bionic/libc.so (strstr)                                                        </span><br><span class="line">  #01 pc 000000000001aa78  /data/app/~~EpW7Q_NNKlVh9bZXN1dcWQ==/com.zhihu.android-Zt48AaNHSi4nYrZ8qtxQvg==/lib/arm64/libmsaoaidsec.so                                                                               </span><br><span class="line">  #02 pc 000000000001b870  /data/app/~~EpW7Q_NNKlVh9bZXN1dcWQ==/com.zhihu.android-Zt48AaNHSi4nYrZ8qtxQvg==/lib/arm64/libmsaoaidsec.so                                                                               </span><br><span class="line">  #03 pc 00000000000b1790  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+204)                                                                                                              </span><br><span class="line">  #04 pc 00000000000511ac  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+64)                                                                                                                       </span><br><span class="line">                                                                                                                                                                                                                    </span><br><span class="line">stack_2022/12/08 06:21:05 [libc.so + strstr] PID:10435, Comm:ZH_RxCachedThre, TID:10503, Regs:                                                                                                                      </span><br><span class="line">&#123;&quot;lr&quot;:&quot;0x6ed246da8c&quot;,&quot;pc&quot;:&quot;0x71f4897300&quot;,&quot;sp&quot;:&quot;0x6ed23447c0&quot;,&quot;x0&quot;:&quot;0x6ed23447d8&quot;,&quot;x1&quot;:&quot;0x6ed2498056&quot;,&quot;x10&quot;:&quot;0x1ea&quot;,&quot;x11&quot;:&quot;0x1&quot;,&quot;x12&quot;:&quot;0x6ed2343dda&quot;,&quot;x13&quot;:&quot;0xafbda102&quot;,&quot;x14&quot;:&quot;0x10&quot;,&quot;x15&quot;:&quot;0x0&quot;,&quot;x16&quot;:&quot;0x6ed2496ac0&quot;</span><br><span class="line">Stackinfo:                                                                                                                                                                                                          </span><br><span class="line">  #00 pc 0000000000095300  /apex/com.android.runtime/lib64/bionic/libc.so (strstr)                                                                                                                                  </span><br><span class="line">  #01 pc 000000000001aa88  /data/app/~~EpW7Q_NNKlVh9bZXN1dcWQ==/com.zhihu.android-Zt48AaNHSi4nYrZ8qtxQvg==/lib/arm64/libmsaoaidsec.so                                                                               </span><br><span class="line">  #02 pc 000000000001b870  /data/app/~~EpW7Q_NNKlVh9bZXN1dcWQ==/com.zhihu.android-Zt48AaNHSi4nYrZ8qtxQvg==/lib/arm64/libmsaoaidsec.so                                                                               </span><br><span class="line">  #03 pc 00000000000b1790  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+204)                                                                                                              </span><br><span class="line">  #04 pc 00000000000511ac  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+64)                                                                                                                       </span><br></pre></td></tr></table></figure>
-
+<pre class="line-numbers language-none"><code class="language-none">.&#x2F;stackplz --name com.zhihu.android stack --symbol strstr --regs --stack<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">stack_2022&#x2F;12&#x2F;08 06:21:05 StackMod      perf event ring buffer full, dropped 6 samples, libc.so + strstr                                                                                                            
+stack_2022&#x2F;12&#x2F;08 06:21:05 [libc.so + strstr] PID:10435, Comm:ZH_RxCachedThre, TID:10503, Regs:                                                                                                                      
+&#123;&quot;lr&quot;:&quot;0x6ed246da7c&quot;,&quot;pc&quot;:&quot;0x71f4897300&quot;,&quot;sp&quot;:&quot;0x6ed23447c0&quot;,&quot;x0&quot;:&quot;0x6ed23447d8&quot;,&quot;x1&quot;:&quot;0x6ed249804a&quot;,&quot;x10&quot;:&quot;0x1ea&quot;,&quot;x11&quot;:&quot;0x1&quot;,&quot;x12&quot;:&quot;0x6ed2343dda&quot;,&quot;x13&quot;:&quot;0xafbda102&quot;,&quot;x14&quot;:&quot;0x10&quot;,&quot;x15&quot;:&quot;0x0&quot;,&quot;x16&quot;:&quot;0x6ed2496ac0&quot;
+Stackinfo:                                                                                                                                
+  #00 pc 0000000000095300  &#x2F;apex&#x2F;com.android.runtime&#x2F;lib64&#x2F;bionic&#x2F;libc.so (strstr)                                                        
+  #01 pc 000000000001aa78  &#x2F;data&#x2F;app&#x2F;~~EpW7Q_NNKlVh9bZXN1dcWQ&#x3D;&#x3D;&#x2F;com.zhihu.android-Zt48AaNHSi4nYrZ8qtxQvg&#x3D;&#x3D;&#x2F;lib&#x2F;arm64&#x2F;libmsaoaidsec.so                                                                               
+  #02 pc 000000000001b870  &#x2F;data&#x2F;app&#x2F;~~EpW7Q_NNKlVh9bZXN1dcWQ&#x3D;&#x3D;&#x2F;com.zhihu.android-Zt48AaNHSi4nYrZ8qtxQvg&#x3D;&#x3D;&#x2F;lib&#x2F;arm64&#x2F;libmsaoaidsec.so                                                                               
+  #03 pc 00000000000b1790  &#x2F;apex&#x2F;com.android.runtime&#x2F;lib64&#x2F;bionic&#x2F;libc.so (__pthread_start(void*)+204)                                                                                                              
+  #04 pc 00000000000511ac  &#x2F;apex&#x2F;com.android.runtime&#x2F;lib64&#x2F;bionic&#x2F;libc.so (__start_thread+64)                                                                                                                       
+                                                                                                                                                                                                                    
+stack_2022&#x2F;12&#x2F;08 06:21:05 [libc.so + strstr] PID:10435, Comm:ZH_RxCachedThre, TID:10503, Regs:                                                                                                                      
+&#123;&quot;lr&quot;:&quot;0x6ed246da8c&quot;,&quot;pc&quot;:&quot;0x71f4897300&quot;,&quot;sp&quot;:&quot;0x6ed23447c0&quot;,&quot;x0&quot;:&quot;0x6ed23447d8&quot;,&quot;x1&quot;:&quot;0x6ed2498056&quot;,&quot;x10&quot;:&quot;0x1ea&quot;,&quot;x11&quot;:&quot;0x1&quot;,&quot;x12&quot;:&quot;0x6ed2343dda&quot;,&quot;x13&quot;:&quot;0xafbda102&quot;,&quot;x14&quot;:&quot;0x10&quot;,&quot;x15&quot;:&quot;0x0&quot;,&quot;x16&quot;:&quot;0x6ed2496ac0&quot;
+Stackinfo:                                                                                                                                                                                                          
+  #00 pc 0000000000095300  &#x2F;apex&#x2F;com.android.runtime&#x2F;lib64&#x2F;bionic&#x2F;libc.so (strstr)                                                                                                                                  
+  #01 pc 000000000001aa88  &#x2F;data&#x2F;app&#x2F;~~EpW7Q_NNKlVh9bZXN1dcWQ&#x3D;&#x3D;&#x2F;com.zhihu.android-Zt48AaNHSi4nYrZ8qtxQvg&#x3D;&#x3D;&#x2F;lib&#x2F;arm64&#x2F;libmsaoaidsec.so                                                                               
+  #02 pc 000000000001b870  &#x2F;data&#x2F;app&#x2F;~~EpW7Q_NNKlVh9bZXN1dcWQ&#x3D;&#x3D;&#x2F;com.zhihu.android-Zt48AaNHSi4nYrZ8qtxQvg&#x3D;&#x3D;&#x2F;lib&#x2F;arm64&#x2F;libmsaoaidsec.so                                                                               
+  #03 pc 00000000000b1790  &#x2F;apex&#x2F;com.android.runtime&#x2F;lib64&#x2F;bionic&#x2F;libc.so (__pthread_start(void*)+204)                                                                                                              
+  #04 pc 00000000000511ac  &#x2F;apex&#x2F;com.android.runtime&#x2F;lib64&#x2F;bionic&#x2F;libc.so (__start_thread+64)                                                                                                                       <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>得到两个信息 <code>libmsaoaidsec.so</code> 的两个地址 <code>1aa78</code> 和 <code>1aa88</code>，使用 <a target="_blank" rel="noopener" href="https://github.com/radareorg/radare2">radare2</a> 寻找关键逻辑。</p>
 <h3 id="找到关键检测逻辑"><a href="#找到关键检测逻辑" class="headerlink" title="找到关键检测逻辑"></a>找到关键检测逻辑</h3><p>复制出 <code>libmsaoaidsec.so</code>，使用 <a target="_blank" rel="noopener" href="https://github.com/radareorg/iaito">iaito</a> 打开。</p>
 <ol>
 <li>定位到 <code>1aa78</code> 地址所在函数为 <code>fcn.0001a940</code></li>
 </ol>
-<p><img src="/locate.png"></p>
+<p><img src="locate.png" alt=""></p>
 <ol start="2">
 <li>交叉引用(xref)找到 <code>fcn.0001a940</code> 方法被 <code>fcn.0001aee4</code> 调用</li>
 </ol>
-<p><img src="/usage1.png"></p>
+<p><img src="usage1.png" alt=""></p>
 <ol start="3">
-<li>重复上述步骤，最终找到 <code>fcn.0001b88c</code>，正好和文章里提到的地址一样。<br><img src="/usage2.png"></li>
+<li>重复上述步骤，最终找到 <code>fcn.0001b88c</code>，正好和文章里提到的地址一样。<br><img src="usage2.png" alt=""></li>
 </ol>
 <h3 id="使用-radare2-修改-so"><a href="#使用-radare2-修改-so" class="headerlink" title="使用 radare2 修改 so"></a>使用 <a target="_blank" rel="noopener" href="https://github.com/radareorg/radare2">radare2</a> 修改 so</h3><ol>
-<li><p>找到 <code>fcn.0001b88c</code> 只有一处调用，将调用置为 <code>nop</code><br><img src="/nop.png"></p>
+<li><p>找到 <code>fcn.0001b88c</code> 只有一处调用，将调用置为 <code>nop</code><br><img src="nop.png" alt=""></p>
 </li>
-<li><p>修改后的 so<br><img src="/modified.png"></p>
+<li><p>修改后的 so<br><img src="modified.png" alt=""></p>
 </li>
 </ol>
 <h3 id="替换-so，测试-frida"><a href="#替换-so，测试-frida" class="headerlink" title="替换 so，测试 frida"></a>替换 so，测试 frida</h3><p>保存修改好的 so，替换手机内原文件。打开 frida 测试一下，已经可以正常使用。</p>
-<p><img src="/frida.png"></p>
+<p><img src="frida.png" alt=""></p>
 <h3 id="Over"><a href="#Over" class="headerlink" title="Over~"></a>Over~</h3>
   </article>
   <aside class="table-content" id="site-toc">

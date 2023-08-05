@@ -69,7 +69,7 @@
 
 
   
-<meta name="generator" content="Hexo 5.4.2"></head>
+<meta name="generator" content="Hexo 6.3.0"></head>
   <body>
     <header class="site-header">
   <div class="site-header-brand">
@@ -169,8 +169,8 @@
 <h1 id="Steps"><a href="#Steps" class="headerlink" title="Steps"></a>Steps</h1><ol>
 <li>重启到 recovery，开启 adb</li>
 <li>找到 system 分区，注意不是 recovery 模式下 shell 里的 <code>/system/build.prop</code> </li>
-<li>adb shell 进入，并挂载 system 分区 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -o rw /dev/block/dm-1 /mnt/</span><br></pre></td></tr></table></figure></li>
-<li>修改 <code>/system/build.prop</code> 也就是在我们挂载的分区里找这个文件，添加下面这行 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ro.setupwizard.mode=DISABLED</span><br></pre></td></tr></table></figure></li>
+<li>adb shell 进入，并挂载 system 分区 <pre class="line-numbers language-none"><code class="language-none">mount -o rw &#x2F;dev&#x2F;block&#x2F;dm-1 &#x2F;mnt&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>修改 <code>/system/build.prop</code> 也就是在我们挂载的分区里找这个文件，添加下面这行 <pre class="line-numbers language-none"><code class="language-none">ro.setupwizard.mode&#x3D;DISABLED<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
 <li>reboot</li>
 </ol>
 <p>Refs:</p>

@@ -69,7 +69,7 @@
 
 
   
-<meta name="generator" content="Hexo 5.4.2"></head>
+<meta name="generator" content="Hexo 6.3.0"></head>
   <body>
     <header class="site-header">
   <div class="site-header-brand">
@@ -172,7 +172,28 @@
 <p>列出 Activity 将自行处理的配置更改。在运行时发生配置更改时，默认情况下会关闭 Activity 然后将其重新启动，但使用该属性声明配置将阻止 Activity 重新启动。 Activity 反而会保持运行状态，并且系统会调用其 onConfigurationChanged() 方法。</p>
 </blockquote>
 <p>其中有可配置项</p>
-<p>|  值 | 说明|<br>|—|—|—|<br>| mcc  | IMSI 移动国家&#x2F;地区代码 (MCC) 发生了变化 - 检测到了 SIM 并更新了 MCC。|<br>| mnc  | IMSI 移动网络代码 (MNC) 发生了变化 - 检测到了 SIM 并更新了 MNC。 |<br>|…|…|</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mcc</td>
+<td>IMSI 移动国家/地区代码 (MCC) 发生了变化 - 检测到了 SIM 并更新了 MCC。</td>
+</tr>
+<tr>
+<td>mnc</td>
+<td>IMSI 移动网络代码 (MNC) 发生了变化 - 检测到了 SIM 并更新了 MNC。</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
 <p>也就是说 Activity 默认收到 sim 卡状态信息改变后会重新创建 Activity，我们只要在 AndroidManifest 里忽略掉这些项即可，这样信息变更的操作将会交由 <code>onConfigChanged()</code> 处理，和转屏重建的原理是一致的。相对于屏幕旋转来说，<code>android:configChanges</code> 的其他值还是很陌生的，但是以后遇到 Activity 莫名其妙重建的话，一定要检查这个位置。 </p>
 <h1 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://developer.android.com/guide/topics/manifest/activity-element.html">https://developer.android.com/guide/topics/manifest/activity-element.html</a></li>

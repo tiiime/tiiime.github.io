@@ -69,7 +69,7 @@
 
 
   
-<meta name="generator" content="Hexo 5.4.2"></head>
+<meta name="generator" content="Hexo 6.3.0"></head>
   <body>
     <header class="site-header">
   <div class="site-header-brand">
@@ -172,18 +172,38 @@
 <li>下载自己平台的 <a target="_blank" rel="noopener" href="https://github.com/frida/frida/releases">frida-server</a>，比如 1+3t 的是<br><a target="_blank" rel="noopener" href="https://github.com/frida/frida/releases/download/10.6.28/frida-server-android-arm64.xz">frida-server-10.6.28-android-arm64.xz</a></li>
 </ul>
 </li>
-<li><p><strong>run frida-server</strong><br>  解压 frida-server-10.6.28-android-arm64.xz ，然后在 android 设备上运行 frida-server</p>
-  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">adb root</span><br><span class="line">adb remount</span><br><span class="line">adb push frida-server /data/local/tmp/ </span><br><span class="line">adb shell &quot;chmod 755 /data/local/tmp/frida-server&quot;</span><br><span class="line">adb shell &quot;/data/local/tmp/frida-server &amp;&quot;</span><br></pre></td></tr></table></figure>
-<p>  总之就是在手机上运行 frida-server 啦，跑起来就成。sd 卡目录有权限限制，所以建议按教程上写的走</p>
+<li><p><strong>run frida-server</strong><br>解压 frida-server-10.6.28-android-arm64.xz ，然后在 android 设备上运行 frida-server</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb root
+adb remount
+adb push frida-server /data/local/tmp/ 
+adb shell <span class="token string">"chmod 755 /data/local/tmp/frida-server"</span>
+adb shell <span class="token string">"/data/local/tmp/frida-server &amp;"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>总之就是在手机上运行 frida-server 啦，跑起来就成。sd 卡目录有权限限制，所以建议按教程上写的走</p>
 </li>
-<li><p><strong>跑个脚本</strong><br> save -&gt; request.js</p>
-  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// frida -U $&#123;packageName&#125; -l  request.js</span></span><br><span class="line"><span class="title class_">Java</span>.<span class="title function_">perform</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">	    <span class="keyword">var</span> <span class="title class_">OkHttpClient</span> = <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&quot;okhttp3.OkHttpClient&quot;</span>);</span><br><span class="line">	    <span class="keyword">var</span> <span class="title class_">RealCall</span> = <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&quot;okhttp3.RealCall&quot;</span>);</span><br><span class="line">	</span><br><span class="line">	    <span class="title class_">OkHttpClient</span>.<span class="property">newCall</span>.<span class="property">implementation</span> = <span class="keyword">function</span> (<span class="params">request</span>) &#123;</span><br><span class="line">	        result = <span class="variable language_">this</span>.<span class="title function_">newCall</span>(request)</span><br><span class="line">	        <span class="variable language_">console</span>.<span class="title function_">log</span>(request.<span class="title function_">toString</span>())</span><br><span class="line">	        <span class="keyword">return</span> result</span><br><span class="line">	    &#125;;</span><br><span class="line">	</span><br><span class="line">	    <span class="title class_">RealCall</span>.<span class="property">getResponseWithInterceptorChain</span>.<span class="property">implementation</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">	        response = <span class="variable language_">this</span>.<span class="title function_">getResponseWithInterceptorChain</span>()</span><br><span class="line">	        <span class="variable language_">console</span>.<span class="title function_">log</span>(response.<span class="title function_">toString</span>())</span><br><span class="line">	        <span class="keyword">return</span> response</span><br><span class="line">	    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>  在电脑上执行 <code>frida -U $&#123;packageName&#125; -l  request.js</code> 就可以看到指定包名的应用使用 okhttp3 进行的 http 请求了</p>
+<li><p><strong>跑个脚本</strong><br>save -&gt; request.js</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// frida -U $&#123;packageName&#125; -l  request.js</span>
+Java<span class="token punctuation">.</span><span class="token function">perform</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+	    <span class="token keyword">var</span> OkHttpClient <span class="token operator">=</span> Java<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span><span class="token string">"okhttp3.OkHttpClient"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	    <span class="token keyword">var</span> RealCall <span class="token operator">=</span> Java<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span><span class="token string">"okhttp3.RealCall"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	
+	    OkHttpClient<span class="token punctuation">.</span>newCall<span class="token punctuation">.</span><span class="token function-variable function">implementation</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">request</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+	        result <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">newCall</span><span class="token punctuation">(</span>request<span class="token punctuation">)</span>
+	        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+	        <span class="token keyword">return</span> result
+	    <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+	
+	    RealCall<span class="token punctuation">.</span>getResponseWithInterceptorChain<span class="token punctuation">.</span><span class="token function-variable function">implementation</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+	        response <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getResponseWithInterceptorChain</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+	        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>response<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+	        <span class="token keyword">return</span> response
+	    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在电脑上执行 <code>frida -U $&#123;packageName&#125; -l  request.js</code> 就可以看到指定包名的应用使用 okhttp3 进行的 http 请求了</p>
 </li>
 <li><p><strong>更多资源</strong></p>
 <ul>
-<li>官网 <a target="_blank" rel="noopener" href="http://www.frida.re/">http://www.frida.re</a></li>
-<li>别人分享的代码段 <a target="_blank" rel="noopener" href="https://codeshare.frida.re/">https://codeshare.frida.re</a></li>
+<li>官网 <a target="_blank" rel="noopener" href="http://www.frida.re">http://www.frida.re</a></li>
+<li>别人分享的代码段 <a target="_blank" rel="noopener" href="https://codeshare.frida.re">https://codeshare.frida.re</a></li>
 </ul>
 </li>
 </ol>

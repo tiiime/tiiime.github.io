@@ -69,7 +69,7 @@
 
 
   
-<meta name="generator" content="Hexo 5.4.2"></head>
+<meta name="generator" content="Hexo 6.3.0"></head>
   <body>
     <header class="site-header">
   <div class="site-header-brand">
@@ -160,8 +160,15 @@
   <article class="passage-article">
     <p>每次出了 bug，测试总是扔过来一个十几兆的 Log 日志过来分析，用 windows 的老哥们直接用 Notepad++ ，搜索过滤 tag 方便得很，效率很高灰常羡慕。苦逼的我拿着 sublime ，搜过各种插件还是被 Notepad++ 完爆。</p>
 <p>终于！终于！终于！找到了个救星。<a target="_blank" rel="noopener" href="http://lnav.org/">lnav</a> ，高亮过滤一应俱全 (还是命令行的，超酷</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">lnav log.txt</span><br><span class="line"></span><br><span class="line">:filter-in TAG</span><br><span class="line">:filter-out TAG|TAG</span><br><span class="line"></span><br><span class="line">/search</span><br><span class="line">n/N 切换下一个/上一个 </span><br><span class="line"></span><br><span class="line">ctrl+w 可以开关单行</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">lnav log.txt
 
+:filter-in TAG
+:filter-out TAG<span class="token operator">|</span>TAG
+
+/search
+n/N 切换下一个/上一个 
+
+ctrl+w 可以开关单行<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>一般找到应用进程 <code>filter-in</code>，再把不相干 TAG <code>filter-out</code>，再之后慢慢搜索就好了，多个 TAG 可以正则过滤掉。需要多个应用一起分析就 <code>filter-in</code> 多个，再也不用被 Notepad++ 嘲笑了。</p>
 <p>当然还有更多功能没用上，慢慢发掘吧。</p>
 

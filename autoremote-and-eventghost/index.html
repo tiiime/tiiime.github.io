@@ -69,7 +69,7 @@
 
 
   
-<meta name="generator" content="Hexo 5.4.2"></head>
+<meta name="generator" content="Hexo 6.3.0"></head>
   <body>
     <header class="site-header">
   <div class="site-header-brand">
@@ -171,25 +171,25 @@
 </li>
 <li><p>按照这个步骤 ：<a target="_blank" rel="noopener" href="https://joaoapps.com/autoremote/eventghost/download/">AutoRemote EventGhost Plugin</a> 安装 AutoRemote 插件。主要就是下载其提供的<code>__init__.py</code>文件并复制到 <code>?\EventGhost\plugins\AutoRemote</code>这个文件夹。</p>
 </li>
-<li><p>接下来重启 EventGhost，选择工具栏里的  <code>Configuration -&gt; add Plugin</code> 添加 AutoRemote 插件，位于 <code>Other </code> 文件夹内。</p>
+<li><p>接下来重启 EventGhost，选择工具栏里的  <code>Configuration -&gt; add Plugin</code> 添加 AutoRemote 插件，位于 <code>Other</code> 文件夹内。</p>
 </li>
 </ul>
 <p>到这里 EventGhost 相关的配置就结束了，接下来就是与 AutoRemote 进行配对。</p>
 <h3 id="Mission-One"><a href="#Mission-One" class="headerlink" title="Mission One"></a>Mission One</h3><p>下面有请第一个出现的坑~ <strong>GFW</strong></p>
 <p>最开始按照官方的教程走，输入手机的验证 URL 应用就会卡死，因为 AutoRemote 使用的短链服务被墙掉了。<br>这里有几个办法，可以根据自己的情况选择下。</p>
 <ol start="0">
-<li><p>使用 AutoRemote 的 Chrome 插件，可以看官网给的视频。</p>
-</li>
-<li><p>自己获取短链对应的<code>key</code>。注意是<code>key</code>部分而不是完整地址，填到<code>Device Key</code>中。</p>
-</li>
+<li>使用 AutoRemote 的 Chrome 插件，可以看官网给的视频。</li>
+<li>自己获取短链对应的<code>key</code>。注意是<code>key</code>部分而不是完整地址，填到<code>Device Key</code>中。</li>
 <li><p>修改 <code>plugin/AutoRemote/__init__.py</code>文件，添加 http 代理。记得重启 EventGhost。</p>
  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gist-embed/2.4/gist-embed.min.js"></script></li>
+ <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gist-embed/2.4/gist-embed.min.js"></script>
+
+<p><code data-gist-id="5319746c375757458f98ae9af4bd1ab0"  data-gist-line="50-60,2200-2210" data-gist-highlight-line="55-58,2204"></code></p>
+</li>
 </ol>
-<p>  <code data-gist-id="5319746c375757458f98ae9af4bd1ab0"  data-gist-line="50-60,2200-2210" data-gist-highlight-line="55-58,2204"></code></p>
 <p>ok，墙的问题解决了。</p>
 <h3 id="Mission-Two"><a href="#Mission-Two" class="headerlink" title="Mission Two"></a>Mission Two</h3><p>第二个坑是家里台式机的和 wifi 并不在同一子网。手机 IP 在<code>192.168.3.*</code>，台式IP是<code>192.168.2.*</code>，AutoRemote 会判定你不在同一个局域网内，很尴尬。折腾一阵终于找到解决办法，将 EventGhost AutoRemote 插件的公网 IP 配置成 PC 的局域网 IP，重新进行一次注册操作。等新的配置同步到手机就可以正常使用了。</p>
-<p><img src="https://ooo.0o0.ooo/2017/01/26/588a055cb6272.jpg"></p>
+<p><img src="https://ooo.0o0.ooo/2017/01/26/588a055cb6272.jpg" alt=""></p>
 <p>嗯，可以开始折腾 Tasker 啦！<br>那么 新年快乐</p>
 
   </article>
