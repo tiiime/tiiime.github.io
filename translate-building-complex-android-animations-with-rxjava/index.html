@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>[翻译]使用 RxJava 构建 Android 复杂动画 | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="android,rxjava," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2018-02-23
+    </span>
+    
+  </div>
+  <h1 class="passage-title">
+    [翻译]使用 RxJava 构建 Android 复杂动画
+  </h1>
+  
+  <article class="passage-article">
+    <p>reddit 上刚看到这篇文章标题时我是这么想的，写点动画犯得着用 rx 吗？读完表示这么干确实不错。</p>
+<blockquote>
+<p>原文地址: <a target="_blank" rel="noopener" href="http://zenandroid.io/building-complex-android-animations-with-rxjava/">http://zenandroid.io/building-complex-android-animations-with-rxjava/</a></p>
+</blockquote>
+<hr>
+<p>本文将介绍如何使用 RxJava 优雅的设计 Android 动画，并结合 kotlin 的扩展方法，摆脱重复代码。效果就是下面这个动图。</p>
+<p>[toc]</p>
+<h4 id="What-we-are-trying-to-achieve"><a href="#What-we-are-trying-to-achieve" class="headerlink" title="What we are trying to achieve"></a>What we are trying to achieve</h4><p>目标效果如图：<br><img src="https://i.loli.net/2018/02/23/5a90182d6aedf.gif" alt=""></p>
+<p>慢放：<br><img src="https://i.loli.net/2018/02/23/5a901832aeb57.gif" alt=""></p>
+<p>简单描述下：</p>
+<ul>
+<li>两组菜单，分别包含三个子项 fab，每个子项都有对应的描述信息</li>
+<li>一个大的 fab ，用于开启或关闭第一组菜单</li>
+<li>用户点击第一组 fab 某项之后，显示第二组 fab 菜单</li>
+<li>小 fab 入场动画： fab滑入的同时由小变大，就位后描述文字 fadein 出现</li>
+<li>大 fab 自己还有旋转动画</li>
+</ul>
+<h4 id="The-classic-way-ViewPropertyAnimator"><a href="#The-classic-way-ViewPropertyAnimator" class="headerlink" title="The classic way: ViewPropertyAnimator"></a>The classic way: ViewPropertyAnimator</h4><p>实现动画最简单的方的就是使用 <code>ViewPropertyAnimator</code>  框架。它提供一系列简便的方式对 <code>单个 view</code> 执行动画。比如 fade out 一个 view：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">view.animate().alpha(<span class="number">0</span>)  </span><br></pre></td></tr></table></figure><br>缩放：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">view.animate()  </span><br><span class="line">    .alpha(<span class="number">0</span>)</span><br><span class="line">    .scaleX(<span class="number">0.5f</span>)</span><br><span class="line">    .scaleY(<span class="number">0.5f</span>)</span><br></pre></td></tr></table></figure><br>非常方便，代码清晰明了。那如何将几个动画按顺序执行呢？</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">view.animate()  </span><br><span class="line">    .alpha(<span class="number">0</span>)</span><br><span class="line">    .scaleX(<span class="number">0.5f</span>)</span><br><span class="line">    .scaleY(<span class="number">0.5f</span>)</span><br><span class="line">    .withEndAction &#123;</span><br><span class="line">        secondView.animate()</span><br><span class="line">            .alpha(<span class="number">0</span>)</span><br><span class="line">            .scaleX(<span class="number">0.5f</span>)</span><br><span class="line">            .scaleY(<span class="number">0.5f</span>)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>是不是不那么优雅了。就算用了 kotlin 提供的 lambda 表达式也没多大帮助。而我们将要实现的动画涉及到更多的步骤，如果光靠 <code>withEndAction</code> 嵌套来嵌套去一定会把人整疯。总之在这种复杂场景用起来相当费劲。</p>
+<h4 id="Enter-RxJava"><a href="#Enter-RxJava" class="headerlink" title="Enter RxJava"></a>Enter RxJava</h4><p>进入正题啦。</p>
+<p>每个动画自己就是一个异步操作。你启动了一个 animation，在几毫秒内执行一些任务，然后结束。我们当前只关心动画结束后启动另一个 animation 或是其他操作。</p>
+<p>对应到 RxJava2 里，<code>Completable</code> 就是为这种操作而生的。</p>
+<blockquote>
+<p>RxJava2 直接提供了 <code>Completable</code>，使用 RxJava 1 也可以非常简单的实现这个组件。 </p>
+</blockquote>
+<p>基本要点就是用 <code>Completable</code> 来 warp 你的 animation，并在 <code>withEndAction</code> 里调用 <code>onComplete</code>。看代码：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> animation = Completable.create &#123;  </span><br><span class="line">        view.animate()</span><br><span class="line">            .alpha(<span class="number">0f</span>)</span><br><span class="line">            .withEndAction(it::onComplete)</span><br><span class="line">&#125;</span><br><span class="line">animation.subscribe()  </span><br></pre></td></tr></table></figure></p>
+<p>包装后的代码功能上与原来相同，好处就是我们可以 RxJava提供的操作符将 animation （或者其他 RxJava 操作，比如网络请求）结合在一起。比如你想让两个动画先后执行可以使用 <code>andThen</code> ，同时执行可以使用 <code>Completable.mergeArray</code>。</p>
+<p>比如在执行完一个 fade 后 fade 另一个 view<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> animation = Completable.create &#123;  </span><br><span class="line">        view.animate()</span><br><span class="line">            .alpha(<span class="number">0f</span>)</span><br><span class="line">            .withEndAction(it::onComplete)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">val</span> animation1 = Completable.create &#123;  </span><br><span class="line">        view1.animate()</span><br><span class="line">            .alpha(<span class="number">0f</span>)</span><br><span class="line">            .withEndAction(it::onComplete)</span><br><span class="line">&#125;</span><br><span class="line">animation.andThen(animation1).subscribe()  </span><br></pre></td></tr></table></figure></p>
+<p>同时 fade 两个 view<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> animation = Completable.create &#123;  </span><br><span class="line">        view.animate()</span><br><span class="line">            .alpha(<span class="number">0f</span>)</span><br><span class="line">            .withEndAction(it::onComplete)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">val</span> animation1 = Completable.create &#123;  </span><br><span class="line">        view1.animate()</span><br><span class="line">            .alpha(<span class="number">0f</span>)</span><br><span class="line">            .withEndAction(it::onComplete)</span><br><span class="line">&#125;</span><br><span class="line">Completable.mergeArray(animation, animation1).subscribe()  </span><br></pre></td></tr></table></figure><br>当两个 view 的动画结束后，对另外两个 view 执行动画<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> animation = ...  </span><br><span class="line"><span class="keyword">val</span> animation1 = ...  </span><br><span class="line">Completable.mergeArray(animation, animation1)  </span><br><span class="line">       .andThen &#123; Completable.mergeArray(animation2, animation3) &#125;</span><br><span class="line">       .subscribe()</span><br></pre></td></tr></table></figure><br>看看，只要你熟悉 rxjava 的操作符，写这种动画变得多简单。一定记得调用 subscribe ，不然就不会动了。</p>
+<p>本文的第一个任务已经完成了，但是从中还是能看到不少重复的代码，使用 kotlin 可以做到更好的效果。</p>
+<h4 id="Bonus-using-Kotlin-extension-functions-for-animations"><a href="#Bonus-using-Kotlin-extension-functions-for-animations" class="headerlink" title="Bonus: using Kotlin extension functions for animations"></a>Bonus: using Kotlin extension functions for animations</h4><p>作者使用以下代码移除样板代码。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> View.<span class="title">fadeOut</span><span class="params">(duration: <span class="type">Long</span> = <span class="number">30</span>)</span></span>: Completable &#123;  </span><br><span class="line">    <span class="keyword">return</span> Completable.create &#123;</span><br><span class="line">        animate().setDuration(duration)</span><br><span class="line">                .alpha(<span class="number">0f</span>)</span><br><span class="line">                .withEndAction &#123;</span><br><span class="line">                    visibility = View.GONE</span><br><span class="line">                    it.onComplete()</span><br><span class="line">                &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用如下<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">myView.fadeOut().subscribe()  </span><br></pre></td></tr></table></figure></p>
+<p>可以到作者的这个项目里看看更多方法 <a target="_blank" rel="noopener" href="https://github.com/acristescu/RxAnimationExample/blob/master/app/src/main/java/io/zenandroid/rxanimationexample/extensions/ViewExtensions.kt">ViewExtensions.kt</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">longFab.slideIn(fabMiniSize).andThen(longLabel.fadeIn())  </span><br></pre></td></tr></table></figure>
+<h4 id="Putting-it-all-together"><a href="#Putting-it-all-together" class="headerlink" title="Putting it all together"></a>Putting it all together</h4><p>让我们回到最开始的目标，实现这个动画。</p>
+<p>分别命名两组 fab 为 <code>Speed Menu</code> 和 <code>Size Menu</code><br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">showSpeedMenu</span><span class="params">()</span></span> = Completable.mergeArray(</span><br><span class="line">        fab.rotate(<span class="number">45f</span>),</span><br><span class="line">        longFab.slideIn(fabMiniSize).andThen(longLabel.fadeIn()),</span><br><span class="line">        normalFab.slideIn(<span class="number">2</span> * fabMiniSize).andThen(normalLabel.fadeIn()),</span><br><span class="line">        blitzFab.slideIn(<span class="number">3</span> * fabMiniSize).andThen(blitzLabel.fadeIn())</span><br><span class="line">)</span><br></pre></td></tr></table></figure><br>首先，同时启动了4个动画，并等待其结束：</p>
+<ol>
+<li>旋转大的 fab</li>
+<li>第一个小 fab 滑入，label 渐入</li>
+<li>第二个小 fab 滑入，label 渐入</li>
+<li>第三个小 fab 滑入，label 渐入</li>
+</ol>
+<p>启动动画<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">showSpeedMenu().subscribe()  </span><br></pre></td></tr></table></figure></p>
+<p>hide 和 show 很相似</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">hideSpeedMenu</span><span class="params">()</span></span> = Completable.mergeArray(</span><br><span class="line">        fab.rotate(<span class="number">0f</span>),</span><br><span class="line">        longLabel.fadeOut().andThen(longFab.slideOut(fabMiniSize)),</span><br><span class="line">        normalLabel.fadeOut().andThen(normalFab.slideOut(<span class="number">2</span> * fabMiniSize)),</span><br><span class="line">        blitzLabel.fadeOut().andThen(blitzFab.slideOut(<span class="number">3</span> * fabMiniSize))</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>最棒的地方来了，当你描述完所有动画后，可以将他们串在一起。下面这几行代码就实现了点击第一步显示的菜单后，隐藏菜单，显示子菜单的动画。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@OnClick(R.id.blitz_fab, R.id.long_fab, R.id.normal_fab)</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">onSpeedClicked</span><span class="params">()</span></span> &#123;</span><br><span class="line">    hideSpeedMenu()</span><br><span class="line">            .doOnComplete &#123; menuState = FabMenuState.SIZE &#125;</span><br><span class="line">            .andThen(showSizeMenu())</span><br><span class="line">            .subscribe()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在，我们终于就可以轻松的将动画结合在一起，同时设置好 menu 状态。要是用原来的方法可不会这么容易。</p>
+<p>关于 menu 状态的处理，目前的实现不是很优雅，如果你有什么建议可以在评论里告诉我~<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@OnClick(R.id.fab)</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">onFabClicked</span><span class="params">()</span></span> &#123;</span><br><span class="line">    menuState = <span class="keyword">when</span>(menuState) &#123;</span><br><span class="line">        FabMenuState.OFF -&gt; &#123;</span><br><span class="line">            showSpeedMenu().subscribe()</span><br><span class="line">            FabMenuState.SPEED</span><br><span class="line">        &#125;</span><br><span class="line">        FabMenuState.SPEED -&gt; &#123;</span><br><span class="line">            hideSpeedMenu().subscribe()</span><br><span class="line">            FabMenuState.OFF</span><br><span class="line">        &#125;</span><br><span class="line">        FabMenuState.SIZE -&gt; &#123;</span><br><span class="line">            hideSizeMenu().subscribe()</span><br><span class="line">            FabMenuState.OFF</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    fadeOutMask.showIf(menuState != FabMenuState.OFF)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>完整代码 <a target="_blank" rel="noopener" href="https://github.com/acristescu/RxAnimationExample/blob/master/app/src/main/java/io/zenandroid/rxanimationexample/MainActivity.kt">MainActivity.kt</a></p>
+<h2 id="reddit-里的一些讨论-link"><a href="#reddit-里的一些讨论-link" class="headerlink" title="reddit 里的一些讨论 link"></a>reddit 里的一些讨论 <a target="_blank" rel="noopener" href="https://www.reddit.com/r/androiddev/comments/7yuyma/building_complex_android_animations_with_rxjava">link</a></h2><ul>
+<li>一个新的基于响应式设计的动画框架 <a target="_blank" rel="noopener" href="https://github.com/material-motion/material-motion-android">material-motion-android</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/PSPDFKit-labs/VanGogh/">VanGogh</a> 一个类似的动画库</li>
+<li>也有人指出 <code>withEndAction</code> 只有在动画正常结束时才会被调用，有可能导致泄露</li>
+<li>接上条，有人要加 <code>CompositeDisposable</code></li>
+<li>接上条，也许存在一个回调函数比  <code>withEndAction</code> 更合适</li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#What-we-are-trying-to-achieve"><span class="toc-text">What we are trying to achieve</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-classic-way-ViewPropertyAnimator"><span class="toc-text">The classic way: ViewPropertyAnimator</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Enter-RxJava"><span class="toc-text">Enter RxJava</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Bonus-using-Kotlin-extension-functions-for-animations"><span class="toc-text">Bonus: using Kotlin extension functions for animations</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Putting-it-all-together"><span class="toc-text">Putting it all together</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#reddit-%E9%87%8C%E7%9A%84%E4%B8%80%E4%BA%9B%E8%AE%A8%E8%AE%BA-link"><span class="toc-text">reddit 里的一些讨论 link</span></a>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/translate-building-complex-android-animations-with-rxjava/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/android/"><i class="fa fa-tags"></i>android</a>
+     
+      <a href="/tags/rxjava/"><i class="fa fa-tags"></i>rxjava</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/kotlin-iterator-sequence/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/leakcanary-learn/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

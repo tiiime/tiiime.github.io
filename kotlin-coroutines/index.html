@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>kotlin-coroutines | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="learn,kotlin,coroutines," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2017-10-07
+    </span>
+    
+      <span>
+        | <a href="/categories/learn/"><i class="fa fa-bookmark"></i>learn</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    kotlin-coroutines
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p>Source:<a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/coroutines.html">https://kotlinlang.org/docs/reference/coroutines.html</a></p>
+</blockquote>
+<p>耗时操作我们见得多了，网络 IO，文件 IO，CPU/GPU 密集计算等等等等。这些操作执行完之前，其运行线程处于阻塞状态。Coroutines 为我们提供了一种更轻量，更可控的方法应对这些业务：<em>suspension of a coroutine</em></p>
+<p>Coroutines 将杂活部分抽出到依赖库， 以此简化异步程序。使用 coroutines 将允许我们以连续的形式表示异步逻辑，底层库会处理异步。它会将相关代码封装成 callback，并订阅相关事件，将任务分配到不同线程(甚至是不同机器)上，待其执行完毕恢复原有线程，顺序执行。</p>
+<p>许多其他语言的异步机制在 kotlin 中都可以使用 coroutines 实现。包括 <a target="_blank" rel="noopener" href="https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md#composing-suspending-functions">async/await</a> from C# and ECMAScript, <a target="_blank" rel="noopener" href="https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md#channels">channels</a> and <a target="_blank" rel="noopener" href="https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md#select-expression">select</a> from Go, and <a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/coroutines.html#generators-api-in-kotlincoroutines">generators/yield</a> from C# and Python.更多相关内容可以<a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/coroutines.html#standard-apis">参见</a>.</p>
+<h3 id="Blocking-vs-Suspending"><a href="#Blocking-vs-Suspending" class="headerlink" title="Blocking vs Suspending"></a>Blocking vs Suspending</h3><p>本质上来说，coroutines 指的是那些可以被挂起从而避免阻塞 thread 的操作。阻塞线程通常意味着很大的性能消耗，尤其是在高负载的场景下，仅有一小部分 thread 可以被执行，如果其中一个 thread 被阻塞会导致一些重要的 work 被 delay。</p>
+<p>而 coroutine suspension 基本没有额外的性能消耗。没有上下文(context)切换也不需要其他额外的 OS 支持。更重要的是 suspension 在很大程度上可以由用户来控制：作为一个库的维护人员，我们可以决定  suspension and optimize/log/intercept 的行为。</p>
+<p>另一个不同是 coroutines 不能在随机指令处挂起，只能在  suspension points 处调用，所以需要用 suspend 标记一个函数。</p>
+<h3 id="Suspending-functions"><a href="#Suspending-functions" class="headerlink" title="Suspending functions"></a>Suspending functions</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">doSomething</span><span class="params">(foo: <span class="type">Foo</span>)</span></span>: Bar &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这样定义的方法叫做 suspending funtion，意味着调用此方法有可能会挂起一个 coroutines(当结果返回时，library 可以取消挂起)。<br>Suspending function 也可以有参数和返回值，但只能在  coroutines 和其他 suspending functions 中调用。实际上我们至少需要一个 suspending 函数来启动 coroutines，通常是一个匿名函数(比如一个 suspending lambda)。一个例子：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">async</span><span class="params">(block: <span class="type">suspend</span> () -&gt; <span class="type">T</span>)</span></span></span><br></pre></td></tr></table></figure>
+<p><code>async()</code>只是个普通函数，但是它可以接收一个 suspending lambda 做参数。这样我们就能传入一个 lambda 并调用它。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">async &#123;</span><br><span class="line">    doSomething(foo)</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同上，<code>await()</code> 也可以是一个 suspending function( 当然也要在 <code>async()</code> 块内调用)，它可以暂时挂起，直到计算结果返回。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">async &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">val</span> result = computation.await()</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> More information on how actual async/await functions work in <code>kotlinx.coroutines</code> can be found <a target="_blank" rel="noopener" href="https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md#composing-suspending-functions">here</a>.</p>
+<p>suspending function 不能再函数中调用。</p>
+<p>另外，suspending function 可以是 virtual 的(写在接口/抽象类里)。实现这些方法时也要加上 <code>suspend</code> modifier.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Base</span> </span>&#123;</span><br><span class="line">    <span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">foo</span><span class="params">()</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span>: <span class="type">Base &#123;</span></span></span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">foo</span><span class="params">()</span></span> &#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="RestrictsSuspension-annotation"><a href="#RestrictsSuspension-annotation" class="headerlink" title="@RestrictsSuspension annotation"></a>@RestrictsSuspension annotation</h3><p>扩展函数(还有 lambda)也可以标记为 <code>suspend</code>，这将允许以 DSL 的形式创建或者其他  API 的用户可以对其进行扩展。当然， library 的作者也可能需要禁止用户添加新的方式 suspend 一个 coroutines。</p>
+<p><a target="_blank" rel="noopener" href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines.experimental/-restricts-suspension/index.html">@RestrictsSuspension</a> 注解就是为此而生的。使用这个注解标注的 class 或 interface <code>R</code>，其 subspending 扩展必须 delegate <code>R</code> 的所有成员或者 <code>R</code> 的其他扩展。又因为扩展函数之间不能无限的代理(程序会死循环)，这就保证了所有的 suspensions 都是由 <code>R</code> 的成员发起的。</p>
+<p>少数情况下，我们的 library 需要使用某个特殊的方式处理每个 suspension。举个例子，使用 buildSequence() 函数时，我们需要确保 coroutine 中的所有挂起的调用都要以 yield() 或 yieldAll() 结束。所以 这里用 <code>RestrictsSuspension</code> 标注。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestrictsSuspension</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">SequenceBuilder</span>&lt;<span class="type">in T</span>&gt; </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="The-inner-workings-of-coroutines"><a href="#The-inner-workings-of-coroutines" class="headerlink" title="The inner workings of coroutines"></a>The inner workings of coroutines</h3><p>Coroutines 完全是由编译技术实现的(无 VM 或 OS限制)，suspension 生效是通过代码转换。每个 suspension 函数(可能会涉及优化，这里不做过多解释)都会被转换成一个状态机，所有状态都对应 suspending 调用。在挂起前，next state 储存于一个编译器生成类的字段内，以及相关局部变量等。等到 coroutines 需要继续时，所有局部变量都会被恢复，状态机从挂起时的状态继续运行。</p>
+<p>被挂起的 coroutines 可以以 object 的形式传递或保存。这个对象是 <code>Continuation</code>，这里描述的所有代码转换实际相当于典型的 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Continuation-passing_style">Continuation-passing style</a>(中文介绍)[<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/20259086]。所以">https://www.zhihu.com/question/20259086]。所以</a> suspending 函数背后其实需要额外的 <code>Continuation</code> 类型参数。</p>
+<p>更多细节可以在<a target="_blank" rel="noopener" href="https://github.com/Kotlin/kotlin-coroutines/blob/master/kotlin-coroutines-informal.md">设计文档</a>里找到。</p>
+<h3 id="Experimental-status-of-coroutines"><a href="#Experimental-status-of-coroutines" class="headerlink" title="Experimental status of coroutines"></a>Experimental status of coroutines</h3><p>当前 coroutines 处于试验状态，也就是说在正式版发布前可能还会有更改。kotlin 1.1 编译会有警告，<a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/diagnostics/experimental-coroutines.html">opt-inflag</a>可以移去这个。</p>
+<p>当前 coroutines api 位于 <code>kotlin.coroutines.experimental</code> 包内。正式版会放到 <code>kotlin.coroutines</code> 。  </p>
+<h3 id="Standard-APIs"><a href="#Standard-APIs" class="headerlink" title="Standard APIs"></a>Standard APIs</h3><p>三个主要构成</p>
+<ul>
+<li>language support (i.s. suspending functions, as described above);</li>
+<li>low-level core API in the Kotlin Standard Library;</li>
+<li>high-level APIs that can be used directly in the user code.</li>
+</ul>
+<h4 id="Low-level-API-kotlin-coroutines"><a href="#Low-level-API-kotlin-coroutines" class="headerlink" title="Low-level API: kotlin.coroutines"></a>Low-level API: kotlin.coroutines</h4><p>低级 API 只用于实现高级 library 时，包含两个主要的 package：</p>
+<ul>
+<li>kotlin.coroutines.experimental 比如 <ul>
+<li>createCoroutine(),</li>
+<li>startCoroutine(),</li>
+<li>suspendCoroutine();</li>
+</ul>
+</li>
+<li>kotlin.coroutines.experimental.intrinsics 低级内联函数，比如 <a target="_blank" rel="noopener" href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines.experimental.intrinsics/suspend-coroutine-or-return.html">suspendCoroutineOrReturn</a></li>
+</ul>
+<p>更多 <a target="_blank" rel="noopener" href="https://github.com/Kotlin/kotlin-coroutines/blob/master/kotlin-coroutines-informal.md">API</a></p>
+<h4 id="Generators-API-in-kotlin-coroutines"><a href="#Generators-API-in-kotlin-coroutines" class="headerlink" title="Generators API in kotlin.coroutines"></a>Generators API in kotlin.coroutines</h4><p><code>kotlin.coroutines.experimental</code> package 里唯一的应用级 api</p>
+<ul>
+<li>buildSequence()</li>
+<li>buildIterator()</li>
+</ul>
+<p>因为与 sequence 相关，所以位于 <code>kotlin-stdlib</code> 内。以上函数实现了 <code>generators</code>，比如用它方便的生成一个 lazy sequence：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> fibonacciSeq = buildSequence &#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">0</span></span><br><span class="line">    <span class="keyword">var</span> b = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    yield(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        yield(a + b)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> tmp = a + b</span><br><span class="line">        a = b</span><br><span class="line">        b = tmp</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+<p>通过不断调用 <code>yield()</code> 函数产生斐波那切数列，并且它是 lazy 的。我们可以用这个 sequence 拿有限个数的数字。比如这样 <code>fibonacciSeq.take(8).toList()</code> results in <code>[1, 1, 2, 3, 5, 8, 13, 21]</code>. 同时 coroutines cheap enough 用于实践。 </p>
+<p>实验：验证 lazy</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> lazySeq = buildSequence &#123;</span><br><span class="line">    print(<span class="string">&quot;START &quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1.</span><span class="number">.5</span>) &#123;</span><br><span class="line">        yield(i)</span><br><span class="line">        print(<span class="string">&quot;STEP &quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    print(<span class="string">&quot;END&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Print the first three elements of the sequence</span></span><br><span class="line">lazySeq.take(<span class="number">3</span>).forEach &#123; print(<span class="string">&quot;<span class="variable">$it</span> &quot;</span>) &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// output：</span></span><br><span class="line"><span class="comment">// START 1 STEP 2 STEP 3 </span></span><br></pre></td></tr></table></figure>
+<p>更多例子：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> lazySeq = buildSequence &#123;</span><br><span class="line">    yield(<span class="number">0</span>)</span><br><span class="line">    yieldAll(<span class="number">1.</span><span class="number">.10</span>) </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">lazySeq.forEach &#123; print(<span class="string">&quot;<span class="variable">$it</span> &quot;</span>) &#125;</span><br><span class="line"><span class="comment">// output</span></span><br><span class="line"><span class="number">0</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span> <span class="number">6</span> <span class="number">7</span> <span class="number">8</span> <span class="number">9</span> <span class="number">10</span> </span><br></pre></td></tr></table></figure></p>
+<p>The buildIterator() works similarly to buildSequence(), but returns a lazy iterator.</p>
+<p>你可以给 <code>SequenceBuilder</code>  写扩展函数为  <code>buildSequence()</code> 添加自定义 yield 逻辑( 还记得 <code>@RestrictsSuspension</code> 吗)：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> SequenceBuilder<span class="type">&lt;Int&gt;</span>.<span class="title">yieldIfOdd</span><span class="params">(x: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (x % <span class="number">2</span> != <span class="number">0</span>) yield(x)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> lazySeq = buildSequence &#123;</span><br><span class="line">    <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1.</span><span class="number">.10</span>) yieldIfOdd(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Other-high-level-APIs-kotlinx-coroutines"><a href="#Other-high-level-APIs-kotlinx-coroutines" class="headerlink" title="Other high-level APIs: kotlinx.coroutines"></a>Other high-level APIs: kotlinx.coroutines</h4><p>只有和 coroutines 相关的 core api  位于 kotlin 标准库。大部分由 core primitives 和很可能会被基于 coroutines 的库使用到的 interface 组成 。</p>
+<p>大部分应用级 API 位于一个单独的 library：<a target="_blank" rel="noopener" href="https://github.com/Kotlin/kotlinx.coroutines">kotlinx.coroutines</a>。它包括：</p>
+<ul>
+<li>平台无关的异步编码 <code>kotlinx-coroutines-core</code><ul>
+<li>这个模块有类似 Go 的 channels ，支持 <code>select</code> 和其他方便的原语</li>
+<li>完全<a target="_blank" rel="noopener" href="https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md">指南在此</a></li>
+</ul>
+</li>
+<li>基于 JDK 8  中 <code>CompletableFuture</code>  的 API：<code>kotlinx-coroutines-jdk8</code></li>
+<li>基于 JDK 7  and higher 的非阻塞 IO (NIO)：<code>kotlinx-coroutines-nio</code></li>
+<li>Support for Swing (<code>kotlinx-coroutines-swing</code>) and JavaFx (<code>kotlinx-coroutines-javafx</code>);</li>
+<li>Support for RxJava: <code>kotlinx-coroutines-rx</code></li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Blocking-vs-Suspending"><span class="toc-text">Blocking vs Suspending</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Suspending-functions"><span class="toc-text">Suspending functions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RestrictsSuspension-annotation"><span class="toc-text">@RestrictsSuspension annotation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#The-inner-workings-of-coroutines"><span class="toc-text">The inner workings of coroutines</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Experimental-status-of-coroutines"><span class="toc-text">Experimental status of coroutines</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Standard-APIs"><span class="toc-text">Standard APIs</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Low-level-API-kotlin-coroutines"><span class="toc-text">Low-level API: kotlin.coroutines</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Generators-API-in-kotlin-coroutines"><span class="toc-text">Generators API in kotlin.coroutines</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Other-high-level-APIs-kotlinx-coroutines"><span class="toc-text">Other high-level APIs: kotlinx.coroutines</span></a></li></ol></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/kotlin-coroutines/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/kotlin/"><i class="fa fa-tags"></i>kotlin</a>
+     
+      <a href="/tags/coroutines/"><i class="fa fa-tags"></i>coroutines</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/android-sync-adapter/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/android-audio-focus/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

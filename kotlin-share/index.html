@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>kotlin share | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="work,android,kotlin," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2017-05-20
+    </span>
+    
+      <span>
+        | <a href="/categories/work/"><i class="fa fa-bookmark"></i>work</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    kotlin share
+  </h1>
+  
+  <article class="passage-article">
+    <p>本周五轮到技术分享，趁着 Google I/O 刚宣布 Kotlin 加入官方支持，正好借这个时机向同事们安利 Kotlin。选了几点内容，发现和<a target="_blank" rel="noopener" href="https://android-developers.googleblog.com/2017/05/android-announces-support-for-kotlin.html">这篇官方博客</a>重合度蛮高的，膨胀一波不过分吧兄弟。不过这位老哥也没介绍 Delegation，Dsl，Coroutines …难道和我一样想偷懒</p>
+<hr>
+<h2 id="Kotlin"><a href="#Kotlin" class="headerlink" title="Kotlin"></a>Kotlin</h2><blockquote>
+<p><strong>Statically typed programming language for modern multiplatform applications</strong><br> <em>100% interoperable with Java™ and Android™</em> </p>
+</blockquote>
+<p>Kotlin has been around for quite a while; it was announced back in 2011 and the first preview was released in 2012. Kotlin 1.0 was released in 2016, at which point JetBrains committed to maintaining backwards compatibility for stable features from 1.0 forward. </p>
+<h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ul>
+<li>简洁</li>
+<li>安全</li>
+<li>兼容性</li>
+<li>强大的开发工具</li>
+</ul>
+<hr>
+<h3 id="与-Java-区别"><a href="#与-Java-区别" class="headerlink" title="与 Java 区别"></a>与 Java 区别</h3><ul>
+<li>class 默认 final</li>
+<li>没有原始类型</li>
+<li>Collections 分为可变和不可变更两种</li>
+<li>Exceptions</li>
+<li>没有 static 成员<br>…</li>
+</ul>
+<hr>
+<h3 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> hello</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">   println(<span class="string">&quot;Hello World!&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> name:String = <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">val</span> name:String = <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="一些简单的语言特性"><a href="#一些简单的语言特性" class="headerlink" title="一些简单的语言特性"></a>一些简单的语言特性</h3><h4 id="Null-checks"><a href="#Null-checks" class="headerlink" title="Null-checks"></a>Null-checks</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> email:String = <span class="literal">null</span> <span class="comment">// Error</span></span><br><span class="line"><span class="keyword">var</span> name:String? = <span class="literal">null</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">saveName</span><span class="params">(name:<span class="type">String</span>)</span></span>&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br><span class="line">saveName(name) <span class="comment">// Error</span></span><br></pre></td></tr></table></figure>
+<h4 id="Data-Class"><a href="#Data-Class" class="headerlink" title="Data Class"></a>Data Class</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Customer</span> </span>&#123;</span><br><span class="line">   <span class="keyword">private</span> String name;</span><br><span class="line">   <span class="keyword">private</span> String email;</span><br><span class="line">   <span class="keyword">private</span> String company;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> Customer(String name) &#123;</span><br><span class="line">       <span class="keyword">this</span>(name, <span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> Customer(String name, String email) &#123;</span><br><span class="line">       <span class="keyword">this</span>(name, email, <span class="string">&quot;&quot;</span>);</span><br><span class="line"></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> Customer(String name, String email, String company) &#123;</span><br><span class="line">       <span class="keyword">this</span>.name = name;</span><br><span class="line">       <span class="keyword">this</span>.email = email;</span><br><span class="line">       <span class="keyword">this</span>.company = company;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> String getName() &#123;</span><br><span class="line">       <span class="keyword">return</span> name;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> void setName(String name) &#123;</span><br><span class="line">       <span class="keyword">this</span>.name = name;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> String getEmail() &#123;</span><br><span class="line">       <span class="keyword">return</span> email;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> void setEmail(String email) &#123;</span><br><span class="line">       <span class="keyword">this</span>.email = email;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> String getCompany() &#123;</span><br><span class="line">       <span class="keyword">return</span> company;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> void setCompany(String company) &#123;</span><br><span class="line">       <span class="keyword">this</span>.company = company;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="keyword">public</span> boolean equals(Object o) &#123;</span><br><span class="line">       <span class="keyword">if</span> (<span class="keyword">this</span> == o) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">       <span class="keyword">if</span> (o == <span class="literal">null</span> || getClass() != o.getClass()) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">       Customer customer = (Customer) o;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (name != <span class="literal">null</span> ? !name.equals(customer.name) : customer.name != <span class="literal">null</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">       <span class="keyword">if</span> (email != <span class="literal">null</span> ? !email.equals(customer.email) : customer.email != <span class="literal">null</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">       <span class="keyword">return</span> company != <span class="literal">null</span> ? company.equals(customer.company) : customer.company == <span class="literal">null</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="keyword">public</span> int hashCode() &#123;</span><br><span class="line">       int result = name != <span class="literal">null</span> ? name.hashCode() : <span class="number">0</span>;</span><br><span class="line">       result = <span class="number">31</span> * result + (email != <span class="literal">null</span> ? email.hashCode() : <span class="number">0</span>);</span><br><span class="line">       result = <span class="number">31</span> * result + (company != <span class="literal">null</span> ? company.hashCode() : <span class="number">0</span>);</span><br><span class="line">       <span class="keyword">return</span> result;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="keyword">public</span> String toString() &#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="string">&quot;Customer&#123;&quot;</span> +</span><br><span class="line">               <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">               <span class="string">&quot;, email=&#x27;&quot;</span> + email + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">               <span class="string">&quot;, company=&#x27;&quot;</span> + company + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">               <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="class"><span class="keyword">class</span> <span class="title">Customer</span></span>(<span class="keyword">var</span> name: String, <span class="keyword">var</span> email: String = <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="keyword">var</span> company: String = <span class="string">&quot;&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="Smart-casts"><a href="#Smart-casts" class="headerlink" title="Smart casts"></a>Smart casts</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Cpu</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Intel</span> : <span class="type">Cpu &#123;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">intelCool</span><span class="params">()</span></span> &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AMD</span> : <span class="type">Cpu &#123;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">amdBoom</span><span class="params">()</span></span> &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> cpu: Cpu = AMD()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (cpu <span class="keyword">is</span> Intel) &#123;</span><br><span class="line">    cpu.intelCool()</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (cpu <span class="keyword">is</span> AMD) &#123;</span><br><span class="line">    cpu.amdBoom()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="when"><a href="#when" class="headerlink" title="when"></a>when</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">when</span> (obj) &#123;</span><br><span class="line">    <span class="number">1</span> -&gt; println(<span class="string">&quot;One&quot;</span>)</span><br><span class="line">    <span class="string">&quot;Hello&quot;</span> -&gt; println(<span class="string">&quot;Greeting&quot;</span>)</span><br><span class="line">    <span class="keyword">is</span> <span class="built_in">Long</span> -&gt; println(<span class="string">&quot;Long&quot;</span>)</span><br><span class="line">    !<span class="keyword">is</span> String -&gt; println(<span class="string">&quot;Not a string&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span> -&gt; println(<span class="string">&quot;Unknown&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Extension-functions"><a href="#Extension-functions" class="headerlink" title="Extension functions"></a>Extension functions</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> String?.<span class="title">isNull</span><span class="params">()</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span> == <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> name: String? = <span class="literal">null</span></span><br><span class="line">println(name.isNull()) <span class="comment">// ok</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Cpu.<span class="title">go</span><span class="params">()</span></span> &#123;</span><br><span class="line">    print(<span class="string">&quot;cpu go&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> Intel.<span class="title">go</span><span class="params">()</span></span> &#123;</span><br><span class="line">    print(<span class="string">&quot;intel go&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> AMD.<span class="title">go</span><span class="params">()</span></span> &#123;</span><br><span class="line">    print(<span class="string">&quot;amd go&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> cpu: Cpu = AMD()</span><br><span class="line"></span><br><span class="line">    cpu.go()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Destructuring-Declarations"><a href="#Destructuring-Declarations" class="headerlink" title="Destructuring Declarations"></a>Destructuring Declarations</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="class"><span class="keyword">class</span> <span class="title">Order</span></span>(<span class="keyword">val</span> itemCode: String, <span class="keyword">val</span> quantity: <span class="built_in">Int</span>,</span><br><span class="line">                 <span class="keyword">val</span> price: <span class="built_in">Float</span>)</span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">getOrder</span><span class="params">(...)</span></span>: Order &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> Order(itemCode, quantity, price);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> (what, howMany, howMuch) = getOrder(...)</span><br></pre></td></tr></table></figure>
+<h4 id="Higher-Order-Functions-and-Lambdas"><a href="#Higher-Order-Functions-and-Lambdas" class="headerlink" title="Higher-Order Functions and Lambdas"></a>Higher-Order Functions and Lambdas</h4><p>A higher-order function is a function that takes functions as parameters, or returns a function.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">lock</span><span class="params">(lock: <span class="type">Lock</span>, body: () -&gt; <span class="type">T</span>)</span></span>: T &#123;</span><br><span class="line">    lock.lock()</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> body()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">finally</span> &#123;</span><br><span class="line">        lock.unlock()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="object"><a href="#object" class="headerlink" title="object"></a>object</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The use of &#x27;object&#x27; instead of &#x27;class&#x27; indicates a singleton declaration</span></span><br><span class="line"><span class="keyword">object</span> Singleton &#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">foo</span><span class="params">()</span></span> = <span class="number">42</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 匿名内部类</span></span><br><span class="line"><span class="keyword">val</span> arrayList = arrayListOf(<span class="number">1</span>, <span class="number">5</span>, <span class="number">2</span>)</span><br><span class="line">Collections.sort(arrayList, <span class="keyword">object</span> : Comparator&lt;<span class="built_in">Int</span>&gt; &#123;</span><br><span class="line">     <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">compare</span><span class="params">(x: <span class="type">Int</span>, y: <span class="type">Int</span>)</span></span> = y - x</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>…</p>
+<hr>
+<h3 id="Android"><a href="#Android" class="headerlink" title="Android"></a>Android</h3><h4 id="Kotlin-Android-Extensions"><a href="#Kotlin-Android-Extensions" class="headerlink" title="Kotlin Android Extensions"></a>Kotlin Android Extensions</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Using R.layout.activity_main from the main source set</span></span><br><span class="line"><span class="keyword">import</span> kotlinx.android.synthetic.main.activity_main.*</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyActivity</span> : <span class="type">Activity</span></span>() &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line">        textView.setText(<span class="string">&quot;Hello, world!&quot;</span>)</span><br><span class="line">        <span class="comment">// Instead of findView(R.id.textView) as TextView</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Anko"><a href="#Anko" class="headerlink" title="Anko"></a>Anko</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">verticalLayout &#123;</span><br><span class="line">    <span class="keyword">val</span> name = editText()</span><br><span class="line">    button(<span class="string">&quot;Say Hello&quot;</span>) &#123;</span><br><span class="line">        onClick &#123; toast(<span class="string">&quot;Hello, <span class="subst">$&#123;name.text&#125;</span>!&quot;</span>) &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://github.com/Kotlin/anko/raw/master/doc/helloworld.png" alt=""></p>
+<hr>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/Kotlin/anko">anko</a> </li>
+<li><a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/comparison-to-java.html">comparison-to-java</a></li>
+<li><a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/tutorials/android-plugin.html">kotlin-android-plugin</a></li>
+<li><a target="_blank" rel="noopener" href="https://android-developers.googleblog.com/2017/05/android-announces-support-for-kotlin.html">android-announces-support-for-kotlin</a></li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Kotlin"><span class="toc-text">Kotlin</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-text">优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8E-Java-%E5%8C%BA%E5%88%AB"><span class="toc-text">与 Java 区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hello-World"><span class="toc-text">Hello World</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E7%AE%80%E5%8D%95%E7%9A%84%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7"><span class="toc-text">一些简单的语言特性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Null-checks"><span class="toc-text">Null-checks</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Data-Class"><span class="toc-text">Data Class</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Smart-casts"><span class="toc-text">Smart casts</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#when"><span class="toc-text">when</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Extension-functions"><span class="toc-text">Extension functions</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Destructuring-Declarations"><span class="toc-text">Destructuring Declarations</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Higher-Order-Functions-and-Lambdas"><span class="toc-text">Higher-Order Functions and Lambdas</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#object"><span class="toc-text">object</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Android"><span class="toc-text">Android</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Kotlin-Android-Extensions"><span class="toc-text">Kotlin Android Extensions</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Anko"><span class="toc-text">Anko</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/kotlin-share/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/android/"><i class="fa fa-tags"></i>android</a>
+     
+      <a href="/tags/kotlin/"><i class="fa fa-tags"></i>kotlin</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/android-weekly-note-01/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/rxjava-backpressure/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

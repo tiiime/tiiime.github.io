@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>2023 年用 cemu 玩塞尔达荒野之息 | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="emulator," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2023-04-22
+    </span>
+    
+  </div>
+  <h1 class="passage-title">
+    2023 年用 cemu 玩塞尔达荒野之息
+  </h1>
+  
+  <article class="passage-article">
+    <p>一张六年前的 10 系显卡就能体验 4k 60 帧的塞尔达，简直不要太爽。</p>
+<p>不过网上都是整合包，所以记录下在 2023 年，不用整合包，折腾 cemu 模拟器，玩 Wii U 版塞尔达的过程。</p>
+<p>[TOC]</p>
+<h3 id="下载游戏"><a href="#下载游戏" class="headerlink" title="下载游戏"></a>下载游戏</h3><p>安装 WiiUUSBHelper 这个工具，提供 Wii U 等 ROM 下载。<br><a target="_blank" rel="noopener" href="https://github.com/FailedShack/USBHelperInstaller/releases">https://github.com/FailedShack/USBHelperInstaller/releases</a></p>
+<p>首次启动程需要填一个 title url，输入 <code>titlekeys.ovh</code> 即可。<br>加载 title 信息可能需要梯子，我这里网络正常，大概几分钟同步完毕。<br>选择自己需要的区，我找到的汉化补丁是根据日版制作的，所以选择日区。  </p>
+<p>然后搜索下载游戏，顺手在这里把 cemu 下载。</p>
+<h3 id="安装汉化"><a href="#安装汉化" class="headerlink" title="安装汉化"></a>安装汉化</h3><p>汉化包[91WiiNS官中NS移植][简中2018-08-release][日]塞尔达传说：旷野之息[91WiiNS官中NS移植][简中2018-08-release]<br><a target="_blank" rel="noopener" href="https://www.tekqart.com/thread-91496-1-1.html">https://www.tekqart.com/thread-91496-1-1.html</a></p>
+<p>汉化安装方法。需要启动游戏，进游戏保存一下，才能看到相关文件夹。<br><a target="_blank" rel="noopener" href="https://bbs.oldmanemu.net/thread-9306.htm">https://bbs.oldmanemu.net/thread-9306.htm</a></p>
+<h3 id="配置帧率-分辨率"><a href="#配置帧率-分辨率" class="headerlink" title="配置帧率/分辨率"></a>配置帧率/分辨率</h3><p>启动游戏后，进游戏保存一下。退出全屏，在 cemu 模拟器 Options-&gt; Graphic packs-&gt; 选 zelda<br>Mod 选 fps++ 配置帧数<br>Workarounds/Graphics 选 4k</p>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E6%B8%B8%E6%88%8F"><span class="toc-text">下载游戏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E6%B1%89%E5%8C%96"><span class="toc-text">安装汉化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%B8%A7%E7%8E%87-%E5%88%86%E8%BE%A8%E7%8E%87"><span class="toc-text">配置帧率&#x2F;分辨率</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/cemu-zelda-2023/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/emulator/"><i class="fa fa-tags"></i>emulator</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/make-adb-logcat-great-again/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/radare2-re-frida/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

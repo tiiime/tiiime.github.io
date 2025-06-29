@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>LeakCanary 源码学习 | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Android, developer" />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2018-01-17
+    </span>
+    
+  </div>
+  <h1 class="passage-title">
+    LeakCanary 源码学习
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/square/leakcanary">https://github.com/square/leakcanary</a></p>
+</blockquote>
+<p>跟踪过程遇到的一些的类</p>
+<ul>
+<li>AndroidRefWatcherBuilder： LeakCanary.install 内部具体执行者，构建初始化</li>
+<li><strong>RefWatcher/ActivityRefWatcher</strong>：判断是否产生内存泄漏 / 专供 Android 使用  </li>
+<li>AndroidWatchExecutor： 触发 RefWatcher 检查</li>
+<li><strong>AndroidHeapDumper</strong>：当 RefWatcher 发现内存泄漏，调用 <code>dumper.dumpHeap()</code> 导出文件 </li>
+<li>ServiceHeapDumpListener: 然后调用 <code>listener.analyze(heapDump:HeapDump)</code> 通知分析数据</li>
+<li>DisplayLeakService：显示结果</li>
+<li>HeapAnalyzerService：分析</li>
+<li><strong>HeapAnalyzer</strong>：分析负责人</li>
+</ul>
+<h3 id="RefWatcher"><a href="#RefWatcher" class="headerlink" title="RefWatcher"></a>RefWatcher</h3><p>Builder 里边初始化了一堆东西，大部分都传给 RefWatcher 构造函数了。RefWatcher 提供了一个 <code>watch</code> 方法；如果一个对象生命周期结束了(比如<code>Activity.onDestroy()</code>之后)，watch 这个对象，RefWatcher 内部会使用 KeyedWeakReference 将其包装一下，这样我们就可以得到一个 key ，后面根据这个 key 就能知道对象有没有释放。</p>
+<p>先插一句 WeakReference 和 ReferenceQueue 的用法。<br>WeakReference 构造函数可以传入一个 ReferenceQueue，  WeakReference 引用的对象被 GC 回收后，这个 WeakReference 就会被加入队列，所以检查 ReferenceQueue 队列就能知道 WeakReference 引用的对象有没有被释放。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* retainedKeys:Set&lt;String&gt; 保存 key 用的</span></span><br><span class="line"><span class="comment">* 将对象封装为 KeyedWeakReference</span></span><br><span class="line"><span class="comment">* key 保存到 retainedKeys</span></span><br><span class="line"><span class="comment">* 触发检查对象是否被回收</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">watch</span><span class="params">(Object watchedReference, String referenceName)</span> </span>&#123;</span><br><span class="line">  String key = UUID.randomUUID().toString();</span><br><span class="line">  retainedKeys.add(key);</span><br><span class="line">  <span class="keyword">final</span> KeyedWeakReference reference =</span><br><span class="line">      <span class="keyword">new</span> KeyedWeakReference(watchedReference, key, referenceName, queue);</span><br><span class="line"></span><br><span class="line">  ensureGoneAsync(watchStartNanoTime, reference);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 先检查一遍有没有回收，如果被回收了那咱们到这就 ok</span></span><br><span class="line"><span class="comment">* 如果没被回收就触发 GC，再检查一遍</span></span><br><span class="line"><span class="comment">* 还有的话那你就是内存泄漏了，dump heap 触发通知逻辑</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">Retryable.<span class="function">Result <span class="title">ensureGone</span><span class="params">(<span class="keyword">final</span> KeyedWeakReference reference, <span class="keyword">final</span> <span class="keyword">long</span> watchStartNanoTime)</span> </span>&#123;</span><br><span class="line">  removeWeaklyReachableReferences()</span><br><span class="line">  <span class="keyword">if</span> (gone(reference)) &#123;</span><br><span class="line">      <span class="keyword">return</span> DONE;</span><br><span class="line">  &#125;</span><br><span class="line">  gcTrigger.runGc();</span><br><span class="line">  removeWeaklyReachableReferences()</span><br><span class="line">  <span class="keyword">if</span> (!gone(reference)) &#123;</span><br><span class="line">    <span class="comment">// dump heap &amp; notify</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 遍历 ReferenceQueue，将已被回收的对象移除</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">removeWeaklyReachableReferences</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  KeyedWeakReference ref;</span><br><span class="line">  <span class="keyword">while</span> ((ref = (KeyedWeakReference) queue.poll()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">    retainedKeys.remove(ref.key);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 判断是否被回收</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">gone</span><span class="params">(KeyedWeakReference reference)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> !retainedKeys.contains(reference.key);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="AndroidHeapDumper"><a href="#AndroidHeapDumper" class="headerlink" title="AndroidHeapDumper"></a>AndroidHeapDumper</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一句话，拿到 dumpFile</span></span><br><span class="line">android.os.Debug.dumpHprofData(heapDumpFile.getAbsolutePath());</span><br></pre></td></tr></table></figure>
+<h3 id="HeapAnalyzer"><a href="#HeapAnalyzer" class="headerlink" title="HeapAnalyzer"></a>HeapAnalyzer</h3><p>调用 <a target="_blank" rel="noopener" href="https://github.com/square/haha">square haha</a> 这个库负责分析<br>大概步骤：</p>
+<ul>
+<li>解析 dump 文件</li>
+<li>先拿到所有 KeyedWeakReference 相关内容，再根据 key 进行搜索，拿到 reference</li>
+<li>搞定泄露的 reference 就可以拿到具体路径了 </li>
+<li>封装成 AnalysisResult 返回</li>
+<li>通知栏提示</li>
+</ul>
+<hr>
+<p>整个 LeakCanary 的设计清晰明了，跟踪代码时逻辑抽象封装非常到位，厉害。</p>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#RefWatcher"><span class="toc-text">RefWatcher</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AndroidHeapDumper"><span class="toc-text">AndroidHeapDumper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HeapAnalyzer"><span class="toc-text">HeapAnalyzer</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/leakcanary-learn/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/translate-building-complex-android-animations-with-rxjava/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/android-statemachine-update/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

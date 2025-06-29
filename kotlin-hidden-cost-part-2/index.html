@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>[翻译]kotlin-hidden-cost-part-2 | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="translate,android,kotlin," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2017-08-29
+    </span>
+    
+      <span>
+        | <a href="/categories/translate/"><i class="fa fa-bookmark"></i>translate</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    [翻译]kotlin-hidden-cost-part-2
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p><a target="_blank" rel="noopener" href="https://medium.com/@BladeCoder/exploring-kotlins-hidden-costs-part-2-324a4a50b70">https://medium.com/@BladeCoder/exploring-kotlins-hidden-costs-part-2-324a4a50b70</a></p>
+</blockquote>
+<h3 id="Local-functions"><a href="#Local-functions" class="headerlink" title="Local functions"></a>Local functions</h3><p>在上篇文章中，还有一种函数没有介绍:声明在其他函数里的函数，叫做local function，作用域在外层函数内。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">someMath</span><span class="params">(a: <span class="type">Int</span>)</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">sumSquare</span><span class="params">(b: <span class="type">Int</span>)</span></span> = (a + b) * (a + b)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sumSquare(<span class="number">1</span>) + sumSquare(<span class="number">2</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们先提一下 local function 的局限:<strong>不能声明在 inline 函数内，包含 local function 的函数也不能在 inline 函数内使用。</strong>这种方式下没有避免函数调用 cost 的魔法。</p>
+<p>编译后，local function 被转换成 Function 对象，和 lambda 一样，上篇文章中描述的限制也同样适用于此。对应的 JAVA 形式如下:</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> static <span class="keyword">final</span> int someMath(<span class="keyword">final</span> int a) &#123;</span><br><span class="line">   Function1 sumSquare$ = new Function1(<span class="number">1</span>) &#123;</span><br><span class="line">      <span class="comment">// $FF: synthetic method</span></span><br><span class="line">      <span class="comment">// $FF: bridge method</span></span><br><span class="line">      <span class="keyword">public</span> Object invoke(Object var1) &#123;</span><br><span class="line">         <span class="keyword">return</span> Integer.valueOf(<span class="keyword">this</span>.invoke(((Number)var1).intValue()));</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">final</span> int invoke(int b) &#123;</span><br><span class="line">         <span class="keyword">return</span> (a + b) * (a + b);</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;;</span><br><span class="line">   <span class="keyword">return</span> sumSquare$.invoke(<span class="number">1</span>) + sumSquare$.invoke(<span class="number">2</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在此有一处性能较之 lambda 稍好：由于函数的实例是 caller 已知的，所以会直接调用<em>确定</em>的方法而不是 Function 接口泛型生成的方法。<strong>也就是说在外部函数调用 local function 时，不会有类型转换和对原始类型拆箱装箱</strong>。从字节码可以看出：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ALOAD 1</span><br><span class="line">ICONST_1</span><br><span class="line">INVOKEVIRTUAL be/myapplication/MyClassKt$someMath$1.invoke (I)I</span><br><span class="line">ALOAD 1</span><br><span class="line">ICONST_2</span><br><span class="line">INVOKEVIRTUAL be/myapplication/MyClassKt$someMath$1.invoke (I)I</span><br><span class="line">IADD</span><br><span class="line">IRETURN</span><br></pre></td></tr></table></figure><br>方法被调用两次，接收一个 <code>int</code> 参数，返回一个 <code>int</code> 值，期间没有拆箱操作，方法调用期间仍有一个创建 Function 实例的消耗，可以把 local function 写成 non-capture 形式避免：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">someMath</span><span class="params">(a: <span class="type">Int</span>)</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">sumSquare</span><span class="params">(a: <span class="type">Int</span>, b: <span class="type">Int</span>)</span></span> = (a + b) * (a + b)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sumSquare(a, <span class="number">1</span>) + sumSquare(a, <span class="number">2</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们现在就有了一个可复用，无类型转换/拆箱消耗的 Funtion 实例。与 class 的私有函数相比，唯一的缺点就是会生成带有几个方法的额外 class。</p>
+<blockquote>
+<p>Local functions 是 private functions 的替代方法，它可以访问外部函数的局部变量。需要付出的代价是每次调用外部函数都会生成 Function 对象，建议将 local function 写成 non-capturing 形式。</p>
+</blockquote>
+<h3 id="Null-safety"><a href="#Null-safety" class="headerlink" title="Null safety"></a>Null safety</h3><p>kotlin 的一大特性就是<a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/null-safety.html"> nullable 和 non-null </a>对象之间有着鲜明的界限。编译器禁止将 non-null 对象赋值为 null/nullable 变量，可以有效避免运行时的 <code>NullPointerExceptions</code>。</p>
+<h4 id="Non-null-arguments-runtime-checks"><a href="#Non-null-arguments-runtime-checks" class="headerlink" title="Non-null arguments runtime checks"></a>Non-null arguments runtime checks</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">sayHello</span><span class="params">(who: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">    println(<span class="string">&quot;Hello <span class="variable">$who</span>&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对应 java：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">sayHello</span><span class="params">(<span class="meta">@NotNull</span> String who)</span> </span>&#123;</span><br><span class="line">   Intrinsics.checkParameterIsNotNull(who, <span class="string">&quot;who&quot;</span>);</span><br><span class="line">   String var1 = <span class="string">&quot;Hello &quot;</span> + who;</span><br><span class="line">   System.out.println(var1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>Kotlin 编译器还给参数加上了 <code>@NotNull</code> 注解，当传入空值时 java tools 可以据此提示。</p>
+<p>然而仅有注解是远远不够的，编译器还在函数起始位置<strong>调用了一个静态方法</strong>来检查参数，可以抛出 <code>IllegalArgumentException</code> 异常。在入口位置崩溃肯定比逻辑里不知到哪出了 <code>NullPointerException</code> 强。</p>
+<p>实际上，<strong>每个 public function </strong> 都会为其<strong>所有非空参数</strong>进行 <code>Intrinsics.checkParameterIsNotNull()</code> 调用。<strong>private function 不会调用此方法</strong>，编译器可以确保 kotlin class 内部代码是 null 安全的。</p>
+<p>调用这个静态方法对性能的影响是无关紧要的，对调试测试很有帮助。也就是说，在 release 版本可以把这个调用移除。使用 <code>-Xno-param-assertions</code> 这个编译选项或者在 Proguard 中加入一下规则：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-assumenosideeffects <span class="class"><span class="keyword">class</span> <span class="title">kotlin</span>.<span class="title">jvm</span>.<span class="title">internal</span>.<span class="title">Intrinsics</span> </span>&#123;</span><br><span class="line">    static void checkParameterIsNotNull(java.lang.Object, java.lang.String);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p> Android 的 ProGuard 默认是关闭的，需要手动开启。</p>
+</blockquote>
+<h4 id="Nullable-primitive-types"><a href="#Nullable-primitive-types" class="headerlink" title="Nullable primitive types"></a>Nullable primitive types</h4><p>需要提醒一下：一个 nullable 类型永远是一个引用。把原始类型声明为 <strong>nullable</strong> ，kotlin 会用 <code>Integer</code> 或 <code>Float</code> 替代 <code>int</code> 和 <code>float</code> 这些类型。会产生额外的装箱拆箱操作。</p>
+<p>相比于 Java 使用 autoboxing 让你可以将 int 和 Integer 一视同仁，从而写出无视 null safe 的代码，kotlin 强制你在使用 nullable 的类型是对其进行检查，好处显而易见：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">add</span><span class="params">(a: <span class="type">Int</span>, b: <span class="type">Int</span>)</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a + b</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">add</span><span class="params">(a: <span class="type">Int</span>?, b: <span class="type">Int</span>?)</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (a ?: <span class="number">0</span>) + (b ?: <span class="number">0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>使用原始类型应尽可能声明为 non-null ，以获得更好地可读性和性能。</p>
+</blockquote>
+<h4 id="About-arrays"><a href="#About-arrays" class="headerlink" title="About arrays"></a>About arrays</h4><p>kotlin 有三种 array 类型：</p>
+<ul>
+<li>IntArray, FloatArray and others: 原始类型数组，编译为 int[], float[] and others.</li>
+<li>Array<T>: non-null 对象引用数组，将对原始类型进行装箱</li>
+<li>Array&lt;T?&gt;:nullable 对象引用数组，也将对原始类型进行装箱</li>
+</ul>
+<blockquote>
+<p>如果数据对象是原始类型，尽量用 IntArray 减少额外的性能损耗。</p>
+</blockquote>
+<h3 id="Varargs"><a href="#Varargs" class="headerlink" title="Varargs"></a>Varargs</h3><p>和 Java 一样，我们在 kotlin 可以用<a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/functions.html#variable-number-of-arguments-varargs">变长参数</a>。关键字有点不一样：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">printDouble</span><span class="params">(<span class="keyword">vararg</span> values: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">    values.forEach &#123; println(it * <span class="number">2</span>) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>实际上也和 Java 一样， 变长参数就是一个<strong>数组</strong>参数，下面三种方式都能正常调用：</p>
+<h4 id="1-Passing-multiple-arguments"><a href="#1-Passing-multiple-arguments" class="headerlink" title="1. Passing multiple arguments"></a>1. Passing multiple arguments</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">printDouble(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="2-Passing-a-single-array"><a href="#2-Passing-a-single-array" class="headerlink" title="2. Passing a single array"></a>2. Passing a single array</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> values = intArrayOf(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">printDouble(*values)</span><br></pre></td></tr></table></figure>
+<h4 id="3-Passing-a-mix-of-arrays-and-arguments"><a href="#3-Passing-a-mix-of-arrays-and-arguments" class="headerlink" title="3. Passing a mix of arrays and arguments"></a>3. Passing a mix of arrays and arguments</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> values = intArrayOf(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">printDouble(<span class="number">0</span>, *values, <span class="number">42</span>)</span><br></pre></td></tr></table></figure>
+<p>没啥意思</p>
+<hr>
+<p><a target="_blank" rel="noopener" href="https://medium.com/@BladeCoder/exploring-kotlins-hidden-costs-part-3-3bf6e0dbf0a4">part 3</a></p>
+<h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://medium.com/@BladeCoder/exploring-kotlins-hidden-costs-part-2-324a4a50b70">https://medium.com/@BladeCoder/exploring-kotlins-hidden-costs-part-2-324a4a50b70</a></li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Local-functions"><span class="toc-text">Local functions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Null-safety"><span class="toc-text">Null safety</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Non-null-arguments-runtime-checks"><span class="toc-text">Non-null arguments runtime checks</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Nullable-primitive-types"><span class="toc-text">Nullable primitive types</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#About-arrays"><span class="toc-text">About arrays</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Varargs"><span class="toc-text">Varargs</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Passing-multiple-arguments"><span class="toc-text">1. Passing multiple arguments</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Passing-a-single-array"><span class="toc-text">2. Passing a single array</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-Passing-a-mix-of-arrays-and-arguments"><span class="toc-text">3. Passing a mix of arrays and arguments</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ref"><span class="toc-text">Ref</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/kotlin-hidden-cost-part-2/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/android/"><i class="fa fa-tags"></i>android</a>
+     
+      <a href="/tags/kotlin/"><i class="fa fa-tags"></i>kotlin</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/kotlin-hidden-cost-part-3/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/kotlin-hidden-cost-part-1/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>Java Collections | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="learn,java," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2016-08-31
+    </span>
+    
+      <span>
+        | <a href="/categories/learn/"><i class="fa fa-bookmark"></i>learn</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    Java Collections
+  </h1>
+  
+  <article class="passage-article">
+    <p>总结下 Java 容器相关的知识。</p>
+<p>常用的容器种类有 Set, Map 和 List，在项目中根据使用场景选取合适的容器。</p>
+<ul>
+<li><p>Collection 无序，允许重复</p>
+<ul>
+<li><p>List 有序，允许重复</p>
+</li>
+<li><p>Set 无序，不允许重复</p>
+</li>
+<li><p>Quene</p>
+</li>
+</ul>
+</li>
+<li><p>Map 无序，key 不允许重复</p>
+</li>
+</ul>
+<p>在 Java 中，Iterable，Collection，Set，List，Map 等都是 interface，<br>继承关系如下图。</p>
+<img src="/java-collections/collections.png" class="" title="Collections">
+<hr>
+<h2 id="List-容器"><a href="#List-容器" class="headerlink" title="List 容器"></a>List 容器</h2><h4 id="AbstractList"><a href="#AbstractList" class="headerlink" title="AbstractList"></a>AbstractList</h4><p>AbstractList 是继承了 List 接口的抽象类，实现了 List 一些通用的方法。 对于需要随机访问数据的场景应优先选择实现它。</p>
+<h4 id="AbstractSequentialList"><a href="#AbstractSequentialList" class="headerlink" title="AbstractSequentialList"></a>AbstractSequentialList</h4><p>与 AbstractList 相似，只不过 AbstractSequentialList 更适用于实现连续访问数据的场景。</p>
+<h4 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h4><p>ArrayList 继承了 AbstractList，相对于数组来说，ArrayList 内部封装了一个 Object[],大体上操作没有太多区别，不同的是 ArrayList 可以动态的扩展大小，原理是当内部数组满了后新建一个当前 Object[] 大小 1.5 倍的数组，将原来内容拷贝到新的数组内。关于性能方面，因为 ArrayList 保存的是 Object 对象，在 get 时需要一次类型转换操作，如果数据量很大，性能上的差异会凸显出来。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Positional Access Operations</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span></span><br><span class="line"><span class="function">E <span class="title">elementData</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (E) elementData[index];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Returns the element at the specified position in this list.</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> index index of the element to return</span></span><br><span class="line"><span class="comment">* <span class="doctag">@return</span> the element at the specified position in this list</span></span><br><span class="line"><span class="comment">* <span class="doctag">@throws</span> IndexOutOfBoundsException &#123;<span class="doctag">@inheritDoc</span>&#125;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">  rangeCheck(index);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> elementData(index);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="LinkedList"><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h4><p>LinkedList 继承了 AbstractSequentialList ，内部数据储存部分使用的是链表。优点的话也就是链表这种数据结构的优点。</p>
+<hr>
+<h2 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h2><h4 id="AbstractMap"><a href="#AbstractMap" class="headerlink" title="AbstractMap"></a>AbstractMap</h4><p>继承了 Map 接口，为实现 Map 提供大体框架。</p>
+<h4 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h4><p>HashMap 内实现了 Map 所有的操作，接受 null 值作为 key 或 value，不保证元素顺序。HashMap  原理写不动了…</p>
+<h4 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h4><p>LinkedHashMap 继承自 HashMap 并实现 Map 接口。与 HashMap 不同的是它维持一个所有元素的双向链表，所以它内部元素是有序的。</p>
+<h4 id="TreeMap"><a href="#TreeMap" class="headerlink" title="TreeMap"></a>TreeMap</h4><p>TreeMap 是一个基于红黑树的 NavigableMap 实现。会对插入的元素进行排序。</p>
+<hr>
+<h2 id="Set-容器"><a href="#Set-容器" class="headerlink" title="Set 容器"></a>Set 容器</h2><h4 id="AbstractSet"><a href="#AbstractSet" class="headerlink" title="AbstractSet"></a>AbstractSet</h4><p>提供实现 Set 接口的大体框架。它仅继承了 AbstractCollection ，实现 Set 接口。</p>
+<h4 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h4><p>继承自 AbstractSet，并实现 Set 接口。内部实现使用一个 HashMap 储存，不保证元素顺序，允许元素值为 null。</p>
+<h4 id="LinkedHashSet"><a href="#LinkedHashSet" class="headerlink" title="LinkedHashSet"></a>LinkedHashSet</h4><p>继承自 HashSet，翻开源文件代码却意外的少，原来它是调用了一个 HashSet 的构造函数。和 HashSet 相比较，LinkedHashSet 保证了元素插入的顺序；当一个元素 e 已经插入后再次调用<code>s.add(e)</code>，会在<code>s.contains(e)</code>判断时直接返回 true。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * Constructs a new, empty linked hash set. (This package private</span></span><br><span class="line"><span class="comment">  * constructor is only used by LinkedHashSet.) The backing</span></span><br><span class="line"><span class="comment">  * HashMap instance is a LinkedHashMap with the specified initial</span></span><br><span class="line"><span class="comment">  * capacity and the specified load factor.</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@param</span> initialCapacity the initial capacity of the hash map</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@param</span> loadFactor the load factor of the hash map</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@param</span> dummy ignored (distinguishes this</span></span><br><span class="line"><span class="comment">  * constructor from other int, float constructor.)</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@throws</span> IllegalArgumentException if the initial capacity is less</span></span><br><span class="line"><span class="comment">  * than zero, or if the load factor is nonpositive</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  HashSet(<span class="keyword">int</span> initialCapacity, <span class="keyword">float</span> loadFactor, <span class="keyword">boolean</span> dummy) &#123;</span><br><span class="line">    map = <span class="keyword">new</span> LinkedHashMap&lt;&gt;(initialCapacity, loadFactor);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="TreeSet"><a href="#TreeSet" class="headerlink" title="TreeSet"></a>TreeSet</h4><p>首先，TreeSet 继承自 AbstractSet ，并且实现了 NavigableSet 接口。主要提供时间复杂度为 log(n) 的插入，删除和查找操作，插入的元素默认由小到大排列。需要 key 实现 Comparable 接口，或者在构造函数提供一个 Comparator。</p>
+<hr>
+<h4 id="关于-Dictionary-和-Vector"><a href="#关于-Dictionary-和-Vector" class="headerlink" title="关于 Dictionary 和 Vector"></a>关于 Dictionary 和 Vector</h4><p>Dictionary 和 Vector 都是早期Java提供的方法。</p>
+<p>Vector也继承了AbstractList，和ArrayList的区别都有啥呢？</p>
+<ul>
+<li>Vector 是线程安全的，不过这个我们 ArrayList 也可以通过<code>Collections.synchronizedCollection(Collection&lt;T&gt; c)</code>实现。</li>
+<li>Vector 和 ArrayList 内部都靠数组驱动，当数组满了后，Vector 默认会新建一个当前 size 2 倍的数组，ArrayList 是 1.5 倍。<a target="_blank" rel="noopener" href="http://stackoverflow.com/a/2986307">(A Vector defaults to doubling the size of its array, while the ArrayList increases its array size by 50 percent.)</a></li>
+</ul>
+<p>与 HashTable 对应的是 HashMap ，主要的差异有：</p>
+<ul>
+<li>HashTable 方法是同步的。</li>
+<li>HashTable 的 key 和 value 都不可以为 null。</li>
+<li>继承不同</li>
+<li>遍历方式的内部实现不同</li>
+<li>Hash 值得使用不同，HashTable 直接使用对象的 hashCode ，HashMap 则重新计算。</li>
+<li>内部数组的初始化和扩容方式</li>
+</ul>
+<hr>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> io.github.tiiime;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Iterable iterable;</span><br><span class="line">        Collection collection;</span><br><span class="line"></span><br><span class="line">        Map map;</span><br><span class="line"></span><br><span class="line">        AbstractCollection abstractCollection;</span><br><span class="line">        Set set;</span><br><span class="line">        List list;</span><br><span class="line">        Queue queue;</span><br><span class="line"></span><br><span class="line">        AbstractList abstractList;</span><br><span class="line">        AbstractSequentialList abstractSequentialList;</span><br><span class="line">        AbstractSet abstractSet;</span><br><span class="line">        AbstractMap abstractMap;</span><br><span class="line"></span><br><span class="line">        ArrayList arrayList;</span><br><span class="line">        LinkedList linkedList;</span><br><span class="line">        LinkedHashMap linkedHashMap;</span><br><span class="line">        LinkedHashSet linkedHashSet;</span><br><span class="line"></span><br><span class="line">        HashMap hashMap;</span><br><span class="line">        HashSet hashSet;</span><br><span class="line"></span><br><span class="line">        SortedMap sortedMap;</span><br><span class="line">        SortedSet sortedSet;</span><br><span class="line"></span><br><span class="line">        NavigableMap navigableMap;</span><br><span class="line">        NavigableSet navigableSet;</span><br><span class="line"></span><br><span class="line">        TreeMap treeMap;</span><br><span class="line">        TreeSet treeSet;</span><br><span class="line"></span><br><span class="line">        Dictionary dictionary;</span><br><span class="line">        Hashtable hashtable;</span><br><span class="line">        Vector vector;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://kasiopea.matfyz.cz/doc/docs.oracle.com/javase/8/docs/api/java/util/Map.html">Java Doc Map</a></li>
+<li><a target="_blank" rel="noopener" href="https://kasiopea.matfyz.cz/doc/docs.oracle.com/javase/8/docs/api/java/util/List.html">Java Doc List</a></li>
+<li><a target="_blank" rel="noopener" href="https://kasiopea.matfyz.cz/doc/docs.oracle.com/javase/8/docs/api/java/util/Set.html">Java Doc Set</a></li>
+<li><a target="_blank" rel="noopener" href="https://kasiopea.matfyz.cz/doc/docs.oracle.com/javase/8/docs/api/java/util/Collection.html">Java Doc Collection</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/devinzhang/archive/2012/01/13/2321481.html">Java 的 HashMap 和 HashTable-Devin Zhang</a></li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#List-%E5%AE%B9%E5%99%A8"><span class="toc-text">List 容器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#AbstractList"><span class="toc-text">AbstractList</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AbstractSequentialList"><span class="toc-text">AbstractSequentialList</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ArrayList"><span class="toc-text">ArrayList</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LinkedList"><span class="toc-text">LinkedList</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Map"><span class="toc-text">Map</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#AbstractMap"><span class="toc-text">AbstractMap</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HashMap"><span class="toc-text">HashMap</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LinkedHashMap"><span class="toc-text">LinkedHashMap</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TreeMap"><span class="toc-text">TreeMap</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Set-%E5%AE%B9%E5%99%A8"><span class="toc-text">Set 容器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#AbstractSet"><span class="toc-text">AbstractSet</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HashSet"><span class="toc-text">HashSet</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LinkedHashSet"><span class="toc-text">LinkedHashSet</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TreeSet"><span class="toc-text">TreeSet</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E-Dictionary-%E5%92%8C-Vector"><span class="toc-text">关于 Dictionary 和 Vector</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/java-collections/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/java/"><i class="fa fa-tags"></i>java</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/android-scaletype/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/jvm-learn/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

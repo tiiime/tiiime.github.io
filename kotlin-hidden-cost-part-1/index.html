@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>[翻译]kotlin-hidden-cost-part-1 | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="translate,android,kotlin," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2017-08-29
+    </span>
+    
+      <span>
+        | <a href="/categories/translate/"><i class="fa fa-bookmark"></i>translate</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    [翻译]kotlin-hidden-cost-part-1
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p><a target="_blank" rel="noopener" href="https://medium.com/@BladeCoder/exploring-kotlins-hidden-costs-part-1-fbb9935d9b62">https://medium.com/@BladeCoder/exploring-kotlins-hidden-costs-part-1-fbb9935d9b62</a></p>
+</blockquote>
+<p> Jake Wharton 大佬写过一篇  <a href="java-hidden-cost">Java’s hidden costs </a> 的文章，balabala<br>这里介绍 kotlin 相关内容</p>
+<p>Kotlin 是一种更现代的语言，与 Java 相比提供了更多的语法糖，这些语法糖的背后有着同样多的“黑魔法”。，其中一些有着不可忽视的性能消耗，尤其是需要兼容老设备或者低端设备的项目。 </p>
+<p>我也不是反对 Kotlin，正相反我非常喜欢这门语言，它可以提升工作效率。</p>
+<h3 id="Kotlin-Bytecode-inspector"><a href="#Kotlin-Bytecode-inspector" class="headerlink" title="Kotlin Bytecode inspector"></a>Kotlin Bytecode inspector</h3><p>action -&gt; “Show Kotlin Bytecode”<br>“Decompile” -&gt; 查看反编译后 java 文件<br><img src="https://cdn-images-1.medium.com/max/800/1*RUsF1M4oD2G4OwGE89-yOw.png" alt=""></p>
+<p>每次提及 kotlin feature 都包含以下几点</p>
+<ul>
+<li>原始类型装箱，这会创建生命周期很短的对象</li>
+<li>代码中不存在，但却需要额外例化的对象</li>
+<li>额外生成的方法。因为 Android 方法数的限制，需要使用 MultiDex 解决，随之而来的是性能问题，尤其在 Lollipop 之前的版本上更为严重。</li>
+</ul>
+<h4 id="A-note-about-benchmarks"><a href="#A-note-about-benchmarks" class="headerlink" title="A note about benchmarks"></a>A note about benchmarks</h4><p>我也不是谦虚，我这个测试写的不具有普遍适用性，balabala，就不放出来了。<br>除了运行速度，内存消耗什么的也是要考虑一个的，你们要测自己测</p>
+<h3 id="Higher-order-functions-and-Lambda-expressions"><a href="#Higher-order-functions-and-Lambda-expressions" class="headerlink" title="Higher-order functions and Lambda expressions"></a>Higher-order functions and Lambda expressions</h3><p>我们 kotlin 支持高阶函数，想用 lambda 什么的随便，同时也是在 Java 6/7 JVMs and Android 环境下使用 lambda 最好的方式。</p>
+<p>看代码<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">transaction</span><span class="params">(db: <span class="type">Database</span>, body: (<span class="type">Database</span>) -&gt; <span class="type">Int</span>)</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    db.beginTransaction()</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">val</span> result = body(db)</span><br><span class="line">        db.setTransactionSuccessful()</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        db.endTransaction()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实际使用</span></span><br><span class="line"><span class="keyword">val</span> deletedRows = transaction(db) &#123;</span><br><span class="line">    it.delete(<span class="string">&quot;Customers&quot;</span>, <span class="literal">null</span>, <span class="literal">null</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>Java 6 JVMs 不能直接使用 Lambda 表达式，所以在字节码里 lambda 和匿名函数被编译为 <code>Function</code> 对象。</p>
+<h4 id="Function-objects"><a href="#Function-objects" class="headerlink" title="Function objects"></a>Function objects</h4><p>上面的 lambda 表达式编译后转换成 Java 的形式就是下面这样：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span>$<span class="title">myMethod</span>$1 <span class="title">implements</span> <span class="title">Function1</span> </span>&#123;</span><br><span class="line">   <span class="comment">// $FF: synthetic method</span></span><br><span class="line">   <span class="comment">// $FF: bridge method</span></span><br><span class="line">   <span class="keyword">public</span> Object invoke(Object var1) &#123;</span><br><span class="line">      <span class="keyword">return</span> Integer.valueOf(<span class="keyword">this</span>.invoke((Database)var1));</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">final</span> int invoke(<span class="meta">@NotNull</span> Database it) &#123;</span><br><span class="line">      Intrinsics.checkParameterIsNotNull(it, <span class="string">&quot;it&quot;</span>);</span><br><span class="line">      <span class="keyword">return</span> db.delete(<span class="string">&quot;Customers&quot;</span>, <span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Android 的 dex 文件里，每个 lambda 表达式编译为 <code>Function</code> 对象后都会给总方法数<a target="_blank" rel="noopener" href="https://gist.github.com/JakeWharton/ea4982e491262639884e">增加 3 到 4 个方法</a>。<br>幸好 <code>Function</code> 对象只在必要时才创建，通常情况下，这意味着：</p>
+<ul>
+<li>对于 <em>capture 表达式 </em> ，每次使用时都会创建，并在执行后被 GC 回收。</li>
+<li>对于 <em>non-capturing</em> 表达式(纯函数)，会创建一个单例 <code>Function</code> 对象，并复用。</li>
+</ul>
+<p>上面的示例是 non-capturing lambda ，所以被编译为单例，而不是内部类。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.transaction(db, (Function1)MyClass$myMethod$<span class="number">1.</span>INSTANCE);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>尽量不要重复调用内部执行  capturing lambdas  的标准(非内联的)高阶函数，减轻 GC 的压力。</p>
+</blockquote>
+<h4 id="Boxing-overhead"><a href="#Boxing-overhead" class="headerlink" title="Boxing overhead"></a>Boxing overhead</h4><p>Java8 创建了 <a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html">43 个特定的函数接口</a>来尽可能的避免拆箱装箱上的性能损耗，Kotlin 没有这么做， <code>Function</code> 对象只实现了一个泛型的接口，实际上每个输入输出对象都被视为 <code>Object</code>。<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** A function that takes 1 argument. */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Function1</span>&lt;<span class="type">in P1, out R</span>&gt; : <span class="type">Function</span>&lt;<span class="type">R</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">/** Invokes the function with the specified argument. */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">operator</span> <span class="function"><span class="keyword">fun</span> <span class="title">invoke</span><span class="params">(p1: <span class="type">P1</span>)</span></span>: R</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>也就是说以高阶函数的形式传递参数，如果涉及到原始类型(比如 <code>Int</code> 和 <code>Long</code>)输入或输出 ，会引发  <strong>systematic boxing and unboxing</strong> 。可能会导致不可忽视的性能问题，尤其是在 Android 设备上。</p>
+<p>上面的例子里，返回值被封装为 <code>Integer</code> 对象，调用函数会立即将其拆箱。</p>
+<blockquote>
+<p>在写一个涉及原始类型做输入输出的标准(非内联)高阶函数得十分小心，因为重复调用函数时，对这些值做拆箱装箱会给 GC 带来很大的压力。</p>
+</blockquote>
+<h4 id="Inline-functions-to-the-rescue-内联函数拯救世界"><a href="#Inline-functions-to-the-rescue-内联函数拯救世界" class="headerlink" title="Inline functions to the rescue 内联函数拯救世界"></a>Inline functions to the rescue 内联函数拯救世界</h4><p>幸好 Kotlin 提供了一个方法可以避免这些消耗：将高阶函数声明为 <code>inline</code>。编译器会将函数体直接内联到调用代码里。对高阶函数益处更明显，以参数形式传入的 lambda 函数体也将被内联，这意味着：</p>
+<ul>
+<li>不会产生 Function 对象</li>
+<li>在 lambda 使用原始类型也不会有拆箱装箱的消耗</li>
+<li>不会增加方法数</li>
+<li><p>实际执行中没有方法调用，当方法重复调用时对 CPU 的消耗更低</p>
+<p>当我们把 <code>transaction()</code> 声明为 <code>inline</code> 后，对应的 Java 形式为：</p>
+</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">db.beginTransaction();</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">   int result$iv = db.delete(<span class="string">&quot;Customers&quot;</span>, <span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">   db.setTransactionSuccessful();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">   db.endTransaction();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>很有用的特性，当然使用也要遵守基本法：</p>
+<ul>
+<li>内联函数不能调用自己</li>
+<li>在一个类中，声明为 public 的内联函数，只能访问这个类的 public 方法和字段</li>
+<li>The code will grow in size，多次引用一个很长的内联函数会导致最终生成的代码巨长无比，如果这个内联函数还引用其他巨长无比的内联函数画面一定美不胜收。</li>
+</ul>
+<blockquote>
+<p>声明内联函数时应尽可能克制其长度，必要时把过长的代码移到非内联函数中。可以在性能至关重要的部分使用 inline。</p>
+</blockquote>
+<hr>
+<h3 id="Companion-objects-伴生对象"><a href="#Companion-objects-伴生对象" class="headerlink" title="Companion objects 伴生对象"></a>Companion objects 伴生对象</h3><p>Kotlin 没有静态的字段和方法。和对象无关的方法或字段可以声明在 <a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/object-declarations.html#companion-objects"> companion object </a> 中。</p>
+<h4 id="Accessing-private-class-fields-from-its-companion-object"><a href="#Accessing-private-class-fields-from-its-companion-object" class="headerlink" title="Accessing private class fields from its companion object"></a>Accessing private class fields from its companion object</h4><p>伴生对象访问类的私有字段<br>看这个例子：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> <span class="keyword">private</span> <span class="keyword">constructor</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> hello = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">newInstance</span><span class="params">()</span></span> = MyClass()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>编译时，伴生对象被编译为一个单例。就是说和 Java 里其他类访问私有字段一样，<strong>伴生对象访问外部类的私有字段和方法时会生成额外的方法以供调用</strong>。 每当伴生对象进行读写操作时都是执行一个静态方法调用。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ALOAD <span class="number">1</span></span><br><span class="line">INVOKESTATIC be/myapplication/MyClass.access$getHello$p (Lbe/myapplication/MyClass;)I</span><br><span class="line">ISTORE <span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p>Java 可以用 <code>package</code> 访问权限来避免生成这些方法，不过 kotlin 没有。<br>使用 <code>public</code> 或 <code>internal</code> 的话会生成默认的 getter 和 setter 方法供外界调用，技术上来说，调用实例方法比静态方法更 expensive 。所有不必因为考虑性能的原因修改可见性。</p>
+<blockquote>
+<p>如果你需要伴生类去反复的修改类的字段，也许可以考虑把值 cache 到 local variable 来避免重复额外的隐式方法调用。</p>
+</blockquote>
+<h4 id="Accessing-constants-declared-in-a-companion-object"><a href="#Accessing-constants-declared-in-a-companion-object" class="headerlink" title="Accessing constants declared in a companion object"></a>Accessing constants declared in a companion object</h4><p>访问伴生对象中的常量<br>在 kotlin 中，我们常常把 <code>static</code> 常量声明到伴生对象里。<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">val</span> TAG = <span class="string">&quot;TAG&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">helloWorld</span><span class="params">()</span></span> &#123;</span><br><span class="line">        println(TAG)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>代码看起来整洁简单，但是背后的实现却不像代码看起来那样。<br>和上面提到的一样，<strong>访问伴生对象中的 <code>private</code> 常量会导致伴生类的实现额外生成 synthetic getter 方法</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GETSTATIC be/myapplication/MyClass.Companion : Lbe/myapplication/MyClass$Companion;</span><br><span class="line">INVOKESTATIC be/myapplication/MyClass$Companion.access$getTAG$p (Lbe/myapplication/MyClass$Companion;)Ljava/lang/String;</span><br><span class="line">ASTORE <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>事实上更糟，这个生成的方法并不直接返回值，而是调用一个 kotlin 生成的实例方法 getter。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ALOAD <span class="number">0</span></span><br><span class="line">INVOKESPECIAL be/myapplication/MyClass$Companion.getTAG ()Ljava/lang/String;</span><br><span class="line">ARETURN</span><br></pre></td></tr></table></figure>
+<p>声明为 <code>public</code> 的话，就会直接调用 getter 方法，不用生成额外的方法。</p>
+<p>这还没完，结果显示储存一个常量时，kotlin 编译器会在 main class 生成一个 <code>private static final</code> 字段，而不是伴生对象。有因为它时私有的，所以想要伴生对象可以访问它，还得生成 access 方法。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">INVOKESTATIC be/myapplication/MyClass.access$getTAG$cp ()Ljava/lang/String;</span><br><span class="line">ARETURN</span><br></pre></td></tr></table></figure>
+<p>最终由这个方法返回值：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GETSTATIC be/myapplication/MyClass.TAG : Ljava/lang/String;</span><br><span class="line">ARETURN</span><br></pre></td></tr></table></figure></p>
+<p>所以，当你访问一个伴生对象里的 private constant field 时，实际上是：</p>
+<ul>
+<li>调用类 A 伴生对象 B 的一个静态方法</li>
+<li>这个方法调用伴生对象 B 的实例方法</li>
+<li>这个实例方法再调用这个类 A 的静态方法</li>
+<li>最终返回类 A 的静态字段值</li>
+</ul>
+<p>等价的 Java 代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">&quot;TAG&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Companion companion = <span class="keyword">new</span> Companion();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// synthetic</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String access$getTAG$cp() &#123;</span><br><span class="line">        <span class="keyword">return</span> TAG;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Companion</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">final</span> String <span class="title">getTAG</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> MyClass.access$getTAG$cp();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// synthetic</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String access$getTAG$p(Companion c) &#123;</span><br><span class="line">            <span class="keyword">return</span> c.getTAG();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">helloWorld</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(Companion.access$getTAG$p(companion));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>我们有什么方法可以让字节码变少吗？有，但不保证适用于所有情况。</p>
+<p>第一个，使用 <code>const</code> 关键字修饰字段为<a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/properties.html#compile-time-constants">编译时常量</a>。会把值直接内联到调用位置，仅适用于原始类型和 String 对象。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">val</span> TAG = <span class="string">&quot;TAG&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">helloWorld</span><span class="params">()</span></span> &#123;</span><br><span class="line">        println(TAG)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第二个，用 <a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/java-to-kotlin-interop.html#instance-fields"><code>@JvmField</code></a>注解修饰伴生对象的 public 字段，告诉编译器像纯 Java 一样处理这个常量。这个注解实际上只是为了兼容 Java 创建的，如果不是为了用于 Java 代码的话，作者不建议使用。而且它<em>仅可用于 public 字段</em>。至于 Android 方面，你可能只会在实现 <code>Parcelable</code> 对象时使用到：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span></span>() : Parcelable &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="meta">@JvmField</span></span><br><span class="line">        <span class="keyword">val</span> CREATOR = creator &#123; MyClass(it) &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">constructor</span>(parcel: Parcel) : <span class="keyword">this</span>()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">writeToParcel</span><span class="params">(dest: <span class="type">Parcel</span>, flags: <span class="type">Int</span>)</span></span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">describeContents</span><span class="params">()</span></span> = <span class="number">0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后一个，你可以用 <a target="_blank" rel="noopener" href="https://developer.android.com/studio/build/shrink-code.html">Proguard</a>优化字节码，祈祷可以合并些方法，不保证绝对有效。</p>
+<blockquote>
+<p>Reading a “static” constant from a companion object adds two to three additional levels of indirection in Kotlin compared to Java and two to three additional methods will be generated for each of these constants.<br>Always declare primitive type and String constants using the const keyword to avoid this.<br>For other types of constants you can’t, so if you need to access the constant repeatedly, you may want to cache the value in a local variable.<br>Also, prefer storing public global constants in their own object rather than a companion object.<br>和 Java 相比，访问伴生对象的 <code>static</code> 常量增加了两到三个间接访问，每个常量字段都是。<br>尽量使用 const 修饰原始类型和 String 来避免<br>对于其他不能修饰的常量类型，并且还要重复访问的，考虑 cache the value in a local variable。<br>也可以把 public global constants 储存在自己的对象上，别房放到伴生对象里。</p>
+</blockquote>
+<hr>
+<p>over<br><a target="_blank" rel="noopener" href="https://medium.com/@BladeCoder/exploring-kotlins-hidden-costs-part-2-324a4a50b70">part 2</a>:local functions, null safety and varargs.</p>
+<hr>
+<h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://medium.com/@BladeCoder/exploring-kotlins-hidden-costs-part-1-fbb9935d9b62">https://medium.com/@BladeCoder/exploring-kotlins-hidden-costs-part-1-fbb9935d9b62</a></li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Kotlin-Bytecode-inspector"><span class="toc-text">Kotlin Bytecode inspector</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#A-note-about-benchmarks"><span class="toc-text">A note about benchmarks</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Higher-order-functions-and-Lambda-expressions"><span class="toc-text">Higher-order functions and Lambda expressions</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Function-objects"><span class="toc-text">Function objects</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Boxing-overhead"><span class="toc-text">Boxing overhead</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Inline-functions-to-the-rescue-%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0%E6%8B%AF%E6%95%91%E4%B8%96%E7%95%8C"><span class="toc-text">Inline functions to the rescue 内联函数拯救世界</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Companion-objects-%E4%BC%B4%E7%94%9F%E5%AF%B9%E8%B1%A1"><span class="toc-text">Companion objects 伴生对象</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Accessing-private-class-fields-from-its-companion-object"><span class="toc-text">Accessing private class fields from its companion object</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Accessing-constants-declared-in-a-companion-object"><span class="toc-text">Accessing constants declared in a companion object</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ref"><span class="toc-text">Ref</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/kotlin-hidden-cost-part-1/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/android/"><i class="fa fa-tags"></i>android</a>
+     
+      <a href="/tags/kotlin/"><i class="fa fa-tags"></i>kotlin</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/kotlin-hidden-cost-part-2/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/hs-koft/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

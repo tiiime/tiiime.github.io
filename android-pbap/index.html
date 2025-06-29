@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>Android PBAP Contacts | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="learn,pbap,bluetooth," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2017-06-15
+    </span>
+    
+      <span>
+        | <a href="/categories/learn/"><i class="fa fa-bookmark"></i>learn</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    Android PBAP Contacts
+  </h1>
+  
+  <article class="passage-article">
+    <h2 id="PBAP"><a href="#PBAP" class="headerlink" title="PBAP "></a>PBAP </h2><blockquote>
+<p><strong>Phone Book Access Profile</strong> 定义了两部设备间传输通讯录的协议。主要是为车载终端的 Hands-free 使用场景设计，可以将移动设备上的通讯录同步到车载设备上。也可用于客户端请求访问储存在服务端的通讯录。</p>
+</blockquote>
+<p><img src="http://www.qnx.com/developers/docs/660/topic/com.qnx.doc.car.bluetooth/images/01504221520340792Ftopic2Fpbap.xml_d7291e148.jpg" alt=""></p>
+<ul>
+<li><a href="pps-doc">PPS object</a>: Shows the profile used for a connected device</li>
+<li><a href="pbap-doc">PBAP 协议相关</a></li>
+</ul>
+<h2 id="OBEX"><a href="#OBEX" class="headerlink" title="OBEX"></a>OBEX</h2><p>OBject EXchange 的缩写。<strong>OBEX</strong> 是一个在设备间交换二进制对象的协议。</p>
+<p>它在设计上和 HTTP 协议相似，为 client 和 server 提供可靠连接来传输数据。<br>主要区别有:</p>
+<ul>
+<li>HTTP 通常在 TCP/IP 连接下使用。OBEX 也可以，不过更常见是用于红外和蓝牙这些设备的连接上，或者 USB 设备</li>
+<li>HTTP 的传输内容为可读文本，OBEX 是二进制，更利于在设备资源有限的情况下解析</li>
+<li>HTTP 的每个请求之间是无关联的，而 OBEX 的每个请求可能影响后续请求</li>
+</ul>
+<h2 id="For-Android"><a href="#For-Android" class="headerlink" title="For Android"></a>For Android</h2><p>在 Android 源码中已经有 PBAP 协议实现，不过处于 hide 状态，简单点可以把源码拷贝到<strong>自己的包名</strong>下使用。</p>
+<p><strong>相关代码:</strong></p>
+<ul>
+<li><a href="package-pbap">android/bluetooth/client/pbap</a></li>
+<li><a href="package-vcard">com/android/vcard</a></li>
+<li><a href="package-obex">javax/obex</a></li>
+</ul>
+<p><strong>使用方式:</strong></p>
+<ol>
+<li><p>connect</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 首先和普通蓝牙一样通过适配器获取设备，然后构造 BluetoothPbapClient 对象</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> fun <span class="title">getPBAPClient</span><span class="params">(address: String)</span> </span>= BluetoothPbapClient(btAdapter?.getRemoteDevice(address), handler)</span><br><span class="line"><span class="comment">// 尝试链接</span></span><br><span class="line">pbapClient = getPBAPClient(address)</span><br><span class="line">pbapClient?.connect()</span><br></pre></td></tr></table></figure>
+<p> <strong>handler</strong> 用来处理整个过程中的消息(<a href="pbap-client">BluetoothPbapClient</a>#EVENT_*), 和已有逻辑使用同一个 handler 时需要注意不要和自己的消息冲突, 最好单独创建一个 handler .</p>
+<p> <strong>最终会调用以下函数</strong>：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// android.bluetooth.client.pbap.BluetoothPbapSession$RfcommConnectThread::run</span></span><br><span class="line"><span class="comment">// 建立一个连接</span></span><br><span class="line">mSocket = mDevice.createRfcommSocketToServiceRecord(</span><br><span class="line">		UUID.fromString(PBAP_UUID));</span><br><span class="line">mSocket.connect();</span><br><span class="line"><span class="comment">// 初始化 OBEX </span></span><br><span class="line">BluetoothPbapObexTransport transport;</span><br><span class="line">transport = <span class="keyword">new</span> BluetoothPbapObexTransport(mSocket);</span><br><span class="line"><span class="comment">// 发送连接成功 MSG</span></span><br><span class="line">mSessionHandler.obtainMessage(RFCOMM_CONNECTED, transport).sendToTarget();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Pull</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 拉取数据</span></span><br><span class="line">pbapClient?.pullPhoneBook(BluetoothPbapClient.PB_PATH)</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Pulls complete phone book.</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> pbName absolute path to the phone book</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> filter bit mask which indicates which fields of the vCard hall be</span></span><br><span class="line"><span class="comment">*            included in each entry of the resulting list</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> format vCard format of entries in the resulting list</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> maxListCount limits number of entries in the response</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> listStartOffset offset to the first entry of the list that would</span></span><br><span class="line"><span class="comment">*            be returned</span></span><br><span class="line"><span class="comment">* <span class="doctag">@return</span> &lt;code&gt;true&lt;/code&gt; if request has been sent successfully;</span></span><br><span class="line"><span class="comment">*         &lt;code&gt;false&lt;/code&gt; otherwise; upon completion PCE sends</span></span><br><span class="line"><span class="comment">*         &#123;<span class="doctag">@link</span> #EVENT_PULL_PHONE_BOOK_DONE&#125; or</span></span><br><span class="line"><span class="comment">*         &#123;<span class="doctag">@link</span> #EVENT_PULL_PHONE_BOOK_ERROR&#125; in case of failure</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">pullPhoneBook</span><span class="params">(String pbName, <span class="keyword">long</span> filter, </span></span></span><br><span class="line"><span class="params"><span class="function">				<span class="keyword">byte</span> format, <span class="keyword">int</span> maxListCount,<span class="keyword">int</span> listStartOffset)</span></span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>pbName</strong>: 表示想要拉取的数据, 包括并不限于通讯录, 通话记录, 未接来电, etc(详见 <a href="pbap-client">BluetoothPbapClient</a>#*_PATH)</li>
+<li><strong>Filter</strong>:  可以过滤掉 VCard 中不需要的字段(<code>0x07</code> -&gt; NameAndNumberOnly)</li>
+</ul>
+</li>
+</ol>
+<p>最终会通过 <strong>BluetoothPbapClient.EVENT_PULL_PHONE_BOOK_DONE</strong> 消息的 <code>msg.obj</code> 字段把一个 <code>ArrayList&lt;VCardEntry&gt;</code> 对象传递到 handler. </p>
+<h2 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h2><p>4.4.4 设备连接 7.1 手机: 成功 (手机需点同意访问通讯录)<br>7.1 手机连接 7.1 手机: 成功 (两部手机都要点同意访问通讯录)</p>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.bluetooth.org/docman/handlers/downloaddoc.ashx?doc_id=230887">Phone Book Access Profile - Bluetooth SIG</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/OBject_EXchange">OBject EXchange</a></li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PBAP"><span class="toc-text">PBAP </span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OBEX"><span class="toc-text">OBEX</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#For-Android"><span class="toc-text">For Android</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C"><span class="toc-text">测试结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-text">Ref</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/android-pbap/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/pbap/"><i class="fa fa-tags"></i>pbap</a>
+     
+      <a href="/tags/bluetooth/"><i class="fa fa-tags"></i>bluetooth</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/okio/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/zsh-completions-for-adb/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

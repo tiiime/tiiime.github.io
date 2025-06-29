@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>[翻译] 代码每一天 | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Android, developer" />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2021-11-20
+    </span>
+    
+  </div>
+  <h1 class="passage-title">
+    [翻译] 代码每一天
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p>Ref: <a target="_blank" rel="noopener" href="https://johnresig.com/blog/write-code-every-day/">https://johnresig.com/blog/write-code-every-day/</a><br>Posted: April 10th, 2014</p>
+</blockquote>
+<p>去年秋天，我的 <a target="_blank" rel="noopener" href="https://github.com/jeresig">Side Project</a> 到了紧要关头：而我没有取得实质的进展，我无法在不影响正常工作的情况下，完成更多工作。</p>
+<p>做这个 Side Project 时，有几个问题。我主要是在晚上或是周末时间开工，这个策略不对，为了在周末完成高质量的工作，给我带来了很大的压力（如果我做不到，就会感觉很失败）。而且，不能保证每个周末都是空闲的，也不能保证这两天无时无刻都在编程（一点休息，放松都不做是不可能的）。还有一个问题就是，一周对于某些编码工作来说，间隔太久了，很容易就忘记之前在做什么（就算你做了笔记）。更不要说，如果你错过了一个周末，就有两周的空窗期，这种持续数周的上下文切换很致命（我有很多 Side Project 就是这样挂掉的）。</p>
+<p>受到 <a target="_blank" rel="noopener" href="http://jenniferdewalt.com/">Jennifer Dewalt</a> 在去年 180 天完成 180 个网站的项目影响，我觉得有必要试一下：每天都花时间搞 Side Project。</p>
+<p>我制定了一些规则：</p>
+<ol>
+<li>每天都要写代码。可以写文档，博客或是其他东西，但是不能算入代码之内。</li>
+<li>必须是有效代码。不能是调整缩进，格式化代码这种的工作，最好重构也不算。（可以做，但不能算有效代码）</li>
+<li>代码必须在午夜前完成。</li>
+<li>代码要开源，上传到 Github。</li>
+</ol>
+<p>有些规则很武断。技术上来讲，代码不需要在午夜前完成编写，我只是想避免熬夜而写烂代码。代码也不一定要开源上传到 Github，我只是尽量让我对编写的代码进行更多的思考（思考复用，在早期考虑创建 module）。</p>
+<p>目前为止，我执行的很成功，已经坚持了 20 周了。这完全改变了我的编码方式，并对我的生活和精神产生了实质性的影响。</p>
+<p>随着习惯改变，一些有趣的事也发生了：</p>
+<p><strong>最小可执行代码。</strong> 我强迫自己每天编写不少于 30 分钟的代码，（在短时间内编写有意义的代码很难，特别是刚上完一天班）一周里有几天我甚至会写更久（通常不超过一个小时），周末优势可以干一整天。</p>
+<p><strong>写代码成为习惯。</strong>我并不在意 Github 上的绿格子。我感觉最重要的是：这是你为你自己的生活作出的改变，而不是别人的看法。减肥和锻炼也是：如果你不在意提升自己，你就不会成功。</p>
+<p><strong>战胜焦虑。</strong>在这个尝试之前，我常常感到焦虑，没有完成“足够”的工作，没有取得“足够”的进展（这两个东西其实都无法量化，因为我连个时间表都没有）。我意识到<strong>取得进展的成就感，和取得实际进展同样重要</strong>。这让我眼界大开。自从我每天都取得进展，我的焦虑消失了。我感受到了所完成的工作量，不再疯狂渴望完成所有工作。</p>
+<p><strong>周末。</strong>以前，周末完成工作是至关重要的（通常来说，这是我之前完成 Side Project 代码编写的唯一时间）。现在不同了——这很好。在周末完成一周的计划，通常会让我失望。我很少能在周末完成我想要做的事，为了完成更多工作，我常常要强迫自己拒掉其它周末活动（吃啊，逛博物馆，去公园，约会等等）。我强烈认为，Side Project 很重要，但是不要影响到正常生活。</p>
+<p><strong>后台任务。</strong>自从开始每天写 Side Project，一个有趣的变化是，要做的活常常在头脑里窜出来。走路，洗澡等等其它不太用脑子的时候，我会思考接下来要写的代码，找到一个解决问题的好方法。在此之前没有这种情况，之前都是在想写其它任务，或者被自己的焦虑情绪占据。</p>
+<p><strong>上下文切换。</strong>搞 Side Project 总是会有上下文切换的开销。之前的时候隔了一周再去恢复上下文太难了。每天编写代码，恢复现场更容易了。</p>
+<p><strong>工作生活平衡。</strong> 学会如何更好地平衡工作，Side Project 和生活，也是非常重要的变化之一。因为每天都要去写 Side Project，我必须很好的安排时间。如果今晚要出去嗨皮，很晚才能回来，那我就得早点开始 Side Project 的工作，也就是在日常公司工作开始之前。如果我没有完成 Side Project 的工作，并且晚上又出去了，我会尽快赶回家完成它（而不是错过这一天）。值得一提的是，我发现留给业余爱好的时间变少了，但这是一个值得的权衡，为了生活。</p>
+<p><strong>外在认知。</strong> 额外还有一个新的习惯，就是沟通。我的伴侣理解我必须完成每天的工作，一些活动安排都要绕开它。很欣慰在我说了“我们可以看电影，不过之后我要把代码写完”后能够理解。</p>
+<p><strong>写了多少代码？</strong>我很难相信过去几个月自己写了多少代码。我写了几个网站，重写了一写框架，创建了一堆 node 模块。我写了好多东西，都忘了。几周前的工作看起来就很遥远了。我对自己完成的工作量很满意。</p>
+<p>我认为这种习惯上的改变是巨大的成功，并希望尽可能地继续下去。与此同时，我将尽我所能向那些希望搞 Side Projetc 的人推荐这个方法。欢迎<a target="_blank" rel="noopener" href="https://johnresig.com/about/">向我反馈</a>，非常乐于听到你的故事。</p>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/write-code-every-day/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/compose-ui-beyond-the-ui-part-i-big-changes/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/the-state-of-managing-state-with-compose/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

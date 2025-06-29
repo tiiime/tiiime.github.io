@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>Compose (UI) 不止 UI（part 1）:巨变 | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Android, developer" />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2021-12-25
+    </span>
+    
+  </div>
+  <h1 class="passage-title">
+    Compose (UI) 不止 UI（part 1）:巨变
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p>原文地址： <a target="_blank" rel="noopener" href="https://proandroiddev.com/compose-ui-beyond-the-ui-part-i-big-changes-bfe824ee8ed4">https://proandroiddev.com/compose-ui-beyond-the-ui-part-i-big-changes-bfe824ee8ed4</a></p>
+</blockquote>
+<p>Jetpack Compose 是开发 Andorid UI 和应用的新工具。因为是以 UI 框架的形式问世的，已经有许多文章介绍它的内部原理和如何用来构建 UI。</p>
+<p>但是构建一个应用不仅仅是 UI，在其他方面 Compose 也带来了改变。这个系列文章，我会关注一些<strong>未来构建 App 时可能会发生的变化</strong>。</p>
+<p>我认为，它有许多优势，除此之外还会因为其他因素被广泛使用。有必要讨论它会如何改变我们的开发，找到适合我们需求的方式。</p>
+<blockquote>
+<p>注意：本文提到的 Compose 都是指 Compose UI，<a target="_blank" rel="noopener" href="https://jakewharton.com/a-jetpack-compose-by-any-other-name/">而 Compose 并不是只有 UI 呦！</a></p>
+</blockquote>
+<h1 id="如今的-Android-开发有什么问题？"><a href="#如今的-Android-开发有什么问题？" class="headerlink" title="如今的 Android 开发有什么问题？"></a>如今的 Android 开发有什么问题？</h1><p>Android 有些方面很复杂。一部分是因为 bug，另外是缺少经验的开发者（甚至有些老 Android 开发也）常常遇到问题。</p>
+<h2 id="Fragment-和-Activity-的生命周期"><a href="#Fragment-和-Activity-的生命周期" class="headerlink" title="Fragment 和 Activity 的生命周期"></a>Fragment 和 Activity 的生命周期</h2><blockquote>
+<p>生命周期是 Android 开发最复杂的点之一：是导致许多错误的根源，对开发者来说很难理解。</p>
+</blockquote>
+<p>尤其是 Fragment，<a target="_blank" rel="noopener" href="https://developer.squareup.com/blog/advocating-against-android-fragments/">可以看这里</a>，内部有两个生命周期，一个是 view，一个是 Fragment 自己。<br>还有复杂的返回栈。比如，你在 fragment 存活时监听了一个数据，想去更新 UI 时，却发现 view 已经销毁了；又或者新的 view 已经创建，而你持有了一个已经被销毁 view 的引用，导致内存泄漏。</p>
+<p>随着文档改善，建议的增加，和 Lifecycle 相关组件的引入，处理生命周期相对来说有所改善。但它仍是一个问题源。</p>
+<h2 id="Configuration-changes-回调"><a href="#Configuration-changes-回调" class="headerlink" title="Configuration changes 回调"></a>Configuration changes 回调</h2><p>Android 生命周期开发非常复杂的另一个原因就是 configuration changes。<a target="_blank" rel="noopener" href="https://developer.android.com/guide/topics/resources/runtime-changes#HandlingTheChange">谷歌建议我们</a>让系统处理 configuration change，大部分应用都遵守了（<em>UPD：这个建议是给老的 view 系统的，compose 不再需要</em>）。举例来说，让系统处理 configuration change 的一个场景就是转屏，系统重新创建 activity（和 fragment 和 view）。有许多影响：整在执行的操作会被暂停，内存中的数据会重置。除此之外，状态和任务也会丢失，用户要等待。</p>
+<p>解决这个问题有几种方案：首先忽略官方的建议，<strong>自己处理 configuration change</strong>。Activity 和 Fragment 没有被重建，转屏会快一点，但是我们要手动重载资源，更新 UI。</p>
+<p>另一个方案就是<strong>让这些类被引用</strong>，也就是不被销毁。以前是用一个 headless 的 fragment，现在通常用 ViewModel 实现。ViewModel 与 MVVM 无关，只是一个可以在 fragment 和 activity 生命周期 recreate 后，不被销毁的类。</p>
+<p>使用 ViewModel 也不简单，首先要由系统实例化，如果我们想给 ViewModel 的构造方法加个参数（几本是必然要加），就要提供工厂方法。并且 ViewModel 不能方便的访问绑定到 Fragment 或是 Activity 的对象，有一个更短的生命周期： resource，local 和 fragment 自己…想要访问这些对象，需要更复杂的逻辑避免内存泄漏。</p>
+<h2 id="Theming-and-material-components"><a href="#Theming-and-material-components" class="headerlink" title="Theming and material components"></a>Theming and material components</h2><p>Android 的主题和 material components 就是难用。使用组件支持的功能很方便，一旦你稍微想对组件做一些定制，准备好个把钟头吧。</p>
+<h1 id="Compose-做了什么改变？"><a href="#Compose-做了什么改变？" class="headerlink" title="Compose 做了什么改变？"></a>Compose 做了什么改变？</h1><p>虽然 Compose UI 只是个 UI 工具，它的工作原理在 UI 之外改变我们应用的架构。可以让我们更好的处理前面的问题，<strong>改善 Android 开发体验</strong>。</p>
+<h2 id="和-Fragment-说再见，你不会想它的。"><a href="#和-Fragment-说再见，你不会想它的。" class="headerlink" title="和 Fragment 说再见，你不会想它的。"></a>和 Fragment 说再见，你不会想它的。</h2><p>首先，Compose 不需要 Fragment。迁移现有 App 的过程中，使用 Fragment 包一层 Compose  或许情有可原；全新的项目里，就忘掉 Fragment 吧。<br>Compsoe 可以让我们访问 Context 和 Android framework， composable 函数可以承载 UI，大到整块屏幕，或是用来做到 navigation frameworks。所以，没有理由在一个 100% Compose 应用里使用　Fragment：<strong>何况它们没有提供任何价值</strong>还要处理生命周期。</p>
+<h2 id="终结-Configuration-changes-带来的破坏"><a href="#终结-Configuration-changes-带来的破坏" class="headerlink" title="终结 Configuration changes 带来的破坏"></a>终结 Configuration changes 带来的破坏</h2><p>关于如何去做，我们会在后面的文章介绍，使用 Compose 比传统 view 的方式容易很多。不必担心 view 生命周期超出控制器（ViewModel，Presenter 等），或是任务被暂停（有些任务例外，不过那是另外一个话题了）。<br>可以避免重建重量级组件比如 Activity ,对 view 有了更多的控制权，创造更快的用户体验。</p>
+<h2 id="不需要-ViewModel"><a href="#不需要-ViewModel" class="headerlink" title="不需要 ViewModel"></a>不需要 ViewModel</h2><p>自己处理 Configuration changes 随之而来的就是不再需要 ViewModel 了， ViewModel 是为了在 recreate 期间持有数据和任务。<br>我们创建自己的 controller，不需要继承 ViewModel，更轻量，不需要 factory 而且是平台无关的。当然，其实也没有特别简单，后面文章会介绍。</p>
+<h2 id="给人类使用的-Theming-和-material-components"><a href="#给人类使用的-Theming-和-material-components" class="headerlink" title="给人类使用的 Theming 和 material components"></a>给人类使用的 Theming 和 material components</h2><p>在 Compose 自定义 widget 相较于之前的方式更简单，更容易。</p>
+<p>不止于此！我们可以看到所有 material component 的实现，观察它如何工作，使用了什么主题，接收什么参数。总之主题和 material components 会更好用，<br>从代码就可以方便看出支持什么，添加不支持的功能。（译者注：作者这里就给 Compose 一顿夸，没有解释为什么。我想到一个点是 Compose 所有的参数都可以在函数上方便的看到，而不像之前 xml，支持哪些属性，和对应的行为完全靠猜）。</p>
+<h1 id="Compose-带来的其他变化"><a href="#Compose-带来的其他变化" class="headerlink" title="Compose 带来的其他变化"></a>Compose 带来的其他变化</h1><h2 id="Databinding-棺材板上的最后一颗钉子"><a href="#Databinding-棺材板上的最后一颗钉子" class="headerlink" title="Databinding 棺材板上的最后一颗钉子"></a>Databinding 棺材板上的最后一颗钉子</h2><p>当前的趋势就是，架构越来越响应式，而响应式编程关键一步就是如何将数据绑定到 UI。没有问题不代表不能改善。</p>
+<p>使用 databinding 插件可以少写很多模板代码，但是会影响编译速度，编译失败时的问题又很难排查 debug。</p>
+<p>Compose 就没有这些问题，数据和 UI 自动绑定，框架帮我们做了，谢天谢地。</p>
+<p>还有 LiveData，帮我们持有 UI 关心的数据，处理生命周期很有用。虽然在 kotlin 使用上有点小问题，即使声明为非空类型，也会有 null 传过来。</p>
+<p>Databinding 插件只能配合 LiveData 使用，用了 DataBinding 就不能用 flow 替换 LiveData(UPD: Android Studio ArticFox 之后 databinding 支持 StateFlow)。<br>Compose 没有这个问题，用了 Flow，除了解决 null 问题之外，还有更多的操作符可供使用，很能将较重的任务放在其他线程执行（没错，就像 RxJava 那样）。</p>
+<h2 id="Welcome-multiplatform"><a href="#Welcome-multiplatform" class="headerlink" title="Welcome multiplatform"></a>Welcome multiplatform</h2><p>终于讲到 multiplatform 了。Kotlin multiplatform 推动进展显著，会改变整个行业。Compose 支持跨平台：Jetbrains 搞了 <a target="_blank" rel="noopener" href="https://www.jetbrains.com/lp/compose/">Compose for Desktop</a>！（UPD: 还有 <a target="_blank" rel="noopener" href="https://blog.jetbrains.com/kotlin/2021/05/technology-preview-jetpack-compose-for-web/">web</a>!）</p>
+<p>一份代码，跨平台想想都美（在做梦）。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>用 Compose 明天会更好。不久的将来，没有 Fragment，没有 ViewModel，view 和 controller 和 lifecycle 一一映射，开发体验会更愉快。需要学习很多新的内容。<br>（后悔了，我翻译了个广告，没啥有意思的东西…立个 flag，下家公司不用 Compose 不去）。</p>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E4%BB%8A%E7%9A%84-Android-%E5%BC%80%E5%8F%91%E6%9C%89%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-text">如今的 Android 开发有什么问题？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Fragment-%E5%92%8C-Activity-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-text">Fragment 和 Activity 的生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Configuration-changes-%E5%9B%9E%E8%B0%83"><span class="toc-text">Configuration changes 回调</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Theming-and-material-components"><span class="toc-text">Theming and material components</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Compose-%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88%E6%94%B9%E5%8F%98%EF%BC%9F"><span class="toc-text">Compose 做了什么改变？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%92%8C-Fragment-%E8%AF%B4%E5%86%8D%E8%A7%81%EF%BC%8C%E4%BD%A0%E4%B8%8D%E4%BC%9A%E6%83%B3%E5%AE%83%E7%9A%84%E3%80%82"><span class="toc-text">和 Fragment 说再见，你不会想它的。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%88%E7%BB%93-Configuration-changes-%E5%B8%A6%E6%9D%A5%E7%9A%84%E7%A0%B4%E5%9D%8F"><span class="toc-text">终结 Configuration changes 带来的破坏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E9%9C%80%E8%A6%81-ViewModel"><span class="toc-text">不需要 ViewModel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%99%E4%BA%BA%E7%B1%BB%E4%BD%BF%E7%94%A8%E7%9A%84-Theming-%E5%92%8C-material-components"><span class="toc-text">给人类使用的 Theming 和 material components</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Compose-%E5%B8%A6%E6%9D%A5%E7%9A%84%E5%85%B6%E4%BB%96%E5%8F%98%E5%8C%96"><span class="toc-text">Compose 带来的其他变化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Databinding-%E6%A3%BA%E6%9D%90%E6%9D%BF%E4%B8%8A%E7%9A%84%E6%9C%80%E5%90%8E%E4%B8%80%E9%A2%97%E9%92%89%E5%AD%90"><span class="toc-text">Databinding 棺材板上的最后一颗钉子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Welcome-multiplatform"><span class="toc-text">Welcome multiplatform</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-text">结论</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/compose-ui-beyond-the-ui-part-i-big-changes/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/bypass-pixel-setup-on-pixelexperience/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/write-code-every-day/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>[翻译]kotlin-hidden-cost-part-3 | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="translate,android,kotlin," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2017-08-30
+    </span>
+    
+      <span>
+        | <a href="/categories/translate/"><i class="fa fa-bookmark"></i>translate</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    [翻译]kotlin-hidden-cost-part-3
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p><a target="_blank" rel="noopener" href="https://medium.com/@BladeCoder/exploring-kotlins-hidden-costs-part-3-3bf6e0dbf0a4">https://medium.com/@BladeCoder/exploring-kotlins-hidden-costs-part-3-3bf6e0dbf0a4</a></p>
+</blockquote>
+<h3 id="Delegated-properties"><a href="#Delegated-properties" class="headerlink" title="Delegated properties"></a>Delegated properties</h3><p><a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/delegated-properties.html"> delegated property </a> 指的是一个 <a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/properties.html"> property</a> 的 getter 或可选的 setter 是由一个额外的对象实现的，这个对象被称为 <em>delegate</em>。我们可以使用这个特性复用自定义的属性实现。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Example</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> p: String <span class="keyword">by</span> Delegate()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>delegate 对象需要实现 <strong><code>operator</code></strong>， <code>getValue()</code>函数和<code>getValue()</code>函数提供读写操作。函数执行时收到 <strong>所代理对象实例</strong> 和 <strong>属性相关的 metadata</strong> (比如 name)。</p>
+<p>delegate property 背后的代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Example</span> </span>&#123;</span><br><span class="line">   <span class="meta">@NotNull</span></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">final</span> Delegate p$delegate = <span class="keyword">new</span> Delegate();</span><br><span class="line">   <span class="comment">// $FF: synthetic field</span></span><br><span class="line">   <span class="keyword">static</span> <span class="keyword">final</span> KProperty[] $$delegatedProperties = <span class="keyword">new</span> KProperty[]&#123;(KProperty)Reflection.mutableProperty1(<span class="keyword">new</span> MutablePropertyReference1Impl(Reflection.getOrCreateKotlinClass(Example.class), <span class="string">&quot;p&quot;</span>, <span class="string">&quot;getP()Ljava/lang/String;&quot;</span>))&#125;;</span><br><span class="line"></span><br><span class="line">   <span class="meta">@NotNull</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> String <span class="title">getP</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.p$delegate.getValue(<span class="keyword">this</span>, $$delegatedProperties[<span class="number">0</span>]);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">setP</span><span class="params">(<span class="meta">@NotNull</span> String var1)</span> </span>&#123;</span><br><span class="line">      Intrinsics.checkParameterIsNotNull(var1, <span class="string">&quot;&lt;set-?&gt;&quot;</span>);</span><br><span class="line">      <span class="keyword">this</span>.p$delegate.setValue(<span class="keyword">this</span>, $$delegatedProperties[<span class="number">0</span>], var1);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>类中加入了一些静态属性元数据，delegate 在构造函数初始化，读写属性时调用 delegate 的方法。</p>
+<h4 id="Delegate-instances"><a href="#Delegate-instances" class="headerlink" title="Delegate instances"></a>Delegate instances</h4><p>上面的例子中，我们实例化了一个<strong>新的 delegate 对象</strong>。当 delegate 的内部实现是<strong>有状态的</strong>时需要这步，比如下面这个例子，一个缓存 property 计算后的值：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StringDelegate</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> cache: String? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">operator</span> <span class="function"><span class="keyword">fun</span> <span class="title">getValue</span><span class="params">(thisRef: <span class="type">Any</span>?, property: <span class="type">KProperty</span>&lt;*&gt;)</span></span>: String &#123;</span><br><span class="line">        <span class="keyword">var</span> result = cache</span><br><span class="line">        <span class="keyword">if</span> (result == <span class="literal">null</span>) &#123;</span><br><span class="line">            result = someOperation()</span><br><span class="line">            cache = result</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当 delegate 实例需要构造函数提供<strong>额外的参数</strong>时，也需要创建新的实例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Example</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> nameView <span class="keyword">by</span> BindViewDelegate&lt;TextView&gt;(R.id.name)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然也有某些场景<strong>只需一个 delegate 实例代理所有 property</strong>：delegate 是状态无关的，工作过程只与所代理对象实例和 property name 相关。这时你可以把 delegate 写成单例的，用 <code>object</code> 替换 <code>class</code>.</p>
+<p>比如这个例子:<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">object</span> FragmentDelegate &#123;</span><br><span class="line">    <span class="keyword">operator</span> <span class="function"><span class="keyword">fun</span> <span class="title">getValue</span><span class="params">(thisRef: <span class="type">Activity</span>, property: <span class="type">KProperty</span>&lt;*&gt;)</span></span>: Fragment? &#123;</span><br><span class="line">        <span class="keyword">return</span> thisRef.fragmentManager.findFragmentByTag(property.name)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>同样，<strong>一个对象也可以扩展为 delegate</strong>。<code>getValue()</code> and <code>setValue()</code> 也可以声明为<a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/extensions.html#extension-functions">扩展函数</a>的形式。kotlin 内部还提供了一组<strong>扩展函数</strong>，允许将 Map/MutableMap 实例作为代理，使用 property name 做 key。</p>
+<p>如果你打算在一个类内复用某个代理实例，记得在构造函数里给他初始化。</p>
+<p><em>Note:</em> Kotlin 1.1 之后，<a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/delegated-properties.html#local-delegated-properties-since-11">函数的局部变量也可以被 delegate </a> ，此时可以不必在构造函数立即初始化 delegate，在函数使用前实例化即可。</p>
+<blockquote>
+<p>使用 delegate property 引入 delegate 对象的开销，还会在类中加入一些 metadata。尽可能<strong>复用</strong> delegate。 大量使用 delegate 时要考虑这样做是必须的吗？有没有更好地解决方式。</p>
+</blockquote>
+<h4 id="Generic-delegates"><a href="#Generic-delegates" class="headerlink" title="Generic delegates"></a>Generic delegates</h4><p>delegate  函数还可以以泛型形式声明，用于代理不同的类型。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> maxDelay: <span class="built_in">Long</span> <span class="keyword">by</span> SharedPreferencesDelegate&lt;<span class="built_in">Long</span>&gt;()</span><br></pre></td></tr></table></figure>
+<p>如果代理的是原始类型，<strong>每次读写都将会产生装箱拆箱开销</strong>，即使将原始类型声明为 non-null 也没用。</p>
+<blockquote>
+<p>对于非空原始类型，不用泛型，使用指定类型的 delegate 就可以避免装箱拆箱操作。</p>
+</blockquote>
+<h4 id="Standard-delegates-lazy"><a href="#Standard-delegates-lazy" class="headerlink" title="Standard delegates: lazy()"></a>Standard delegates: lazy()</h4><p>kotlin 提供了几个标准 delegate，like Delegates.notNull(), Delegates.observable() and lazy()。</p>
+<p><code>lazy()</code> 函数返回一个只读属性 delegate，使用 lambda 负责在初次使用时初始化。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">val</span> dateFormat: DateFormat <span class="keyword">by</span> lazy &#123;</span><br><span class="line">    SimpleDateFormat(<span class="string">&quot;dd-MM-yyyy&quot;</span>, Locale.getDefault())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在保持可读性的同时，提供了一个简洁的方式<strong>将耗时的初始化过程延迟执行</strong>，提升性能。</p>
+<p>需要注意，<code>lazy()</code> 并不是内联函数，传入的 lambda 被编译为单独的 <code>Function</code>，而不是内联到返回的 delegate 对象内。 </p>
+<p><code>lazy()</code> 有个不起眼的 <strong>optional 参数  <code>mode</code></strong> ，可以以 3 种形式返回 delegate ：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">lazy</span><span class="params">(initializer: () -&gt; <span class="type">T</span>)</span></span>: Lazy&lt;T&gt; = SynchronizedLazyImpl(initializer)</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">lazy</span><span class="params">(mode: <span class="type">LazyThreadSafetyMode</span>, initializer: () -&gt; <span class="type">T</span>)</span></span>: Lazy&lt;T&gt; =</span><br><span class="line">        <span class="keyword">when</span> (mode) &#123;</span><br><span class="line">            LazyThreadSafetyMode.SYNCHRONIZED -&gt; SynchronizedLazyImpl(initializer)</span><br><span class="line">            LazyThreadSafetyMode.PUBLICATION -&gt; SafePublicationLazyImpl(initializer)</span><br><span class="line">            LazyThreadSafetyMode.NONE -&gt; UnsafeLazyImpl(initializer)</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
+<p>默认 mode 是 <code>LazyThreadSafetyMode.SYNCHRONIZED</code>，内部会进行  <strong>double-checked lock</strong>，在<strong>多线程</strong>访问时会检查锁，相对来说开销较高。</p>
+<p>如果你确定只有单线程的访问，设置 mode 为 <code>LazyThreadSafetyMode.NONE</code> 可以<strong>规避访问锁引发的额外</strong>开销。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> dateFormat: DateFormat <span class="keyword">by</span> lazy(LazyThreadSafetyMode.NONE) &#123;</span><br><span class="line">    SimpleDateFormat(<span class="string">&quot;dd-MM-yyyy&quot;</span>, Locale.getDefault())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>使用 <code>lazy()</code> 将耗时初始化延迟执行，指定 mode 避免锁带来的开销。</p>
+</blockquote>
+<h3 id="Ranges"><a href="#Ranges" class="headerlink" title="Ranges"></a>Ranges</h3><p>kotlin 使用 ranges 表示有限集的 value，value 可以是任何 <code>Comparable</code> 类型。这个表达式创建一个实现了 <a target="_blank" rel="noopener" href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.ranges/-closed-range/"><code>ClosedRange</code></a> 接口的对象，操作符是 <code>..</code>。</p>
+<h4 id="Inclusion-tests"><a href="#Inclusion-tests" class="headerlink" title="Inclusion tests"></a>Inclusion tests</h4><p>range 主要是为了使用 <code>in</code> 和 <code>!in</code> 操作符书写 inclusion or exclusion tests。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (i <span class="keyword">in</span> <span class="number">1.</span><span class="number">.10</span>) &#123;</span><br><span class="line">    println(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>内部实现对 <strong>非空原始类型的 range</strong> 进行了优化 (bounded byInt, Long, Byte, Short, Float, Double or Char values)，上例会编译为：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="number">1</span> &lt;= i &amp;&amp; i &lt;= <span class="number">10</span>) &#123;</span><br><span class="line">   System.<span class="keyword">out</span>.println(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>没有额外开销</strong>，也不会有对象生成。也可以在 when 语句内使用 range：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> message = <span class="keyword">when</span> (statusCode) &#123;</span><br><span class="line">    <span class="keyword">in</span> <span class="number">200.</span><span class="number">.299</span> -&gt; <span class="string">&quot;OK&quot;</span></span><br><span class="line">    <span class="keyword">in</span> <span class="number">300.</span><span class="number">.399</span> -&gt; <span class="string">&quot;Find it somewhere else&quot;</span></span><br><span class="line">    <span class="keyword">else</span> -&gt; <span class="string">&quot;Oops&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>和 <code>if&#123;...&#125; else if&#123;...&#125;</code> 功能相同，但可读性更高。</p>
+<p>不过，<strong>当 range 实例化和实际使用位置并不在同一层级时，会有一个小的开销</strong>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">val</span> myRange <span class="keyword">get</span>() = <span class="number">1.</span><span class="number">.10</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">rangeTest</span><span class="params">(i: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (i <span class="keyword">in</span> myRange) &#123;</span><br><span class="line">        println(i)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这导致编译后额外生成了一个 <code>IntRange</code> 对象：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> IntRange getMyRange() &#123;</span><br><span class="line">   <span class="keyword">return</span> new IntRange(<span class="number">1</span>, <span class="number">10</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> void rangeTest(int i) &#123;</span><br><span class="line">   <span class="keyword">if</span>(<span class="keyword">this</span>.getMyRange().contains(i)) &#123;</span><br><span class="line">      System.<span class="keyword">out</span>.println(i);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>将 getter 声明为<strong>内联</strong>也不能避免。kotlin 1.1 编译器可以考虑优化一下这里。不过至少没有装箱什么的，感谢 balabala。</p>
+<blockquote>
+<p>不要瞎折腾，直接用，或者声明成 constants 复用。</p>
+</blockquote>
+<p>range 也可用于其他实现了 <code>Comparable</code> 接口的非原始类型。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (name <span class="keyword">in</span> <span class="string">&quot;Alfred&quot;</span>..<span class="string">&quot;Alicia&quot;</span>) &#123;</span><br><span class="line">    println(name)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>像这种就没啥特殊处理了，肯定会创建一个 <code>ClosedRange</code> 对象：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(RangesKt.rangeTo((Comparable)<span class="string">&quot;Alfred&quot;</span>, (Comparable)<span class="string">&quot;Alicia&quot;</span>)</span><br><span class="line">.contains((Comparable)name)) &#123;</span><br><span class="line">System.<span class="keyword">out</span>.println(name);</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>需要反复使用时考虑设置为 constant。</p>
+</blockquote>
+<h4 id="Iterations-for-loops"><a href="#Iterations-for-loops" class="headerlink" title="Iterations: for loops"></a>Iterations: for loops</h4><p><strong>整型 range</strong> 是连续的：<strong>可被遍历</strong>。可以用更简短的代码替代 java 的 <code>for</code> 循环。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1.</span><span class="number">.10</span>) &#123;</span><br><span class="line">    println(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>也不会产生额外的开销：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">int i = <span class="number">1</span>;</span><br><span class="line">byte var1 = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>) &#123;</span><br><span class="line">   System.<span class="keyword">out</span>.println(i);</span><br><span class="line">   <span class="keyword">if</span>(i == var1) &#123;</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">   &#125;</span><br><span class="line">   ++i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>向后遍历可以用 <a target="_blank" rel="noopener" href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.ranges/down-to.html"><code>downTo()</code> </a> infix 函数替换 <code>..</code></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">10</span> downTo <span class="number">1</span>) &#123;</span><br><span class="line">    println(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这也不会产生额外的开销：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">int i = <span class="number">10</span>;</span><br><span class="line">byte var1 = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>) &#123;</span><br><span class="line">   System.<span class="keyword">out</span>.println(i);</span><br><span class="line">   <span class="keyword">if</span>(i == var1) &#123;</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">   &#125;</span><br><span class="line">   --i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>还有 <code>until()</code> </p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">0</span> until size) &#123;</span><br><span class="line">    println(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>文章完成时的 kotlin 版本对这个函数生成的代码并不完美。<strong>但 Kotlin 1.1.4 有很大的提升</strong>，现在生成的代码更高效：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int i = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span>(int var2 = size; i &lt; var2; ++i) &#123;</span><br><span class="line">   System.<span class="keyword">out</span>.println(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>However, <strong>other iteration variants are not as well optimized</strong>.</p>
+<p>除了 downto() 以外另一种方式：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> (<span class="number">1.</span><span class="number">.10</span>).reversed()) &#123;</span><br><span class="line">    println(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不要用</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">IntProgression var10000 = RangesKt.reversed((IntProgression)(new IntRange(<span class="number">1</span>, <span class="number">10</span>)));</span><br><span class="line">int i = var10000.getFirst();</span><br><span class="line">int var3 = var10000.getLast();</span><br><span class="line">int var4 = var10000.getStep();</span><br><span class="line"><span class="keyword">if</span>(var4 &gt; <span class="number">0</span>) &#123;</span><br><span class="line">   <span class="keyword">if</span>(i &gt; var3) &#123;</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>(i &lt; var3) &#123;</span><br><span class="line">   <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>) &#123;</span><br><span class="line">   System.<span class="keyword">out</span>.println(i);</span><br><span class="line">   <span class="keyword">if</span>(i == var3) &#123;</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   i += var4;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>产生了一个临时 <code>IntRange</code> 对象对应 range，然后创建一个 <code>IntProgression</code> 对象将第一个对象的值逆序。</p>
+<p>任何<strong>将两个以上函数结合来创建 progression</strong> 的代码都会产生相似的结果，<strong>至少两个轻量 progression object 被生成</strong>。</p>
+<p>对 <code>step()</code> infix function(修饰函数?) 也一样，就算 <code>step = 1</code>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1.</span><span class="number">.10</span> step <span class="number">2</span>) &#123;</span><br><span class="line">    println(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>提示，生成的代码读取 <code>IntProgression</code> 的 <code>last</code> 属性时会进行一个计算，确定世界边界，比如上例中，这个值是 9。</p>
+<blockquote>
+<p>遍历就用一个表达式，别整太多中间步骤</p>
+</blockquote>
+<h4 id="Iterations-forEach"><a href="#Iterations-forEach" class="headerlink" title="Iterations: forEach()"></a>Iterations: forEach()</h4><p>用 range 的 内联扩展函数 <code>forEach()</code> 替代 <code>for</code></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">1.</span><span class="number">.10</span>).forEach &#123;</span><br><span class="line">    println(it)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>他不会进行优化，只是使用 <code>Iterable</code> 遍历：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Iterable $receiver$iv = (Iterable)(new IntRange(<span class="number">1</span>, <span class="number">10</span>));</span><br><span class="line">Iterator var1 = $receiver$iv.iterator();</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(var1.hasNext()) &#123;</span><br><span class="line">   int element$iv = ((IntIterator)var1).nextInt();</span><br><span class="line">   System.<span class="keyword">out</span>.println(element$iv);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这段代码比上面的性能还低，它除了创建 <code>IntRange</code> 对象还有一个 <code>IntIterator</code> 的开销。At least, this one generates primitive values.</p>
+<blockquote>
+<p><code>forEach()</code> 有额外开销，不如用 <code>for</code> 循环。</p>
+</blockquote>
+<h4 id="Iterations-collection-indices"><a href="#Iterations-collection-indices" class="headerlink" title="Iterations: collection indices"></a>Iterations: collection indices</h4><p>kotlin 标准库为 Collection 提供了扩展函数获取 rande <a target="_blank" rel="noopener" href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/indices.html">引索</a></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> list = listOf(<span class="string">&quot;A&quot;</span>, <span class="string">&quot;B&quot;</span>, <span class="string">&quot;C&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> list.indices) &#123;</span><br><span class="line">    println(list[i])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>这部分代码也获得了优化</strong>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">List list = CollectionsKt.listOf(new String[]&#123;<span class="string">&quot;A&quot;</span>, <span class="string">&quot;B&quot;</span>, <span class="string">&quot;C&quot;</span>&#125;);</span><br><span class="line">int i = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span>(int var2 = ((Collection)list).size(); i &lt; var2; ++i) &#123;</span><br><span class="line">   Object var3 = list.<span class="keyword">get</span>(i);</span><br><span class="line">   System.<span class="keyword">out</span>.println(var3);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>没有多余的东西生成，对数组和实现 Collection 的类兼容很好。也许你想自己实现个扩展函数实现相同功能：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">inline</span> <span class="keyword">val</span> SparseArray&lt;*&gt;.indices: IntRange</span><br><span class="line">    <span class="keyword">get</span>() = <span class="number">0</span> until size()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">printValues</span><span class="params">(map: <span class="type">SparseArray</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (i <span class="keyword">in</span> map.indices) &#123;</span><br><span class="line">        println(map.valueAt(i))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但你的实现可不会被编译器优化，它还没那么叼：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> static <span class="keyword">final</span> void printValues(<span class="meta">@NotNull</span> SparseArray map) &#123;</span><br><span class="line">   Intrinsics.checkParameterIsNotNull(map, <span class="string">&quot;map&quot;</span>);</span><br><span class="line">   IntRange var10000 = RangesKt.until(<span class="number">0</span>, map.size());</span><br><span class="line">   int i = var10000.getFirst();</span><br><span class="line">   int var2 = var10000.getLast();</span><br><span class="line">   <span class="keyword">if</span>(i &lt;= var2) &#123;</span><br><span class="line">      <span class="keyword">while</span>(<span class="literal">true</span>) &#123;</span><br><span class="line">         Object $receiver$iv = map.valueAt(i);</span><br><span class="line">         System.<span class="keyword">out</span>.println($receiver$iv);</span><br><span class="line">         <span class="keyword">if</span>(i == var2) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">         &#125;</span><br><span class="line">         ++i;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我建议你就在 <code>for</code> 循环里用<code>until()</code> ：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">printValues</span><span class="params">(map: <span class="type">SparseArray</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">0</span> until map.size()) &#123;</span><br><span class="line">        println(map.valueAt(i))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果… 你要写一个不实现 <code>Collection</code> 接口的 collection …最好用 for 循环写引索 range ，避免生成多余对象。</p>
+</blockquote>
+<hr>
+<p>balabala over</p>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Delegated-properties"><span class="toc-text">Delegated properties</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Delegate-instances"><span class="toc-text">Delegate instances</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Generic-delegates"><span class="toc-text">Generic delegates</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Standard-delegates-lazy"><span class="toc-text">Standard delegates: lazy()</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ranges"><span class="toc-text">Ranges</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Inclusion-tests"><span class="toc-text">Inclusion tests</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Iterations-for-loops"><span class="toc-text">Iterations: for loops</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Iterations-forEach"><span class="toc-text">Iterations: forEach()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Iterations-collection-indices"><span class="toc-text">Iterations: collection indices</span></a></li></ol></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/kotlin-hidden-cost-part-3/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/android/"><i class="fa fa-tags"></i>android</a>
+     
+      <a href="/tags/kotlin/"><i class="fa fa-tags"></i>kotlin</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/wifi-crack/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/kotlin-hidden-cost-part-2/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

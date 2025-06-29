@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>Redux Learn | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="code,java," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2017-03-19
+    </span>
+    
+      <span>
+        | <a href="/categories/code/"><i class="fa fa-bookmark"></i>code</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    Redux Learn
+  </h1>
+  
+  <article class="passage-article">
+    <h2 id="A-java-implementation-of-Redux"><a href="#A-java-implementation-of-Redux" class="headerlink" title="A java implementation of Redux"></a>A java implementation of Redux</h2><blockquote>
+<p>Redux is a predictable state container for JavaScript apps.<br>示例项目：<a target="_blank" rel="noopener" href="https://github.com/tiiime/redux-learn">https://github.com/tiiime/redux-learn</a></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">                      (previousState,action)</span><br><span class="line">   +--------+     +-------+  →  +-----------+</span><br><span class="line">   | Action |  -&gt; | Store |     |  Reducers |</span><br><span class="line">   +--------+     +-------+  ←  +-----------+</span><br><span class="line">       ↑     (notify) |  (newState)</span><br><span class="line">       |              ↓</span><br><span class="line">dispatch(action)  getState()</span><br><span class="line">   +-----------------------+</span><br><span class="line">   |  UI/Other Subscribers |</span><br><span class="line">   +-----------------------+</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="Basics"><a href="#Basics" class="headerlink" title="Basics"></a>Basics</h2><p>Redux 包括几个主要概念：<code>State</code>, <code>Store</code>, <code>Actions</code>, <code>Reducers</code>, <code>Middleware</code>.</p>
+<p><strong>Redux 的三个基本原则</strong>：</p>
+<ul>
+<li>单数据源</li>
+<li>State 是只读的</li>
+<li>State 的修改由纯函数完成</li>
+</ul>
+<p><strong>好处</strong>：单向数据流<br><strong>缺点</strong>：应用所有状态要求保存在一个 State 之中。</p>
+<h3 id="Store"><a href="#Store" class="headerlink" title="Store"></a>Store</h3><ul>
+<li>保存应用状态;</li>
+<li><code>getState()</code> 获取状态;</li>
+<li><code>dispatch(action)</code> 更新状态;</li>
+<li><code>subscribe(listener)</code> 添加监听者;</li>
+<li><code>subscribe(listener)</code> 取消监听.</li>
+</ul>
+<h3 id="Action-amp-ActionCreator"><a href="#Action-amp-ActionCreator" class="headerlink" title="Action &amp; ActionCreator"></a>Action &amp; ActionCreator</h3><p><strong>Actions</strong> 负责将应用数据传递给 Store。<br>包含一个 <code>type</code> 字段和操作所需的信息，传递的信息应该尽可能的小。<br>比如传递一个 index 好于传递整个 item 信息。<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  type: TOGGLE_TODO,</span><br><span class="line">  index: 5</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>ActionCreator</strong> 创建 Action 的场所。</p>
+<h3 id="Reducers"><a href="#Reducers" class="headerlink" title="Reducers"></a>Reducers</h3><p>消费 Action 的位置.   <strong>传入同一参数返回值永远不变。无副作用，没有API调用，不会修改参数，纯计算。</strong></p>
+<p>永远不要在 reducer 里执行以下操作：</p>
+<ul>
+<li>修改参数;</li>
+<li>调用有副作用的 API，跳转操作;</li>
+<li>调用非纯函数, e.g. <code>Date.now()</code> or <code>Math.random()</code>.</li>
+</ul>
+<h4 id="Splitting-Reducers"><a href="#Splitting-Reducers" class="headerlink" title="Splitting Reducers"></a>Splitting Reducers</h4><p>Store 构建时传入一个 Reducer 对象，叫做 <code>rootReducer</code>，一般是由几个 <code>childReducer</code> 组合而成，职责是将几个 <code>childReducer</code> 的返回值组合成新的状态树 (newState) 返回 Store。</p>
+<h3 id="Data-Flow"><a href="#Data-Flow" class="headerlink" title="Data Flow"></a>Data Flow</h3><p>Redux 框架遵循严谨的单向数据流.</p>
+<ul>
+<li>调用 store.dispatch(action) 分发 Action.</li>
+<li>Redux store 调用内部的 reducer 函数.</li>
+<li>Root reducer 可以是将许多 reducer 的返回值组合成新的状态树.</li>
+<li>Redux store 保存 root reducer 返回的状态树.</li>
+</ul>
+<h3 id="Middleware"><a href="#Middleware" class="headerlink" title="Middleware"></a>Middleware</h3><p>Middleware 提供了 <code>dispatch(action)</code> 和 <code>reducer</code> 这两个操作之间的扩展点。并且可以组合成一个链式调用。在 Redux 中可以使用 middleware 完成打 log，异常反馈，异步操作，路由等操作。</p>
+<h3 id="Async-Actions"><a href="#Async-Actions" class="headerlink" title="Async Actions"></a>Async Actions</h3><p>网络请求为例：<br>产生网络请求 Action，这个 Action 包括<strong>网络请求具体所需要的信息</strong>和<strong>请求完成后下一步操作的  <code>nextAction</code></strong>。由专门执行异步操作的 Middleware 去执行耗时操作，待结果返回后调用 <code>store.dispatch(nextAction)</code>。</p>
+<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://redux.js.org/">http://redux.js.org/</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/jvm-redux/jvm-redux-api">https://github.com/jvm-redux/jvm-redux-api</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ruiaraujo/redux-java">https://github.com/ruiaraujo/redux-java</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Yarikx/reductor">https://github.com/Yarikx/reductor</a></li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#A-java-implementation-of-Redux"><span class="toc-text">A java implementation of Redux</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Basics"><span class="toc-text">Basics</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Store"><span class="toc-text">Store</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Action-amp-ActionCreator"><span class="toc-text">Action &amp; ActionCreator</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reducers"><span class="toc-text">Reducers</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Splitting-Reducers"><span class="toc-text">Splitting Reducers</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Data-Flow"><span class="toc-text">Data Flow</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Middleware"><span class="toc-text">Middleware</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Async-Actions"><span class="toc-text">Async Actions</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%EF%BC%9A"><span class="toc-text">参考：</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/redux-learn/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/java/"><i class="fa fa-tags"></i>java</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/android-statemachine/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/autoremote-and-eventghost/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

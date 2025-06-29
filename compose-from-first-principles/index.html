@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>翻译：Compose From First Principles | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="translate,compose," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2021-06-03
+    </span>
+    
+      <span>
+        | <a href="/categories/translate/"><i class="fa fa-bookmark"></i>translate</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    翻译：Compose From First Principles
+  </h1>
+  
+  <article class="passage-article">
+    <h1 id="Compose-首要原则"><a href="#Compose-首要原则" class="headerlink" title="Compose 首要原则"></a>Compose 首要原则</h1><blockquote>
+<p>原文地址：<a target="_blank" rel="noopener" href="http://intelligiblebabble.com/compose-from-first-principles/">http://intelligiblebabble.com/compose-from-first-principles/</a><br><strong>译者注：原文写于 2019 年，有点内容过时了，但是全文还是很值得一看的！翻译夹杂私货，仅作学习备忘，建议读原版。</strong><br><a target="_blank" rel="noopener" href="https://twitter.com/intelligibabble">推荐关注作者的 Twitter</a></p>
+</blockquote>
+<p>本月初，来自世界各地的数千名开发者参加了谷歌2019年的I/O大会。我对此次 I/O 尤为兴奋，Google 第一次公开介绍了 Jetpack Compose 项目，我从 2018 年二月开始受雇于这个项目。</p>
+<p>Compose 是一个雄心勃勃的跨团队项目，在安卓平台初始 UI 工具推出的 10 多年后，致力于重新构想 Android UI 工具集。</p>
+<p>有一个关于<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=VsStyq4Lzxo">声明式 UI </a>的视频，解释了这个项目背后的动机和目标，本篇文章不再赘述。如果你想在阅读本文之前，了解背后的动机，可以先去看这个视频，本文只讨论实现细节。</p>
+<iframe width="728" height="320" src="https://www.youtube.com/embed/VsStyq4Lzxo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<p>自从我们开源了 <a target="_blank" rel="noopener" href="http://d.android.com/jetpackcompose">Compose</a> 后，很多人对它的工作原理很感兴趣，提出了许多问题。我考虑了会儿先讲哪一点比较合适。</p>
+<p>本文主要想给大家建立一个扎实的思维模式，关于 Compose 做了什么，把看起来像黑魔法似的操作背后原理讲明白。我想，最好的方式莫过于把 Compose 工作原理简化，先构建一个原始框架，再一点点的修饰，逐渐变成一个像样的东西。换句话说，让我们从“基本原理”开始，写一个 Compose。</p>
+<p>本文只解释 Compose 做了什么，不负责解释为什么这样做。读者需要熟悉 <a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/">Kotlin</a>，尤其是<a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/extensions.html">扩展函数</a>。</p>
+<p>最后声明下，<em>文中代码和 Compose 实际应用完全没有关系</em>。</p>
+<h2 id="UI-是树状数据结构"><a href="#UI-是树状数据结构" class="headerlink" title="UI 是树状数据结构"></a>UI 是树状数据结构</h2><p>Compose 的核心设计目的是为了高效构建 <em>并维护</em> 树状数据结构。更具体的说，他提供了一种可以描述树如何<em>随时间变化</em>的编程模型 。</p>
+<p>这种变成模型不是全新的。我们从许多框架中得到启发，例如 <a target="_blank" rel="noopener" href="https://reactjs.org/">React</a>，<a target="_blank" rel="noopener" href="https://fblitho.com/">Litho</a>，<a target="_blank" rel="noopener" href="https://vuejs.org/">Vue</a>，<a target="_blank" rel="noopener" href="https://flutter.dev/">Flutter</a> 等等，他们都以各自的方式达成了这个目的。</p>
+<p>从上面列出的框架中，我们大概可以猜到，这各系统主要是用来构建 UI 的。UI 是典型的会随时间变化的树状数据结构。而且，现代 UI 正在变得越来越动态，复杂，需要一种编程模型来缓解复杂度。</p>
+<p>Compose 的运行时并不聚焦于某一种类型的树，已经被在很多不同类型的树上了，例如 Android Views, ComponentNodes, Vectors, TextSpan，后续还会有更多的应用场景。</p>
+<p>本文没有使用上面提到的，而是自己定义一个基础树状结构，更易于理解。</p>
+<p>我们可以想象一个非常基础的 UI 库，定义了以下几种类型：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">  <span class="keyword">val</span> children = mutableListOf&lt;Node&gt;()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">enum</span> <span class="class"><span class="keyword">class</span> <span class="title">Orientation</span> </span>&#123; Vertical, Horizontal &#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Stack</span></span>(<span class="keyword">var</span> orientation: Orientation) : Node()</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Text</span></span>(<span class="keyword">var</span> text: String) : Node()</span><br></pre></td></tr></table></figure>
+<p>这里只有两个原始类型：<code>Stack</code> 和 <code>Text</code>。真实场景肯定比这多，还有一堆属性和方法，不过没影响，我们就图省事。这俩相当于 Android 里的那堆 <a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/view/View"><code>View</code></a>，或者 Web 里的 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/API/Element"><code>Element</code></a>。</p>
+<p>接着，我们需要一个方法，把 Node 树渲染成像素到屏幕上。这个方法的实现细节不重要，我们假设有这么一个东西就好：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">renderNodeToScreen</span><span class="params">(node: <span class="type">Node</span>)</span></span> &#123; <span class="comment">/* ... */</span> &#125;</span><br></pre></td></tr></table></figure>
+<p>用上面这套东西写出来的 “Hello World” 长下面这个样子：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  renderNodeToScreen(Text(<span class="string">&quot;Hello World!&quot;</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面我们开始搞个复杂点的，写一个 “To Do List” 程序。</p>
+<h2 id="从-UI-到“转换函数”"><a href="#从-UI-到“转换函数”" class="headerlink" title="从 UI 到“转换函数”"></a>从 UI 到“转换函数”</h2><p>构建应用的一个指导原则就是要把 “model” 的概念从 “UI” 中分离。</p>
+<p>这里我们的 “model” 是个 <code>TodoItem</code> 的 list，一种实现方式是用一个函数，把 item list 转换成 Node 树：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">TodoApp</span><span class="params">(items: <span class="type">List</span>&lt;<span class="type">TodoItem</span>&gt;)</span></span>: Node &#123;</span><br><span class="line">  <span class="keyword">return</span> Stack(Orientation.Vertical).apply &#123;</span><br><span class="line">    <span class="keyword">for</span> (item <span class="keyword">in</span> items) &#123;</span><br><span class="line">      children.add(Stack(Orientation.Horizontal).apply &#123;</span><br><span class="line">        children.add(Text(<span class="keyword">if</span> (item.completed) <span class="string">&quot;x&quot;</span> <span class="keyword">else</span> <span class="string">&quot; &quot;</span>))</span><br><span class="line">        children.add(Text(item.title))</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这就可以响应程序的数据变化，并渲染到屏幕上。像下面这样：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  todoItemRepository.observe &#123; items -&gt;</span><br><span class="line">    renderNodeToScreen(TodoApp(items))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从上面 <code>TodoApp</code> 的例子里可以看出，直接向 parent 的 children 属性添加节点很麻烦。我们需要保证这个树里所有 Node 都可以访问其 parent 的 <code>children</code> 属性，调用 <code>children.add(...)</code>。在这个例子里可能看起来还行，不算麻烦，但是当函数逻辑变得再复杂点，就不够用了，很难维护。</p>
+<p>我们可以新建一个 “holder” 对象，用它来持有当前的 “parent” 的 <code>Node</code>。然后用一个 “emit” 函数把 node 添加到 parent，还提供一个 “content” lambda 参数，在这个 lambda 的作用域里，emit 参数传入的 <code>Node</code> 是 parent。这个 “emit” 函数可以把一个 Node 添加到当前这棵树的当前位置（译者注：dsl 声明的感觉？），而不需要知道当前位置的 parent 是谁。</p>
+<p>从语义上说，这个对象可以帮我们构建 “compose” 树，就叫他 <code>Composer</code> 吧。定义如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Composer</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 添加 node 到当前 Node</span></span><br><span class="line">  <span class="comment">// content，可以用来往参数传递的 node 里添加节点</span></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">emit</span><span class="params">(node: <span class="type">Node</span>, content: () -&gt; <span class="type">Unit</span> = &#123;&#125;)</span></span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 一个简单的实现。可以略过不看。</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ComposerImpl</span></span>(root: Node): Composer &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">var</span> current: Node = root</span><br><span class="line"></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">emit</span><span class="params">(node: <span class="type">Node</span>, content: () -&gt; <span class="type">Unit</span> = &#123;&#125;)</span></span> &#123;</span><br><span class="line">    <span class="comment">// 储存当前节点，用于后续恢复</span></span><br><span class="line">    <span class="keyword">val</span> parent = current</span><br><span class="line">    parent.children.add(node)</span><br><span class="line">    current = node</span><br><span class="line">    <span class="comment">// 在这个作用域中，执行传进来的 lambda 函数，lambda 里面的 emit 都会添加到参数 node</span></span><br><span class="line">    content()</span><br><span class="line">    <span class="comment">// 恢复 current</span></span><br><span class="line">    current = parent</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用上面的抽象，可以把 <code>TodoApp</code> 函数以 <code>Composer</code> 的<a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/extensions.html">扩展函数</a>方式重写：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Composer.<span class="title">TodoApp</span><span class="params">(items: <span class="type">List</span>&lt;<span class="type">TodoItem</span>&gt;)</span></span> &#123;</span><br><span class="line">  emit(Stack(Orientation.Vertical)) &#123;</span><br><span class="line">    <span class="keyword">for</span> (item <span class="keyword">in</span> items) &#123;</span><br><span class="line">      emit(Stack(Orientation.Horizontal)) &#123;</span><br><span class="line">        emit(Text(<span class="keyword">if</span> (item.completed) <span class="string">&quot;x&quot;</span> <span class="keyword">else</span> <span class="string">&quot; &quot;</span>))</span><br><span class="line">        emit(Text(item.title))</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接着我们提供一个顶级函数 <code>compose</code>，它 new 了一个 <code>Composer</code>，并在这个 Composer 对象上执行一个 lambda，并把根节点返回：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">compose</span><span class="params">(content: <span class="type">Composer</span>.() -&gt; <span class="type">Unit</span>)</span></span>: Node &#123;</span><br><span class="line">  <span class="keyword">return</span> Stack(Orientation.Vertical).also &#123;</span><br><span class="line">    ComposerImpl(it).apply(content)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当我们想要构建 UI 时，就可以像下面这样使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// render UI</span></span><br><span class="line">renderNodeToScreen(compose &#123; TodoApp(items) &#125;)</span><br></pre></td></tr></table></figure>
+<p>把我们的 ToDoApp 重构一下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Composer.<span class="title">TodoItem</span><span class="params">(item: <span class="type">TodoItem</span>)</span></span> &#123;</span><br><span class="line">  emit(Stack(Orientation.Horizontal)) &#123;</span><br><span class="line">    emit(Text(<span class="keyword">if</span> (item.completed) <span class="string">&quot;x&quot;</span> <span class="keyword">else</span> <span class="string">&quot; &quot;</span>))</span><br><span class="line">    emit(Text(item.title))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> Composer.<span class="title">TodoApp</span><span class="params">(items: <span class="type">List</span>&lt;<span class="type">TodoItem</span>&gt;)</span></span> &#123;</span><br><span class="line">  emit(Stack(Orientation.Vertical)) &#123;</span><br><span class="line">    <span class="keyword">for</span> (item <span class="keyword">in</span> items) &#123;</span><br><span class="line">      TodoItem(item)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种简单的结构，或者说把常见的 UI 逻辑分解成函数至关重要的特性。我们可以把这些函数称为 “Components”（组件）。</p>
+<h2 id="位置化记忆"><a href="#位置化记忆" class="headerlink" title="位置化记忆"></a>位置化记忆</h2><p>一些注重性能的家伙可能注意到了，每次执行 <code>compose</code> 都会重新构建整棵树。对于大型应用这种性能浪费是不能容忍的。从正确性的角度来说，如果一个节点有私有状态，每次重建都会导致这些状态丢失。</p>
+<p>对应这种问题有很多解决方案， Compose 使用了一种我们称为 “位置化记忆”（Positional Memoization）的技术。Compose 的很多架构都是基于这个概念，接下来让我们更加深入地理解它背后的思维模式。</p>
+<p>上节讲了，我们引入 <code>Composer</code> 对象，它持有我们当前在树中的位置和使用 emit 构建视图树节点的上下文。我们的目标是继续使用我们的编程模型，并尝试在视图树重建时复用之前构建 UI 时创建的 Node。基本上，我们想就是想给每个 Node 加上缓存。</p>
+<p>大部分缓存需要 key 从缓存中取回对象。从 TodoApp 的例子我们可以发现，每次执行 <code>TodoApp</code> 函数，都以同样的顺序创建了相同数量的 <code>Node</code>。我们假设缓存所有 Node，每次执行 <code>TodoApp</code> 函数时，以相同的顺序访问缓存（<em>如果我们引入条件分支，这个缓存逻辑就失效了，后面会讨论这个情况</em>）。</p>
+<p>所以，我们使用 <em>执行顺序</em> 做缓存的 key，可以完全避免用于查找的成本；仅用一个 list 或者数组就可以缓存 node，读取缓存的操作也十分轻量。执行转换函数时维护一个 “当前索引”，每次读取缓存就 +1。</p>
+<p>一个简单的实现，给 <code>Composer</code> 新增一个 <code>memo</code> 方法：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Composer</span> </span>&#123;</span><br><span class="line">  <span class="comment">/* emit(...) excluded for brevity */</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 对比 input 和此前在当前位置的元素。如果发生变化，返回 factory 的结果，否则从返回之前的。</span></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">memo</span><span class="params">(<span class="keyword">vararg</span> inputs: <span class="type">Any</span>?, factory: () -&gt; <span class="type">T</span>)</span></span>: T</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// naive implementation. feel free to skip</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ComposerImpl</span>: <span class="type">Composer &#123;</span></span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">var</span> cache = mutableListOf&lt;Any?&gt;()</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">var</span> index = <span class="number">0</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">val</span> inserting <span class="keyword">get</span>() = index == cache.size</span><br><span class="line">  <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">get</span><span class="params">()</span></span>: Any? = cache[index++]</span><br><span class="line">  <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">set</span><span class="params">(value: <span class="type">Any</span>?)</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (inserting) &#123; index++; cache.add(value); &#125;</span><br><span class="line">    <span class="keyword">else</span> cache[index++] = value</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">changed</span><span class="params">(value: <span class="type">T</span>)</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">    <span class="comment">// 插入节点时，不需要比较，直接缓存并返回</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">if</span> (inserting) &#123;</span><br><span class="line">      <span class="keyword">set</span>(value)</span><br><span class="line">      <span class="literal">false</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 获取当前位置的 item，index++。直接缓存新值，</span></span><br><span class="line">      <span class="comment">// 只有在 item 和 value 不同时返回 true</span></span><br><span class="line">      <span class="keyword">val</span> index = index++</span><br><span class="line">      <span class="keyword">val</span> item = cache[index]</span><br><span class="line">      cache[index] = value</span><br><span class="line">      item != value</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">cache</span><span class="params">(update: <span class="type">Boolean</span>, factory: () -&gt; <span class="type">T</span>)</span></span>: T &#123;</span><br><span class="line">    <span class="comment">// 需要更新时，或者第一次执行时，需要执行 factory 并缓存结果</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">if</span> (inserting || update) factory().also &#123; <span class="keyword">set</span>(it) &#125;</span><br><span class="line">    <span class="comment">// otherwise, just return the value in the cache</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">get</span>() <span class="keyword">as</span> T</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> Composer.<span class="title">memo</span><span class="params">(<span class="keyword">vararg</span> inputs: <span class="type">Any</span>?, factory: () -&gt; <span class="type">T</span>)</span></span>: T &#123;</span><br><span class="line">    <span class="keyword">var</span> valid = <span class="literal">true</span></span><br><span class="line">    <span class="comment">// 需要对所有 input 执行检查，不能短路（译者注：changed() 里面修改了 index，短路就错了）。</span></span><br><span class="line">    <span class="keyword">for</span> (input <span class="keyword">in</span> inputs) &#123;</span><br><span class="line">      <span class="comment">// 任意一个 input 发生了变化，缓存就会失效。</span></span><br><span class="line">      valid = !changed(input) &amp;&amp; valid</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> cache(!valid) &#123; factory() &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>Demo 里只用了 <code>MutableList</code>，实际上 Compose 使用了一维数组的 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Gap_buffer">Gap Buffer</a>，让查找，插入，删除操作更轻量。</p>
+<p>注意，如果调用 <code>memo</code> 函数时传入 n 个 input，会增加缓存索引 <code>n+1</code> 次。这需要在给定的位置上，每次调用时都要有相同数量的 input，否则缓存会随时间错位。</p>
+<p>现在我们可以用 <code>memo</code> 函数重写 <code>TodoApp</code>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Composer.<span class="title">TodoItem</span><span class="params">(item: <span class="type">TodoItem</span>)</span></span> &#123;</span><br><span class="line">  emit(memo &#123; Stack(Orientation.Horizontal) &#125;) &#123;</span><br><span class="line">    emit(</span><br><span class="line">      memo(item.completed) &#123;</span><br><span class="line">        Text(<span class="keyword">if</span> (item.completed) <span class="string">&quot;x&quot;</span> <span class="keyword">else</span> <span class="string">&quot; &quot;</span>)</span><br><span class="line">      &#125;</span><br><span class="line">    )</span><br><span class="line">    emit(</span><br><span class="line">      memo(item.title) &#123;</span><br><span class="line">        Text(item.title)</span><br><span class="line">      &#125;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> Composer.<span class="title">TodoApp</span><span class="params">(items: <span class="type">List</span>&lt;<span class="type">TodoItem</span>&gt;)</span></span> &#123;</span><br><span class="line">  emit(memo &#123; Stack(Orientation.Vertical) &#125;) &#123;</span><br><span class="line">    <span class="keyword">for</span> (item <span class="keyword">in</span> items) &#123;</span><br><span class="line">      TodoItem(item)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在，每次执行 <code>compose</code> 都会复用此前创建的 Node，如果没变的话。因为我们是用执行顺序作为缓存依据，我们使用的内存数量没变，编程模型也不变。</p>
+<p>在当前示例中，记忆的最小节点是整个 Node，实际上我们可以单独记忆 Node 的属性，支持可变属性。</p>
+<p>例如，假设 <code>text</code> 是 <code>Text</code> 的可变属性：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Text</span></span>(<span class="keyword">var</span> text: String) : Node()</span><br></pre></td></tr></table></figure>
+<p>因此，我们可以复用 Text 节点，发生变化时，只更新它的 <code>text</code> 属性。实现这个需要另一个 <code>emit</code> 函数，稍微修改下函数签名：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Composer</span> </span>&#123;</span><br><span class="line">  <span class="comment">/* emit(..) and memo(...) excluded for brevity */</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T: Node&gt;</span> <span class="title">emit</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">          factory: () -&gt; <span class="type">T</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">          update: (<span class="type">T</span>) -&gt; <span class="type">Unit</span> = &#123;&#125;,</span></span></span><br><span class="line"><span class="params"><span class="function">          block: () -&gt; <span class="type">Unit</span> = &#123;&#125;</span></span></span><br><span class="line"><span class="params"><span class="function">  )</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// naive implementation. feel free to skip.</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ComposerImpl</span></span>(<span class="keyword">val</span> root: Node) : Composer &#123;</span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T: Node&gt;</span> <span class="title">emit</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">          factory: () -&gt; <span class="type">T</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">          update: (<span class="type">T</span>) -&gt; <span class="type">Unit</span> = &#123;&#125;,</span></span></span><br><span class="line"><span class="params"><span class="function">          block: () -&gt; <span class="type">Unit</span> = &#123;&#125;</span></span></span><br><span class="line"><span class="params"><span class="function">  )</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> node = memo(factory)</span><br><span class="line">    update(node)</span><br><span class="line">    emit(node, block)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个版本的 <code>emit</code> 中，<code>emit</code> 使用 <code>factory</code> 创建 <code>Node</code>，并使用 <code>memo</code> 缓存节点。接着在刚刚创建的 <code>Node</code> 实例上执行 <code>update</code> 函数。<code>update</code> lambda 里可以使用 <code>memo</code> 函数设置 Node 的属性，从而实现缓存 Node 的属性。</p>
+<p>例如，<code>TodoItem</code> 可以这样重写：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Composer.<span class="title">TodoItem</span><span class="params">(item: <span class="type">TodoItem</span>)</span></span> &#123;</span><br><span class="line">  emit(&#123; Stack(Orientation.Horizontal) &#125;) &#123;</span><br><span class="line">    emit(</span><br><span class="line">      &#123; Text() &#125;</span><br><span class="line">      &#123; memo(item.completed) &#123; it.text = <span class="keyword">if</span> (item.completed) <span class="string">&quot;x&quot;</span> <span class="keyword">else</span> <span class="string">&quot; &quot;</span> &#125; &#125;</span><br><span class="line">    )</span><br><span class="line">    emit(</span><br><span class="line">      &#123; Text() &#125;</span><br><span class="line">      &#123; memo(item.title) &#123; it.text = item.title &#125; &#125;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以，为了让复用性能最佳，我们可以在每次调用 <code>compose</code> 时复用 <code>Node</code> 实例，Node 的属性变化时单独更新属性。</p>
+<p>你可能已经注意到了，基于执行顺序记忆存在一个问题。如果在转换函数里引入了条件语句，就坏了。例如：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Composer.<span class="title">TodoApp</span><span class="params">(items: <span class="type">List</span>&lt;<span class="type">TodoItem</span>&gt;)</span></span> &#123;</span><br><span class="line">  emit(&#123; Stack(Orientation.Vertical) &#125;) &#123;</span><br><span class="line">    <span class="keyword">for</span> (item <span class="keyword">in</span> items) &#123;</span><br><span class="line">        TodoItem(item)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">val</span> text = <span class="string">&quot;Total: <span class="subst">$&#123;items.size&#125;</span> items&quot;</span></span><br><span class="line">  emit(</span><br><span class="line">      &#123; Text() &#125;,</span><br><span class="line">      &#123; memo(text) &#123; it.text = text &#125;&#125;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里，假设第一次有两个 item，第二次有三个 item，会出现什么问题？</p>
+<p>前两个 Node 没问题。和第一次执行时一样，我们的缓存可以读取到正确的值。</p>
+<p>当我们拿第三个 <code>TodoItem</code> 时，由于首次执行时只有两个 item，我们拿到的缓存是带有 <code>&quot;Total: $&#123;items.size&#125; items&quot;</code> 属性的 <code>Text</code> 节点。由于这种错位，后续的缓存都失效了，在 获取 <code>Text</code> 节点的缓存时，会发现不存在，重新创建一个新的实例。</p>
+<p>总之，每次控制流导致缓存数量对不上时，或者其它的执行顺序不一致了，我们的缓存就会产生错位，出现未定义行为。</p>
+<p>修复这个需要给“位置化记忆”引入另一个至关重要的概念： 组（Group）。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Composer</span> </span>&#123;</span><br><span class="line">  <span class="comment">/* emit(...) and memo(...) excluded for brevity */</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// start a group, execute block inside that group, end the group</span></span><br><span class="line">  <span class="comment">// 新起一个 group，在 group 内执行代码块，结束 group</span></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">group</span><span class="params">(key: <span class="type">Any</span>?, block: () -&gt; <span class="type">Unit</span>)</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://android.googlesource.com/platform/frameworks/support/+/f06c7ce26e29f15792b54490e4c2f77197d1222f/compose/runtime/src/main/java/androidx/compose/Composer.kt#592">实现太复杂了</a>，可惜这里写不下。</p>
+<p>这个概念导致 composer 的记忆化缓存实现非常复杂，但它对保证位置化记忆正常工作非常重要。而且，group 使得线性缓存变为树状结构，我们可以由此区分节点是被移动了，删除了还是添加了。</p>
+<p><code>group</code> 需要传入一个 key。这个 key 就和 <code>memo</code> 的 input 参数一样，会被存到缓存数组。但是当 key 和上次执行时不匹配的话，运行时会在缓存里搜索，判断这个 group 是被移动了，删除了还是添加了。</p>
+<p>group 的 key 只要在 parent group 的范围内保持唯一就行，不需要全局唯一。好了，让我们使用 group 修改下 <code>TodoApp</code>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Composer.<span class="title">TodoItem</span><span class="params">(item: <span class="type">TodoItem</span>)</span></span> &#123;</span><br><span class="line">  group(<span class="number">3</span>) &#123;</span><br><span class="line">    emit(&#123; Stack(Orientation.Horizontal) &#125;) &#123;</span><br><span class="line">      group(<span class="number">4</span>) &#123;</span><br><span class="line">        emit(</span><br><span class="line">          &#123; Text() &#125;</span><br><span class="line">          &#123; memo(item.completed) &#123; it.text = <span class="keyword">if</span> (item.completed) <span class="string">&quot;x&quot;</span> <span class="keyword">else</span> <span class="string">&quot; &quot;</span> &#125; &#125;</span><br><span class="line">        )</span><br><span class="line">      &#125;</span><br><span class="line">      group(<span class="number">5</span>) &#123;</span><br><span class="line">        emit(</span><br><span class="line">          &#123; Text() &#125;</span><br><span class="line">          &#123; memo(item.title) &#123; it.text = item.title &#125; &#125;</span><br><span class="line">        )</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> Composer.<span class="title">TodoApp</span><span class="params">(items: <span class="type">List</span>&lt;<span class="type">TodoItem</span>&gt;)</span></span> &#123;</span><br><span class="line">  group(<span class="number">0</span>) &#123;</span><br><span class="line">    emit(&#123; Stack(Orientation.Vertical) &#125;) &#123;</span><br><span class="line">      <span class="keyword">for</span> (item <span class="keyword">in</span> items) &#123;</span><br><span class="line">          group(<span class="number">1</span>) &#123;</span><br><span class="line">              TodoItem(item)</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> text = <span class="string">&quot;Total: <span class="subst">$&#123;items.size&#125;</span> items&quot;</span></span><br><span class="line">  group(<span class="number">2</span>) &#123;</span><br><span class="line">    emit(</span><br><span class="line">        &#123; Text() &#125;,</span><br><span class="line">        &#123; memo(text) &#123; it.text = text &#125; &#125;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里给每个 group 都设置了不同的整数作为 key，<code>TodoItem</code> 也包了一层 group，确保每个 TodoItem 单独记忆。</p>
+<p>现在当 <code>items</code> 从 2 变成 3 时，我们可以知道要往缓存里 “加一个” item，而不是去缓存里直接拿下一个，因为超出我们所在的 group 了。当 items 从缓存中移除时同理。</p>
+<p>“移动” item 也类似，就是算法有点复杂。就不展开讲了，只说一点，我们是通过子 group 的 key 来识别 group 内的“移动”。如果打乱例子中的 <code>items</code> list，每个 TodoItem 的外层都是 group(1)，Composer 没法知道 item 的顺序改变了。问题倒也不算大，也就是缓存的性能不是最优，之前关联的状态被设置到其他 item 上。不过，我们可以使用 <code>item</code> 自己做 key：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (item <span class="keyword">in</span> items) &#123;</span><br><span class="line">  group(item) &#123;</span><br><span class="line">    TodoItem(item)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在，每个 group 和它包含的一组缓存会随 item 而动，<code>TodoItem</code> 可以从之前创建的缓存 group 拿到数据了，虽然移动缓存的开销变大了，但是增加了移动 item 时的复用缓存的可能性。</p>
+<p>还有一种 key 可以声明 <code>@Pivotal</code> 属性，我会在以后的文章里讲解。</p>
+<h2 id="State"><a href="#State" class="headerlink" title="State"></a>State</h2><p>目前为止， 示例仅仅是对数据进行一些简单的转换和映射到 UI。实际场景中，大部分 UI 都由多个状态组合而成，这些状态作为数据模型的一部分没有任何意义，重要的是将状态具现到 UI（比如： “view state”）。例如，文本选择、滚动位置、焦点、对话框可见性等状态，你也得放在数据模型里。这种状态只有 UI 关心，别的都不管。</p>
+<p>Compose 需要一种状态模型处理这种“本地状态”。使用位置化记忆就可以很好地处理。</p>
+<p>关于状态，让我们用计数器的例子，一个增加按钮，一个展示当前数值的Text，再加一个重置按钮。我们先用一个全局变量 <code>count</code> 开始：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> count = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> Composer.<span class="title">App</span><span class="params">(recompose: () -&gt; <span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">  emit(&#123; Text() &#125;, &#123; memo(count) &#123; it.text = <span class="string">&quot;<span class="variable">$count</span>&quot;</span> &#125; &#125;)</span><br><span class="line">  emit(&#123; Button() &#125;, &#123; it.text = <span class="string">&quot;Increment&quot;</span>; it.onClick = &#123; count++; recompose(); &#125; &#125;)</span><br><span class="line">  emit(&#123; Button() &#125;, &#123; it.text = <span class="string">&quot;Reset&quot;</span>; it.onClick = &#123; count = <span class="number">0</span>; recompose(); &#125; &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">var</span> recompose: () -&gt; <span class="built_in">Unit</span> = &#123;&#125;</span><br><span class="line">  recompose = &#123;</span><br><span class="line">      renderNodeToScreen(compose &#123; App(recompose) &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">  recompose()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为是全局变量，如果这个组件在多处复用，都会展示相同的数值。这肯定不是我们想要的效果，需要想个办法把 <code>count</code> 变成本地变量。</p>
+<p>该怎么做？</p>
+<p>首先尝试将 count 移入 App 函数体：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// <span class="doctag">NOTE:</span> 不会正常工作</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> Composer.<span class="title">App</span><span class="params">(recompose: () -&gt; <span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">  <span class="keyword">var</span> count = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">  emit(&#123; Text() &#125;, &#123; memo(count) &#123; it.text = <span class="string">&quot;<span class="variable">$count</span>&quot;</span> &#125; &#125;)</span><br><span class="line">  emit(&#123; Button() &#125;, &#123; it.text = <span class="string">&quot;Increment&quot;</span>; it.onClick = &#123; count++; recompose(); &#125; &#125;)</span><br><span class="line">  emit(&#123; Button() &#125;, &#123; it.text = <span class="string">&quot;Reset&quot;</span>; it.onClick = &#123; count = <span class="number">0</span>; recompose(); &#125; &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每次函数调用，<code>count</code> 都会被重新初始化。</p>
+<p>是不是和 Node 服用时很像，使用我们的位置化记忆工具搞定。事实证明，本地状态也可以用这种办法解决。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">State</span>&lt;<span class="type">T</span>&gt;</span>(<span class="keyword">var</span> value: T)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> Composer.<span class="title">App</span><span class="params">(recompose: () -&gt; <span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">  <span class="keyword">val</span> count = memo &#123; State(<span class="number">0</span>) &#125;</span><br><span class="line"></span><br><span class="line">  emit(&#123; Text() &#125;, &#123; memo(count.value) &#123; it.text = <span class="string">&quot;<span class="subst">$&#123;count.value&#125;</span>&quot;</span> &#125; &#125;)</span><br><span class="line">  emit(&#123; Button() &#125;, &#123; it.text = <span class="string">&quot;Increment&quot;</span>; it.onClick = &#123; count.value++; recompose(); &#125; &#125;)</span><br><span class="line">  emit(&#123; Button() &#125;, &#123; it.text = <span class="string">&quot;Reset&quot;</span>; it.onClick = &#123; count.value = <span class="number">0</span>; recompose(); &#125; &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们使用 <code>memo</code> 在每次函数调用（在 UI 树的同一位置上）时获取 <code>State</code> 的同一实例。修改状态，并触发视图树重组，渲染更新 <code>State</code> 的值。</p>
+<h2 id="关于-Composable-注解"><a href="#关于-Composable-注解" class="headerlink" title="关于 @Composable 注解"></a>关于 <code>@Composable</code> 注解</h2><p>我们已经在使用这些 `Composer’ <a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/extensions.html">扩展函数</a> 上取得相当大的进展了。在效率和稳定性上都有所建树。</p>
+<p>回看示例，有很多模板代码可以系统的添加。我们可以应用一些规则和范式，不用了解应用具体细节，自动添加这些模板代码。</p>
+<p>让编译器来处理很合理！为此，Compose 引入 <code>@Composable</code> 注解。它有以下含义：</p>
+<ol>
+<li>函数内，所有调用 <code>Node</code> 子类构造函数的地方外部都包了一层 <code>emit</code> 调用， Node 的属性修改则包了一层 <code>memo</code> 调用。</li>
+<li>所有标记了 <code>@Composable</code> 注解的函数，被调用时外部都包了一层 <code>group</code> 调用。group 的 key 由编译器分配一个调用栈内唯一的整数。</li>
+<li>所有 <code>emit</code> 调用外部都包了一层 <code>group</code>，key 也是调用栈内唯一的整数。</li>
+<li>函数额外接收一个隐式 <code>Composer</code> 参数，而不用写成 <code>Composer</code> 的扩展函数。因为 (1) 和 (2)，所有对 <code>Composer</code> 的需求都是隐式的。</li>
+<li>所以，<code>@Composable</code> 标记的函数只能在 <code>@Composable</code> 函数内调用。 因为 (3)，需要传递  <code>Composer</code> 这个隐式参数。</li>
+</ol>
+<p>综上所述，最终 <code>App</code> 函数如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">State</span>&lt;<span class="type">T</span>&gt;</span>(<span class="keyword">var</span> value: T)</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span> <span class="function"><span class="keyword">fun</span> <span class="title">App</span><span class="params">(recompose: () -&gt; <span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">  <span class="keyword">val</span> count = memo &#123; State(<span class="number">0</span>) &#125;</span><br><span class="line"></span><br><span class="line">  Text(<span class="string">&quot;<span class="subst">$&#123;count.value&#125;</span>&quot;</span>)</span><br><span class="line">  Button(text = <span class="string">&quot;Increment&quot;</span>, onClick = &#123; count.value++; recompose(); &#125;)</span><br><span class="line">  Button(text = <span class="string">&quot;Reset&quot;</span>, onClick = &#123; count.value = <span class="number">0</span>; recompose(); &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>TodoApp</code> 也可以重写下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span> <span class="function"><span class="keyword">fun</span> <span class="title">TodoItem</span><span class="params">(item: <span class="type">TodoItem</span>)</span></span> &#123;</span><br><span class="line">  Stack(Orientation.Horizontal) &#123;</span><br><span class="line">    Text(<span class="keyword">if</span> (item.completed) <span class="string">&quot;x&quot;</span> <span class="keyword">else</span> <span class="string">&quot; &quot;</span>)</span><br><span class="line">    Text(item.title)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span> <span class="function"><span class="keyword">fun</span> <span class="title">TodoApp</span><span class="params">(items: <span class="type">List</span>&lt;<span class="type">TodoItem</span>&gt;)</span></span> &#123;</span><br><span class="line">  Stack(Orientation.Vertical) &#123;</span><br><span class="line">    <span class="keyword">for</span> (item <span class="keyword">in</span> items) &#123;</span><br><span class="line">      TodoItem(item)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  Text(<span class="string">&quot;Total: <span class="subst">$&#123;items.size&#125;</span> items&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这可省老事了！虽然 <code>@Composable</code> 注解隐藏了大量内部调用机制，但并没有完全改变我们在调用一个函数式的预期。和 kotlin 协程提供的 <code>suspend</code> 函数机制很像。当然可以用 Future 实现和协程相同的工作，但是围绕 <code>suspend</code> 建立一个新的思维模式，可以少写很多模板代码。</p>
+<p>现在，你应该对 <code>@Composable</code> 的实际作用和 Compose 背后的设计有所了解了。</p>
+<p>当然还有许多内容没能在本文展现：</p>
+<ul>
+<li><code>@Model</code>工作原理。（译者注：本文写于2019年，现在 @Model 已被废弃）。</li>
+<li>Composable 函数的延迟和并行化。</li>
+<li>缓存可用时，跳过 composable 函数执行</li>
+<li>指定子树的 Invalidating/recomposing</li>
+<li>Having @Composable functions that target different types of trees with compile-time safety</li>
+<li>Optimizing away comparisons of expressions we can determine will never change</li>
+</ul>
+<p>All potential future topics!</p>
+<p>Let me know if this blog post helped you better understand Compose or not. If it didn’t, let me know what was confusing!</p>
+<p>Have followup questions? <a target="_blank" rel="noopener" href="https://twitter.com/intelligibabble">本文作者的 Twitter，推荐关注！</a>!</p>
+<p>Interested in Compose and want to chat with others about it? Stop by the <code>#compose</code> channel on the <a target="_blank" rel="noopener" href="https://kotlinlang.slack.com/">Kotlin Slack</a> (<a target="_blank" rel="noopener" href="https://surveys.jetbrains.com/s3/kotlin-slack-sign-up?_ga=2.224677786.102200139.1558201416-402641717.1556213862">get an invite</a>)</p>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Compose-%E9%A6%96%E8%A6%81%E5%8E%9F%E5%88%99"><span class="toc-text">Compose 首要原则</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#UI-%E6%98%AF%E6%A0%91%E7%8A%B6%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-text">UI 是树状数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E-UI-%E5%88%B0%E2%80%9C%E8%BD%AC%E6%8D%A2%E5%87%BD%E6%95%B0%E2%80%9D"><span class="toc-text">从 UI 到“转换函数”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%8D%E7%BD%AE%E5%8C%96%E8%AE%B0%E5%BF%86"><span class="toc-text">位置化记忆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#State"><span class="toc-text">State</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E-Composable-%E6%B3%A8%E8%A7%A3"><span class="toc-text">关于 @Composable 注解</span></a></li></ol></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/compose-from-first-principles/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/compose/"><i class="fa fa-tags"></i>compose</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/the-state-of-managing-state-with-compose/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/home-server/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

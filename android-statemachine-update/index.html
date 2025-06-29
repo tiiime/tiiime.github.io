@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>android-statemachine-update | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="learn,android," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2018-01-08
+    </span>
+    
+      <span>
+        | <a href="/categories/learn/"><i class="fa fa-bookmark"></i>learn</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    android-statemachine-update
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p><a target="_blank" rel="noopener" href="http://androidxref.com/8.0.0_r4/xref/frameworks/base/core/java/com/android/internal/util/StateMachine.java">http://androidxref.com/8.0.0_r4/xref/frameworks/base/core/java/com/android/internal/util/StateMachine.java</a></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>The state machine defined here is a hierarchical state machine which processes messages<br> and can have states arranged hierarchically.</p>
+</blockquote>
+<p>此处定义的是一个层级状态机，用于处理消息，并以层级的形式管理状态。</p>
+<blockquote>
+<p>A state is a <code>State</code> object and must implement<br> <code>processMessage</code> and optionally <code>enter/exit/getName</code>.<br> The enter/exit methods are equivalent to the construction and destruction<br> in Object Oriented programming and are used to perform initialization and<br> cleanup of the state respectively. The <code>getName</code> method returns the<br> name of the state; the default implementation returns the class name. It may be<br> desirable to have <code>getName</code> return the the state instance name instead,<br> in particular if a particular state class has multiple instances.</p>
+</blockquote>
+<p>一个状态就是一个 <code>State</code> 对象，必须实现 <code>processMessage</code> 方法，可选择实现 <code>enter/exit/getName</code> 方法。<br>enter/exit 方法就像面向对象编程中的构造函数和析构函数一样，用于初始化和释放与状态相关的内容。<br><code>getName</code> 方法就是返回名字的，默认是类名。你要是在状态机里多次实例化一个 State 时记得把它重写返回实例的名字。</p>
+<blockquote>
+<p>When a state machine is created, <code>addState</code> is used to build the<br> hierarchy and <code>setInitialState</code> is used to identify which of these<br> is the initial state. After construction the programmer calls <code>start</code><br> which initializes and starts the state machine. The first action the StateMachine<br> is to the invoke <code>enter</code> for all of the initial state’s hierarchy,<br> starting at its eldest parent. The calls to enter will be done in the context<br> of the StateMachine’s Handler, not in the context of the call to start, and they<br> will be invoked before any messages are processed. For example, given the simple<br> state machine below, mP1.enter will be invoked and then mS1.enter. Finally,<br> messages sent to the state machine will be processed by the current state;<br> in our simple state machine below that would initially be mS1.processMessage.</p>
+</blockquote>
+<p>创建一个状态机，我们使用 <code>addState</code> 方法构建层级，<code>setInitialState</code> 方法明确状态机的初始状态。构建完毕后调用 <code>start</code> 方法初始化并启动状态机。<br>启动后状态机自动执行的第一个动作就是 enter 初始状态。怎么进？其实就是执行从<strong>初始状态最上层父状态</strong>开始一直到<strong>初始状态</strong>的 <code>enter</code> 方法。<br>这个调用会在状态机内部 Handler 所在线程执行，而不是调用 start 的线程，并在处理后续 Message 前执行完毕(或者说执行完才会去处理消息)。<br>譬如下边这个例子，先后执行 mP1.enter -&gt; mS1.enter，后续 message 都会交由当前状态处理；在我们的例子里也就是交给初始状态  mS1.processMessage 。</p>
+<pre>
+        mP1
+       /   \
+      mS2   mS1 ----&gt; initial state
+</pre>
+
+<blockquote>
+<p>After the state machine is created and started, messages are sent to a state<br> machine using <code>sendMessage</code> and the messages are created using<br> <code>obtainMessage</code>. When the state machine receives a message the<br> current state’s <code>processMessage</code> is invoked. In the above example<br> mS1.processMessage will be invoked first. The state may use <code>transitionTo</code><br> to change the current state to a new state.</p>
+</blockquote>
+<p>状态机创建启动后，使用 <code>sendMessage</code> 方法向状态机发送消息，消息使用 <code>obtainMessage</code> 方法创建。<br>状态机接收到消息后，当前状态的 <code>processMessage</code> 方法就会被调用。<br>上面的例子 mS1.processMessage 会被第一个执行。<br>使用 <code>transitionTo</code> 可以切换状态机当前状态。</p>
+<blockquote>
+<p>Each state in the state machine may have a zero or one parent states. If<br> a child state is unable to handle a message it may have the message processed<br> by its parent by returning false or NOT_HANDLED. If a message is not handled by<br> a child state or any of its ancestors, <code>unhandledMessage</code> will be invoked<br> to give one last chance for the state machine to process the message.</p>
+</blockquote>
+<p>状态机里的每一个状态最多只能有一个父状态，但是允许没有父状态。如果一个子状态不能 handle 收到的 message，<br>在 processMessage 方法返回 false 或是 NOT_HANDLED，就可将这个消息交由父状态处理。<br>如果没有一个状态可以处理这个消息，那就得请 <code>unhandledMessage</code> 方法出面看一看能不能管管，他要是也管不了状态机会直接丢弃这个消息，就当此时无发生过。 </p>
+<blockquote>
+<p>When all processing is completed a state machine may choose to call<br> <code>transitionToHaltingState</code>. When the current <code>processingMessage</code><br> returns the state machine will transfer to an internal <code>HaltingState</code><br> and invoke <code>halting</code>. Any message subsequently received by the state<br> machine will cause <code>haltedProcessMessage</code> to be invoked.</p>
+</blockquote>
+<p>当所有东西都处理完毕，状态机可以选择调用 <code>transitionToHaltingState</code> 方法。在当前 <code>processingMessage</code> 返回后，<br>状态机会转移到一个内部状态 <code>HaltingState</code>，调用 <code>halting</code> 方法。状态机收到的后续消息队列都会交由 <code>haltedProcessMessage</code> 方法处理。</p>
+<blockquote>
+<p>If it is desirable to completely stop the state machine call <code>quit</code> or<br> <code>quitNow</code>. These will call <code>exit</code> of the current state and its parents,<br> call <code>onQuitting</code> and then exit Thread/Loopers.</p>
+</blockquote>
+<p>调用 <code>quit</code> or <code>quiteNow</code> 可以完全退出状态机。当前状态到其最上层父状态的 <code>exit</code> 方法会依次执行，<br><code>onQuiting</code> 被调用，并完全退出 Thread/Loopers。</p>
+<blockquote>
+<p>In addition to <code>processMessage</code> each <code>State</code> has<br> an <code>enter</code> method and <code>exit</code> method which may be overridden.</p>
+</blockquote>
+<p><code>State</code> 除了 <code>processMessage</code> 方法，还有 <code>enter</code> 和 <code>exit</code> 可以被重写。</p>
+<blockquote>
+<p>Since the states are arranged in a hierarchy transitioning to a new state<br> causes current states to be exited and new states to be entered. To determine<br> the list of states to be entered/exited the common parent closest to<br> the current state is found. We then exit from the current state and its<br> parent’s up to but not including the common parent state and then enter all<br> of the new states below the common parent down to the destination state.<br> If there is no common parent all states are exited and then the new states<br> are entered.</p>
+</blockquote>
+<p>因为状态是层级的形式，所以转移到新 State 的同时伴随着当前 state 的 <code>exit</code> 和 new state 的 <code>enter</code>。<br>我们通过找到这两个 State 最近的公共父状态，来确定 transition 所需要 enter/exit 的最短路径。<br>接着对子节点和其父节点(<strong>不包含公共父节点</strong>)执行 exit，对公共父节点到 new state 之间包括 new state 的状态执行 enter。<br>如果之间没有公共父节点，那就 exit 到最外层， 再 enter 到 new state。</p>
+<blockquote>
+<p>Two other methods that states can use are <code>deferMessage</code> and<br> <code>sendMessageAtFrontOfQueue</code>. The <code>sendMessageAtFrontOfQueue</code> sends<br> a message but places it on the front of the queue rather than the back. The<br> <code>deferMessage</code> causes the message to be saved on a list until a<br> transition is made to a new state. At which time all of the deferred messages<br> will be put on the front of the state machine queue with the oldest message<br> at the front. These will then be processed by the new current state before<br> any other messages that are on the queue or might be added later. Both of<br> these are protected and may only be invoked from within a state machine.</p>
+</blockquote>
+<p>此外还有两个方法需要介绍， <code>deferMessage</code> 和 <code>sendMessageAtFrontOfQueue</code>。<br><code>sendMessageAtFrontOfQueue</code> 可以把消息放到队列的最前端，优先处理。<br><code>deferMessage</code> 用于把消息保存在一个 list 里，直到下次调用 transition(也就是说当前状态不管这个消息，踢皮球把这个活给下一个上任的状态做)。<br>之后所有被 defer 的 message 会被放到消息队列的前端，最老的 message 最先被处理。<br>两个方法都是 <code>protected</code> 的，只能在状态机内部使用。</p>
+<blockquote>
+<p>To illustrate some of these properties we’ll use state machine with an 8 state hierarchy:</p>
+</blockquote>
+<p>看栗子！</p>
+ <pre>
+           mP0
+          /   \
+         mP1   mS0
+        /   \
+       mS2   mS1
+      /  \    \
+     mS3  mS4  mS5  ---&gt; initial state
+ </pre>
+
+<blockquote>
+<p>After starting mS5 the list of active states is mP0, mP1, mS1 and mS5.<br>  So the order of calling processMessage when a message is received is mS5,<br>  mS1, mP1, mP0 assuming each processMessage indicates it can’t handle this<br>  message by returning false or NOT_HANDLED.</p>
+</blockquote>
+<p>start 执行完毕后，当前处于 active 的状态包括 mP0, mP1, mS1 and mS5。<br>初始化状态为 mS5，这时我们假设有一个 mP0, mP1, mS1 and mS5 都不能处理的消息来了，<br>processMessage 被调用的顺序依次为  mS5,  mS1, mP1, mP0。</p>
+<blockquote>
+ <p>Now assume mS5.processMessage receives a message it can handle, and during<br>  the handling determines the machine should change states. It could call<br>  transitionTo(mS4) and return true or HANDLED. Immediately after returning from<br>  processMessage the state machine runtime will find the common parent,<br>  which is mP1. It will then call mS5.exit, mS1.exit, mS2.enter and then<br>  mS4.enter. The new list of active states is mP0, mP1, mS2 and mS4. So<br>  when the next message is received mS4.processMessage will be invoked.</p>
+</blockquote>
+<p>然后又来了个 mS5 能搞定的消息，这个消息要 transitionTo(mS4)，并返回了 true or HANDLED。<br>状态机就去找公共父状态，也就是 mP1。接下来就是调用 mS5.exit, mS1.exit, mS2.enter and then<br>mS4.enter。处于 active 的新状态 list 是 mP0, mP1, mS2 and mS4。后续收到的 message 交给<br>mS4.processMessage 方法处理。 </p>
+<hr>
+<p><strong>PS 1.关于最短路径</strong></p>
+<p>这里用的方法很取巧，状态机中用于记录 State 信息的类是 <a target="_blank" rel="noopener" href="http://androidxref.com/8.0.0_r4/xref/frameworks/base/core/java/com/android/internal/util/StateMachine.java#StateInfo">StateInfo</a><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">StateInfo</span> </span>&#123;</span><br><span class="line">    <span class="comment">/** The state */</span></span><br><span class="line">    State state;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** The parent of this state, null if there is no parent */</span></span><br><span class="line">    StateInfo parentStateInfo;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** True when the state has been entered and on the stack */</span></span><br><span class="line">    <span class="keyword">boolean</span> active;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">        * Convert StateInfo to string</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;state=&quot;</span> + state.getName() + <span class="string">&quot;,active=&quot;</span> + active + <span class="string">&quot;,parent=&quot;</span></span><br><span class="line">                + ((parentStateInfo == <span class="keyword">null</span>) ? <span class="string">&quot;null&quot;</span> : parentStateInfo.state.getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>关键在于 active，找公共父状态就是用这个东西。<br>看这个例子：</p>
+<pre>
+           mP0
+          /   \
+         mP1   mS0
+        /   \
+       mS2   mS1
+      /  \    \
+     mS3  mS4  mS5  ---&gt; initial state
+ </pre>
+
+<p>此时 mP0 mP1 mS1 mS5 对应的 active = true</p>
+<p>接下来 transitionTo(mS4)</p>
+<p>只要从 mS4 开始一直找他的 parent state，<br>直到一个 active = true 或者 parent = null 就可以确定这个路径了。</p>
+<hr>
+<blockquote>
+<p>Now for some concrete examples, here is the canonical HelloWorld as a state machine.<br>  It responds with “Hello World” being printed to the log for every message.</p>
+</blockquote>
+<p>一个更具体的例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HelloWorld</span> <span class="keyword">extends</span> <span class="title">StateMachine</span> </span>&#123;</span><br><span class="line">    HelloWorld(String name) &#123;</span><br><span class="line">        <span class="keyword">super</span>(name);</span><br><span class="line">        addState(mState1);</span><br><span class="line">        setInitialState(mState1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> HelloWorld <span class="title">makeHelloWorld</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        HelloWorld hw = <span class="keyword">new</span> HelloWorld(<span class="string">&quot;hw&quot;</span>);</span><br><span class="line">        hw.start();</span><br><span class="line">        <span class="keyword">return</span> hw;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">State1</span> <span class="keyword">extends</span> <span class="title">State</span> </span>&#123;</span><br><span class="line">        &amp;#<span class="number">64</span>;<span class="function">Override <span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">processMessage</span><span class="params">(Message message)</span> </span>&#123;</span><br><span class="line">            log(<span class="string">&quot;Hello World&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> HANDLED;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    State1 mState1 = <span class="keyword">new</span> State1();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">testHelloWorld</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    HelloWorld hw = makeHelloWorld();</span><br><span class="line">    hw.sendMessage(hw.obtainMessage());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>A more interesting state machine is one with four states</li>
+<li><p>with two independent parent states.</p></p>
+<pre>
+     mP1      mP2
+    /   \
+   mS2   mS1
+</pre>
+</li>
+<li><p>Here is a description of this state machine using pseudo code.</p>
+
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">state mP1 &#123;</span><br><span class="line">     enter &#123; log(<span class="string">&quot;mP1.enter&quot;</span>); &#125;</span><br><span class="line">     exit &#123; log(<span class="string">&quot;mP1.exit&quot;</span>);  &#125;</span><br><span class="line">     on msg &#123;</span><br><span class="line">         CMD_2 &#123;</span><br><span class="line">             send(CMD_3);</span><br><span class="line">             defer(msg);</span><br><span class="line">             transitionTo(mS2);</span><br><span class="line">             <span class="keyword">return</span> HANDLED;</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="keyword">return</span> NOT_HANDLED;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">INITIAL</span><br><span class="line">state mS1 parent mP1 &#123;</span><br><span class="line">     enter &#123; log(<span class="string">&quot;mS1.enter&quot;</span>); &#125;</span><br><span class="line">     exit  &#123; log(<span class="string">&quot;mS1.exit&quot;</span>);  &#125;</span><br><span class="line">     on msg &#123;</span><br><span class="line">         CMD_1 &#123;</span><br><span class="line">             transitionTo(mS1);</span><br><span class="line">             <span class="keyword">return</span> HANDLED;</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="keyword">return</span> NOT_HANDLED;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">state mS2 parent mP1 &#123;</span><br><span class="line">     enter &#123; log(<span class="string">&quot;mS2.enter&quot;</span>); &#125;</span><br><span class="line">     exit  &#123; log(<span class="string">&quot;mS2.exit&quot;</span>);  &#125;</span><br><span class="line">     on msg &#123;</span><br><span class="line">         CMD_2 &#123;</span><br><span class="line">             send(CMD_4);</span><br><span class="line">             <span class="keyword">return</span> HANDLED;</span><br><span class="line">         &#125;</span><br><span class="line">         CMD_3 &#123;</span><br><span class="line">             defer(msg);</span><br><span class="line">             transitionTo(mP2);</span><br><span class="line">             <span class="keyword">return</span> HANDLED;</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="keyword">return</span> NOT_HANDLED;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">state mP2 &#123;</span><br><span class="line">     enter &#123;</span><br><span class="line">         log(<span class="string">&quot;mP2.enter&quot;</span>);</span><br><span class="line">         send(CMD_5);</span><br><span class="line">     &#125;</span><br><span class="line">     exit &#123; log(<span class="string">&quot;mP2.exit&quot;</span>); &#125;</span><br><span class="line">     on msg &#123;</span><br><span class="line">         CMD_3, CMD_4 &#123; <span class="keyword">return</span> HANDLED; &#125;</span><br><span class="line">         CMD_5 &#123;</span><br><span class="line">             transitionTo(HaltingState);</span><br><span class="line">             <span class="keyword">return</span> HANDLED;</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="keyword">return</span> NOT_HANDLED;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>The implementation is below and also in StateMachineTest:</p>
+
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Hsm1</span> <span class="keyword">extends</span> <span class="title">StateMachine</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CMD_1 = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CMD_2 = <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CMD_3 = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CMD_4 = <span class="number">4</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CMD_5 = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Hsm1 <span class="title">makeHsm1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        log(<span class="string">&quot;makeHsm1 E&quot;</span>);</span><br><span class="line">        Hsm1 sm = <span class="keyword">new</span> Hsm1(<span class="string">&quot;hsm1&quot;</span>);</span><br><span class="line">        sm.start();</span><br><span class="line">        log(<span class="string">&quot;makeHsm1 X&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> sm;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Hsm1(String name) &#123;</span><br><span class="line">        <span class="keyword">super</span>(name);</span><br><span class="line">        log(<span class="string">&quot;ctor E&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Add states, use indentation to show hierarchy</span></span><br><span class="line">        addState(mP1);</span><br><span class="line">            addState(mS1, mP1);</span><br><span class="line">            addState(mS2, mP1);</span><br><span class="line">        addState(mP2);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Set the initial state</span></span><br><span class="line">        setInitialState(mS1);</span><br><span class="line">        log(<span class="string">&quot;ctor X&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">P1</span> <span class="keyword">extends</span> <span class="title">State</span> </span>&#123;</span><br><span class="line">        &amp;#<span class="number">64</span>;<span class="function">Override <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">enter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            log(<span class="string">&quot;mP1.enter&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        &amp;#<span class="number">64</span>;<span class="function">Override <span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">processMessage</span><span class="params">(Message message)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">boolean</span> retVal;</span><br><span class="line">            log(<span class="string">&quot;mP1.processMessage what=&quot;</span> + message.what);</span><br><span class="line">            <span class="keyword">switch</span>(message.what) &#123;</span><br><span class="line">            <span class="keyword">case</span> CMD_2:</span><br><span class="line">                <span class="comment">// CMD_2 will arrive in mS2 before CMD_3</span></span><br><span class="line">                sendMessage(obtainMessage(CMD_3));</span><br><span class="line">                deferMessage(message);</span><br><span class="line">                transitionTo(mS2);</span><br><span class="line">                retVal = HANDLED;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="comment">// Any message we don&#x27;t understand in this state invokes unhandledMessage</span></span><br><span class="line">                retVal = NOT_HANDLED;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> retVal;</span><br><span class="line">        &#125;</span><br><span class="line">        &amp;#<span class="number">64</span>;<span class="function">Override <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            log(<span class="string">&quot;mP1.exit&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">S1</span> <span class="keyword">extends</span> <span class="title">State</span> </span>&#123;</span><br><span class="line">        &amp;#<span class="number">64</span>;<span class="function">Override <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">enter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            log(<span class="string">&quot;mS1.enter&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        &amp;#<span class="number">64</span>;<span class="function">Override <span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">processMessage</span><span class="params">(Message message)</span> </span>&#123;</span><br><span class="line">            log(<span class="string">&quot;S1.processMessage what=&quot;</span> + message.what);</span><br><span class="line">            <span class="keyword">if</span> (message.what == CMD_1) &#123;</span><br><span class="line">                <span class="comment">// Transition to ourself to show that enter/exit is called</span></span><br><span class="line">                transitionTo(mS1);</span><br><span class="line">                <span class="keyword">return</span> HANDLED;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// Let parent process all other messages</span></span><br><span class="line">                <span class="keyword">return</span> NOT_HANDLED;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        &amp;#<span class="number">64</span>;<span class="function">Override <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            log(<span class="string">&quot;mS1.exit&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">S2</span> <span class="keyword">extends</span> <span class="title">State</span> </span>&#123;</span><br><span class="line">        &amp;#<span class="number">64</span>;<span class="function">Override <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">enter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            log(<span class="string">&quot;mS2.enter&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        &amp;#<span class="number">64</span>;<span class="function">Override <span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">processMessage</span><span class="params">(Message message)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">boolean</span> retVal;</span><br><span class="line">            log(<span class="string">&quot;mS2.processMessage what=&quot;</span> + message.what);</span><br><span class="line">            <span class="keyword">switch</span>(message.what) &#123;</span><br><span class="line">            <span class="keyword">case</span>(CMD_2):</span><br><span class="line">                sendMessage(obtainMessage(CMD_4));</span><br><span class="line">                retVal = HANDLED;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span>(CMD_3):</span><br><span class="line">                deferMessage(message);</span><br><span class="line">                transitionTo(mP2);</span><br><span class="line">                retVal = HANDLED;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                retVal = NOT_HANDLED;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> retVal;</span><br><span class="line">        &#125;</span><br><span class="line">        &amp;#<span class="number">64</span>;<span class="function">Override <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            log(<span class="string">&quot;mS2.exit&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">P2</span> <span class="keyword">extends</span> <span class="title">State</span> </span>&#123;</span><br><span class="line">        &amp;#<span class="number">64</span>;<span class="function">Override <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">enter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            log(<span class="string">&quot;mP2.enter&quot;</span>);</span><br><span class="line">            sendMessage(obtainMessage(CMD_5));</span><br><span class="line">        &#125;</span><br><span class="line">        &amp;#<span class="number">64</span>;<span class="function">Override <span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">processMessage</span><span class="params">(Message message)</span> </span>&#123;</span><br><span class="line">            log(<span class="string">&quot;P2.processMessage what=&quot;</span> + message.what);</span><br><span class="line">            <span class="keyword">switch</span>(message.what) &#123;</span><br><span class="line">            <span class="keyword">case</span>(CMD_3):</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span>(CMD_4):</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span>(CMD_5):</span><br><span class="line">                transitionToHaltingState();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> HANDLED;</span><br><span class="line">        &#125;</span><br><span class="line">        &amp;#<span class="number">64</span>;<span class="function">Override <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            log(<span class="string">&quot;mP2.exit&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &amp;#<span class="number">64</span>;<span class="function">Override</span></span><br><span class="line"><span class="function">    <span class="keyword">void</span> <span class="title">onHalting</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        log(<span class="string">&quot;halting&quot;</span>);</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.notifyAll();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    P1 mP1 = <span class="keyword">new</span> P1();</span><br><span class="line">    S1 mS1 = <span class="keyword">new</span> S1();</span><br><span class="line">    S2 mS2 = <span class="keyword">new</span> S2();</span><br><span class="line">    P2 mP2 = <span class="keyword">new</span> P2();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>If this is executed by sending two messages CMD_1 and CMD_2</li>
+<li>(Note the synchronize is only needed because we use hsm.wait())</p></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Hsm1 hsm = makeHsm1();</span><br><span class="line">synchronize(hsm) &#123;</span><br><span class="line">     hsm.sendMessage(obtainMessage(hsm.CMD_1));</span><br><span class="line">     hsm.sendMessage(obtainMessage(hsm.CMD_2));</span><br><span class="line">     <span class="keyword">try</span> &#123;</span><br><span class="line">          <span class="comment">// wait for the messages to be handled</span></span><br><span class="line">          hsm.wait();</span><br><span class="line">     &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">          loge(<span class="string">&quot;exception while waiting &quot;</span> + e.getMessage());</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>The output is:</p>
+
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">D/hsm1    ( 1999): makeHsm1 E</span><br><span class="line">D/hsm1    ( 1999): ctor E</span><br><span class="line">D/hsm1    ( 1999): ctor X</span><br><span class="line">D/hsm1    ( 1999): mP1.enter</span><br><span class="line">D/hsm1    ( 1999): mS1.enter</span><br><span class="line">D/hsm1    ( 1999): makeHsm1 X</span><br><span class="line">D/hsm1    ( 1999): mS1.processMessage what=1</span><br><span class="line">D/hsm1    ( 1999): mS1.exit</span><br><span class="line">D/hsm1    ( 1999): mS1.enter</span><br><span class="line">D/hsm1    ( 1999): mS1.processMessage what=2</span><br><span class="line">D/hsm1    ( 1999): mP1.processMessage what=2</span><br><span class="line">D/hsm1    ( 1999): mS1.exit</span><br><span class="line">D/hsm1    ( 1999): mS2.enter</span><br><span class="line">D/hsm1    ( 1999): mS2.processMessage what=2</span><br><span class="line">D/hsm1    ( 1999): mS2.processMessage what=3</span><br><span class="line">D/hsm1    ( 1999): mS2.exit</span><br><span class="line">D/hsm1    ( 1999): mP1.exit</span><br><span class="line">D/hsm1    ( 1999): mP2.enter</span><br><span class="line">D/hsm1    ( 1999): mP2.processMessage what=3</span><br><span class="line">D/hsm1    ( 1999): mP2.processMessage what=4</span><br><span class="line">D/hsm1    ( 1999): mP2.processMessage what=5</span><br><span class="line">D/hsm1    ( 1999): mP2.exit</span><br><span class="line">D/hsm1    ( 1999): halting</span><br></pre></td></tr></table></figure>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/android-statemachine-update/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/android/"><i class="fa fa-tags"></i>android</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/leakcanary-learn/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/qsort/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

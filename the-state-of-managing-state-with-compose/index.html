@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>[翻译] 使用 Compose 进行状态管理的现状 | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="android,compose," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2021-11-12
+    </span>
+    
+  </div>
+  <h1 class="passage-title">
+    [翻译] 使用 Compose 进行状态管理的现状
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p>原文链接： <a target="_blank" rel="noopener" href="https://code.cash.app/the-state-of-managing-state-with-compose">https://code.cash.app/the-state-of-managing-state-with-compose</a><br>作者：<a target="_blank" rel="noopener" href="https://twitter.com/JakeWharton">JakeWharton</a></p>
+</blockquote>
+<p>Cash App 从五年前开始将 Android 客户端 UI 的 render 和 presenter 分离到不同类里。过去的几年里我们重度使用 RxJava，对这个过程帮助很大。我曾做过一个分享，<a target="_blank" rel="noopener" href="https://jakewharton.com/the-state-of-managing-state-with-rxjava/">使用 RxJava 进行状态管理的现状</a>，在那里我重新定义了 RxJava 的（反）模式以适用于我们想要的架构。</p>
+<p>尽管干净的分层改善了测试性，但是管理状态的代码变得不够清晰，难以理解。业务逻辑被淹没在海量的 RxJava 操作符的组合与嵌套之中。我们尝试过几种 redux 类的库，甚至还自己实现了一个，想避免这种情况，但效果都不够理想。</p>
+<p>没多久，我离开了 Cash App 去了 Google，开发了 <a target="_blank" rel="noopener" href="https://github.com/JakeWharton/SdkSearch">SdkSearch</a> 继续测试类似的架构。在此期间从 RxJava 迁移到 kotlinx.coroutines 的 <code>Channel</code> 解锁了多平台支持。却没有迁移到 <code>Flow</code>，迁移本身并没有难度，问题不再这，而是<strong>生成状态的逻辑应该如何定义</strong>。我对我想要的方式有一个画面，但是不能避免陷入大量 API 之中，简单的表达出来。</p>
+<p>回到 Cash App 之后，我仍然不认为现有 <code>Flow</code> 和协程的任何形式是一个足够好的解决方案。我开始尝试使用 <a target="_blank" rel="noopener" href="https://code.cash.app/the-state-of-managing-state-with-compose#fn:2">Compose</a> 去构建<a target="_blank" rel="noopener" href="https://github.com/JakeWharton/mosaic/">命令行 UI </a><br>和<a target="_blank" rel="noopener" href="https://jakewharton.com/multiplatform-compose-and-gradle-module-metadata-abuse/">多平台 UI binding</a>，思考适用于所有基于 Compose 项目的架构应扮演的角色。 <a target="_blank" rel="noopener" href="https://twitter.com/mattprec">Matt Precious</a> 今年早些时候做了一个 Compose Web 项目，我们基于此反复迭代一个典型的 presenter/render 分离在 Compose 中应该是什么样子的。我们搞了点好玩的东西，不过它依赖了 Compose，所以只能用于 Compose UI 和 Compose Web。</p>
+<p>或者说，可以？</p>
+<h3 id="Enter-Molecule"><a href="#Enter-Molecule" class="headerlink" title="Enter Molecule"></a>Enter Molecule</h3><p><a target="_blank" rel="noopener" href="https://github.com/cashapp/molecule/">Molecule</a> 基于一个想法，Compose 只用于产生状态，而不是去渲染的 UI。</p>
+<p>首先，这个看起来怎么样？这个很重要！</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">Counter</span><span class="params">(start: <span class="type">Int</span>, stop: <span class="type">Int</span>)</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">  <span class="keyword">val</span> value <span class="keyword">by</span> remember &#123; mutableStateOf(start) &#125;</span><br><span class="line">  </span><br><span class="line">  LaunchedEffect(<span class="built_in">Unit</span>) &#123;</span><br><span class="line">    <span class="keyword">while</span> (value &lt;= stop) &#123;</span><br><span class="line">      delay(<span class="number">1_000</span>)</span><br><span class="line">      value++</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> value</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这就是一个普通的 composable 函数，返回一个状态，可以用于绑定到 Compose UI 的 text 属性上。</p>
+<p>Molecule 可以让你以 composable 的形式，将其转换成 <code>StateFlow&lt;Int&gt;</code> 在其他地方使用。当第一个值初始化后， Compose 同步 recompose，所有后续的值都会 emit 到 StateFlow。</p>
+<p>在 presenter，我们可以在 Molecule 中使用可组合的函数模式：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">SomePresenter</span><span class="params">(events: <span class="type">Flow</span>&lt;<span class="type">EventType</span>&gt;)</span></span>: ModelType &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> models: StateFlow&lt;ModelType&gt; = scope.launchMolecule &#123;</span><br><span class="line">  SomePresenter(events)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Compose 为我们开启了一种新的方式，去实现逻辑。编译器插件的使用，以一种原始协程库 API 无法实现的方式解锁了这门语言。关于 Compose 可以看<a target="_blank" rel="noopener" href="https://developer.android.com/jetpack/compose">官方文档</a>。</p>
+<p>现在，我们可以不必再写一堆 RxJava 或是 Flow 操作符，我就写 <code>if/else</code>，<code>for</code> 循环，不必再用 <code>publish</code>/<code>filter</code>/<code>merge</code> 组合，直接用 <code>when</code> 语句，还能有 exhaustiveness 语法检查。</p>
+<p>Compose 提供的工具，比如 <code>remember</code>，state，derived state，effects 等等我们都可以继续用。Molecule 的示例项目中有稍微复杂的使用场景。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">CounterPresenter</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">  events: <span class="type">Flow</span>&lt;<span class="type">CounterEvent</span>&gt;,</span></span></span><br><span class="line"><span class="params"><span class="function">  randomService: <span class="type">RandomService</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>: CounterModel &#123;</span><br><span class="line">  <span class="keyword">var</span> count <span class="keyword">by</span> remember &#123; mutableStateOf(<span class="number">0</span>) &#125;</span><br><span class="line">  <span class="keyword">var</span> loading <span class="keyword">by</span> remember &#123; mutableStateOf(<span class="literal">false</span>) &#125;</span><br><span class="line"></span><br><span class="line">  LaunchedEffect(<span class="built_in">Unit</span>) &#123;</span><br><span class="line">    events.collect &#123; event -&gt;</span><br><span class="line">      <span class="keyword">when</span> (event) &#123;</span><br><span class="line">        <span class="keyword">is</span> Change -&gt; &#123;</span><br><span class="line">          count += event.delta</span><br><span class="line">        &#125;</span><br><span class="line">        Randomize -&gt; &#123;</span><br><span class="line">          loading = <span class="literal">true</span></span><br><span class="line">          launch &#123;</span><br><span class="line">            count = randomService.<span class="keyword">get</span>(-<span class="number">20</span>, <span class="number">20</span>)</span><br><span class="line">            loading = <span class="literal">false</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> CounterModel(count, loading)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 Cash App 的实际使用中是基于类的，可以标准化 presenter API，仍然可以享受编译时安全的依赖注入。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CounterPresenter</span> <span class="meta">@Inject</span> <span class="keyword">constructor</span></span>(</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">val</span> randomService: RandomService,</span><br><span class="line">) : MoleculePresenter &#123;</span><br><span class="line">  <span class="meta">@Composable</span></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">Present</span><span class="params">(events: <span class="type">Flow</span>&lt;<span class="type">CounterEvent</span>&gt;)</span></span> : CounterModel &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们使用 Molecule 已经有 5 个月了。它还没有为正式版做好准备，我们没有 100% 确定应该以怎样的形式使用 Compose API。我们在这周公布了这个库，集成到 Cash App 进行更多的测试。邀请你来加入我们，体验这个库。</p>
+<p>这会是我们管理状态的最终形式吗？未必。但这是我们的下一个方案，也可能是你的~</p>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Enter-Molecule"><span class="toc-text">Enter Molecule</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/the-state-of-managing-state-with-compose/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/android/"><i class="fa fa-tags"></i>android</a>
+     
+      <a href="/tags/compose/"><i class="fa fa-tags"></i>compose</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/write-code-every-day/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/compose-from-first-principles/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

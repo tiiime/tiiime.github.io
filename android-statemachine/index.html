@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>Android StateMachine | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="learn,android," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2017-05-01
+    </span>
+    
+      <span>
+        | <a href="/categories/learn/"><i class="fa fa-bookmark"></i>learn</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    Android StateMachine
+  </h1>
+  
+  <article class="passage-article">
+    <p>默认构造函数创建一个 HandlerThread 维护消息队列<br>并根据传入的 Looper 创建 SmHandler 对象</p>
+<h4 id="Constructor"><a href="#Constructor" class="headerlink" title="Constructor"></a>Constructor</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="title">StateMachine</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">    mSmThread = <span class="keyword">new</span> HandlerThread(name);</span><br><span class="line">    mSmThread.start();</span><br><span class="line">    Looper looper = mSmThread.getLooper();</span><br><span class="line"></span><br><span class="line">    initStateMachine(name, looper);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Constructor creates a StateMachine using the looper.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> name of the state machine</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="title">StateMachine</span><span class="params">(String name, Looper looper)</span> </span>&#123;</span><br><span class="line">    initStateMachine(name, looper);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Constructor creates a StateMachine using the handler.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> name of the state machine</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="title">StateMachine</span><span class="params">(String name, Handler handler)</span> </span>&#123;</span><br><span class="line">    initStateMachine(name, handler.getLooper());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Initialize.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> looper for this state machine</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> name of the state machine</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initStateMachine</span><span class="params">(String name, Looper looper)</span> </span>&#123;</span><br><span class="line">    mName = name;</span><br><span class="line">    mSmHandler = <span class="keyword">new</span> SmHandler(looper, <span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="StateMachine-addState-State-state-State-parent"><a href="#StateMachine-addState-State-state-State-parent" class="headerlink" title="StateMachine::addState(State state, State parent)"></a>StateMachine::addState(State state, State parent)</h4><p> -&gt; SmHandler::addState(State state, State parent)</p>
+<ul>
+<li>添加 State： State 保存在 <code>HashMap&lt;State, StateInfo&gt; mStateInfo</code></li>
+<li>StateInfo ： 保存 State ， parentStateInfo 还有 active 标志位</li>
+<li>做 parent 唯一检测</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">final</span> StateInfo <span class="title">addState</span><span class="params">(State state, State parent)</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">	</span><br><span class="line">    StateInfo parentStateInfo = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">        parentStateInfo = mStateInfo.get(parent);</span><br><span class="line">        <span class="keyword">if</span> (parentStateInfo == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// Recursively add our parent as it&#x27;s not been added yet.</span></span><br><span class="line">            parentStateInfo = addState(parent, <span class="keyword">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    StateInfo stateInfo = mStateInfo.get(state);</span><br><span class="line">    <span class="keyword">if</span> (stateInfo == <span class="keyword">null</span>) &#123;</span><br><span class="line">        stateInfo = <span class="keyword">new</span> StateInfo();</span><br><span class="line">        mStateInfo.put(state, stateInfo);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Validate that we aren&#x27;t adding the same state in two different hierarchies.</span></span><br><span class="line">    <span class="keyword">if</span> ((stateInfo.parentStateInfo != <span class="keyword">null</span>)</span><br><span class="line">            &amp;&amp; (stateInfo.parentStateInfo != parentStateInfo)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">&quot;state already added&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    stateInfo.state = state;</span><br><span class="line">    stateInfo.parentStateInfo = parentStateInfo;</span><br><span class="line">    stateInfo.active = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (mDbg) mSm.log(<span class="string">&quot;addStateInternal: X stateInfo: &quot;</span> + stateInfo);</span><br><span class="line">    <span class="keyword">return</span> stateInfo;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://ooo.0o0.ooo/2017/03/09/58c0e36d20aa8.png" alt="img"></p>
+<h4 id="SmHandler-handleMessage-Message-msg"><a href="#SmHandler-handleMessage-Message-msg" class="headerlink" title="SmHandler::handleMessage(Message msg)"></a>SmHandler::handleMessage(Message msg)</h4><ul>
+<li>处理接收到的 Message</li>
+<li>保存 msg 到 SmHandler.mMsg</li>
+<li>调用 <code>SmHandler::processMsg(msg)</code> </li>
+<li>把消费掉 msg 的 State 保存到 msgProcessedState </li>
+<li>调用 <code>SmHandler::performTransitions(State msgProcessedState, Message msg)</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mHasQuit) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/** onPreHandleMessage **/</span></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Save the current message */</span></span><br><span class="line">    mMsg = msg;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** State that processed the message */</span></span><br><span class="line">    State msgProcessedState = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (mIsConstructionCompleted) &#123;</span><br><span class="line">        <span class="comment">/** Normal path */</span></span><br><span class="line">        msgProcessedState = processMsg(msg);</span><br><span class="line">    &#125; ...</span><br><span class="line">    </span><br><span class="line">    performTransitions(msgProcessedState, msg);</span><br><span class="line">    </span><br><span class="line">	<span class="comment">/** onPostHandleMessage **/</span></span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="SmHandler-processMsg-Message-msg"><a href="#SmHandler-processMsg-Message-msg" class="headerlink" title="SmHandler::processMsg(Message msg)"></a>SmHandler::processMsg(Message msg)</h4><ul>
+<li>把消息交给当前 State 处理 if NOT_HANDLED -&gt; <code>StateInfo.parentState.state.processMessage(msg)</code> -&gt; <code>SmHandler::unhandledMessage(msg)</code></li>
+<li>返回消费掉 msg 的 State</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">final</span> State <span class="title">processMsg</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">    StateInfo curStateInfo = mStateStack[mStateStackTopIndex];</span><br><span class="line"></span><br><span class="line">	...</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">if</span> (isQuit(msg)) &#123;</span><br><span class="line">        transitionTo(mQuittingState);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (!curStateInfo.state.processMessage(msg)) &#123;</span><br><span class="line">            <span class="comment">/**</span></span><br><span class="line"><span class="comment">             * Not processed</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            curStateInfo = curStateInfo.parentStateInfo;</span><br><span class="line">            <span class="keyword">if</span> (curStateInfo == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">/**</span></span><br><span class="line"><span class="comment">                 * No parents left so it&#x27;s not handled</span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                mSm.unhandledMessage(msg);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (curStateInfo != <span class="keyword">null</span>) ? curStateInfo.state : <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="SmHandler-performTransitions-msgProcessedState-msg"><a href="#SmHandler-performTransitions-msgProcessedState-msg" class="headerlink" title="SmHandler::performTransitions(msgProcessedState, msg)"></a>SmHandler::performTransitions(msgProcessedState, msg)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">                S0</span><br><span class="line">               /  \</span><br><span class="line">              S1   S4</span><br><span class="line">             /  \    \</span><br><span class="line">           S2   S3   S5 &lt;-- init</span><br><span class="line"></span><br><span class="line">mStateStack -&gt; &#123;S0,S4,S5&#125;</span><br><span class="line"></span><br><span class="line">transitionTo(S3)</span><br><span class="line"></span><br><span class="line">after setupTempStateStackWithStatesToEnter</span><br><span class="line">mTempStateStack -&gt; &#123;S3,S1,S0&#125; &amp; return S0</span><br><span class="line"></span><br><span class="line">after invokeExitMethods(S0)</span><br><span class="line">mStateStack -&gt; &#123;S0,S4.active=false,S5.active=false&#125; &amp; mStateStackTopIndex = &#123;index of S0&#125;</span><br><span class="line"></span><br><span class="line">after moveTempStateStackToStateStack</span><br><span class="line">mStateStack -&gt; &#123;S0,S1.active=false,S3.active=false&#125; &amp; return  &#123;index of S0&#125; + 1</span><br><span class="line"></span><br><span class="line">after invokeEnterMethods</span><br><span class="line">mStateStack -&gt; &#123;S0,S1.active=true,S3.active=true&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">performTransitions</span><span class="params">(State msgProcessedState, Message msg)</span> </span>&#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * If transitionTo has been called, exit and then enter</span></span><br><span class="line"><span class="comment">	 * the appropriate states. We loop on this to allow</span></span><br><span class="line"><span class="comment">	 * enter and exit methods to use transitionTo.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	State orgState = mStateStack[mStateStackTopIndex].state;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Record whether message needs to be logged before we transition and</span></span><br><span class="line"><span class="comment">	 * and we won&#x27;t log special messages SM_INIT_CMD or SM_QUIT_CMD which</span></span><br><span class="line"><span class="comment">	 * always set msg.obj to the handler.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">boolean</span> recordLogMsg = mSm.recordLogRec(mMsg) &amp;&amp; (msg.obj != mSmHandlerObj);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (mLogRecords.logOnlyTransitions()) &#123;</span><br><span class="line">	    <span class="comment">/** Record only if there is a transition */</span></span><br><span class="line">	    <span class="keyword">if</span> (mDestState != <span class="keyword">null</span>) &#123;</span><br><span class="line">	        mLogRecords.add(mSm, mMsg, mSm.getLogRecString(mMsg), msgProcessedState,</span><br><span class="line">	                orgState, mDestState);</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (recordLogMsg) &#123;</span><br><span class="line">	    <span class="comment">/** Record message */</span></span><br><span class="line">	    mLogRecords.add(mSm, mMsg, mSm.getLogRecString(mMsg), msgProcessedState, orgState,</span><br><span class="line">	            mDestState);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	State destState = mDestState;</span><br><span class="line">	<span class="keyword">if</span> (destState != <span class="keyword">null</span>) &#123;</span><br><span class="line">	    <span class="comment">/**</span></span><br><span class="line"><span class="comment">	     * Process the transitions including transitions in the enter/exit methods</span></span><br><span class="line"><span class="comment">	     */</span></span><br><span class="line">	    <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">			...</span><br><span class="line">	</span><br><span class="line">	        <span class="comment">/**</span></span><br><span class="line"><span class="comment">	         * Determine the states to exit and enter and return the</span></span><br><span class="line"><span class="comment">	         * common ancestor state of the enter/exit states. Then</span></span><br><span class="line"><span class="comment">	         * invoke the exit methods then the enter methods.</span></span><br><span class="line"><span class="comment">	         */</span></span><br><span class="line">	        StateInfo commonStateInfo = setupTempStateStackWithStatesToEnter(destState);</span><br><span class="line">	        invokeExitMethods(commonStateInfo);</span><br><span class="line">	        <span class="keyword">int</span> stateStackEnteringIndex = moveTempStateStackToStateStack();</span><br><span class="line">	        invokeEnterMethods(stateStackEnteringIndex);</span><br><span class="line">	</span><br><span class="line">	        <span class="comment">/**</span></span><br><span class="line"><span class="comment">	         * Since we have transitioned to a new state we need to have</span></span><br><span class="line"><span class="comment">	         * any deferred messages moved to the front of the message queue</span></span><br><span class="line"><span class="comment">	         * so they will be processed before any other messages in the</span></span><br><span class="line"><span class="comment">	         * message queue.</span></span><br><span class="line"><span class="comment">	         */</span></span><br><span class="line">	        moveDeferredMessageAtFrontOfQueue();</span><br><span class="line">	</span><br><span class="line">	        <span class="keyword">if</span> (destState != mDestState) &#123;</span><br><span class="line">	            <span class="comment">// A new mDestState so continue looping</span></span><br><span class="line">	            destState = mDestState;</span><br><span class="line">	        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	            <span class="comment">// No change in mDestState so we&#x27;re done</span></span><br><span class="line">	            <span class="keyword">break</span>;</span><br><span class="line">	        &#125;</span><br><span class="line">	    &#125;</span><br><span class="line">	    mDestState = <span class="keyword">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * After processing all transitions check and</span></span><br><span class="line"><span class="comment">	 * see if the last transition was to quit or halt.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">if</span> (destState != <span class="keyword">null</span>) &#123;</span><br><span class="line">	    <span class="keyword">if</span> (destState == mQuittingState) &#123;</span><br><span class="line">	        <span class="comment">/**</span></span><br><span class="line"><span class="comment">	         * Call onQuitting to let subclasses cleanup.</span></span><br><span class="line"><span class="comment">	         */</span></span><br><span class="line">	        mSm.onQuitting();</span><br><span class="line">	        cleanupAfterQuitting();</span><br><span class="line">	    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (destState == mHaltingState) &#123;</span><br><span class="line">	        <span class="comment">/**</span></span><br><span class="line"><span class="comment">	         * Call onHalting() if we&#x27;ve transitioned to the halting</span></span><br><span class="line"><span class="comment">	         * state. All subsequent messages will be processed in</span></span><br><span class="line"><span class="comment">	         * in the halting state which invokes haltedProcessMessage(msg);</span></span><br><span class="line"><span class="comment">	         */</span></span><br><span class="line">	        mSm.onHalting();</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="SmHandler-setupTempStateStackWithStatesToEnter-State-destState"><a href="#SmHandler-setupTempStateStackWithStatesToEnter-State-destState" class="headerlink" title="SmHandler::setupTempStateStackWithStatesToEnter(State destState)"></a>SmHandler::setupTempStateStackWithStatesToEnter(State destState)</h5><p>将 destState 到 null / 第一个 State.active == true 之间路径上的所有 State 保存到 mTempStateStack<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">final</span> StateInfo <span class="title">setupTempStateStackWithStatesToEnter</span><span class="params">(State destState)</span> </span>&#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Search up the parent list of the destination state for an active</span></span><br><span class="line"><span class="comment">     * state. Use a do while() loop as the destState must always be entered</span></span><br><span class="line"><span class="comment">     * even if it is active. This can happen if we are exiting/entering</span></span><br><span class="line"><span class="comment">     * the current state.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    mTempStateStackCount = <span class="number">0</span>;</span><br><span class="line">    StateInfo curStateInfo = mStateInfo.get(destState);</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        mTempStateStack[mTempStateStackCount++] = curStateInfo;</span><br><span class="line">        curStateInfo = curStateInfo.parentStateInfo;</span><br><span class="line">    &#125; <span class="keyword">while</span> ((curStateInfo != <span class="keyword">null</span>) &amp;&amp; !curStateInfo.active);</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> curStateInfo;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h1 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.kang.statemachine;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Message;</span><br><span class="line"><span class="keyword">import</span> com.example.kang.statemachine.util.State;</span><br><span class="line"><span class="keyword">import</span> com.example.kang.statemachine.util.StateMachine;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by kang on 17-3-9.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *               S0</span></span><br><span class="line"><span class="comment"> *              /  \</span></span><br><span class="line"><span class="comment"> *             S1   S4</span></span><br><span class="line"><span class="comment"> *            /  \   \</span></span><br><span class="line"><span class="comment"> *           S2  S3   S5 &lt;-- init</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExampleStateMachine</span> <span class="keyword">extends</span> <span class="title">StateMachine</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CMD_0 = <span class="number">0x00</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CMD_1 = <span class="number">0x01</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CMD_2 = <span class="number">0x02</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CMD_3 = <span class="number">0x03</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CMD_4 = <span class="number">0x04</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CMD_5 = <span class="number">0x05</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CMD_TRANSITION_TO_S3 = <span class="number">0x06</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CMD_TRANSITION_TO_S2 = <span class="number">0x07</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CMD_TRANSITION_TO_S5 = <span class="number">0x08</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ExampleStateMachine</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(name);</span><br><span class="line"></span><br><span class="line">        addState(s0);</span><br><span class="line">            addState(s1,s0);</span><br><span class="line">                addState(s2,s1);</span><br><span class="line">                addState(s3,s1);</span><br><span class="line">            addState(s4,s0);</span><br><span class="line">                addState(s5,s4);</span><br><span class="line"></span><br><span class="line">        setInitialState(s5);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transitionToS3</span><span class="params">()</span></span>&#123;</span><br><span class="line">        sendMessage(CMD_TRANSITION_TO_S3);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transitionToS2</span><span class="params">()</span></span>&#123;</span><br><span class="line">        sendMessage(CMD_TRANSITION_TO_S2);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transitionToS5</span><span class="params">()</span></span>&#123;</span><br><span class="line">        sendMessage(CMD_TRANSITION_TO_S5);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> State s0 = <span class="keyword">new</span> NameState(<span class="string">&quot;S0&quot;</span>);</span><br><span class="line">    <span class="keyword">private</span> State s1 = <span class="keyword">new</span> NameState(<span class="string">&quot;S1&quot;</span>);</span><br><span class="line">    <span class="keyword">private</span> State s2 = <span class="keyword">new</span> NameState(<span class="string">&quot;S2&quot;</span>)&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">processMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">switch</span> (msg.what) &#123;</span><br><span class="line">                <span class="keyword">case</span> CMD_0:</span><br><span class="line">                    <span class="keyword">super</span>.processMessage(msg);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> CMD_TRANSITION_TO_S5:</span><br><span class="line">                    sendMessage(CMD_1);</span><br><span class="line">                    deferMessage(obtainMessage(CMD_0));</span><br><span class="line">                    transitionTo(s5);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">default</span>:</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">super</span>.processMessage(msg);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> HANDLED;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">private</span> State s3 = <span class="keyword">new</span> NameState(<span class="string">&quot;S3&quot;</span>)&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">processMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">switch</span> (msg.what) &#123;</span><br><span class="line">                <span class="keyword">case</span> CMD_TRANSITION_TO_S2:</span><br><span class="line">                    deferMessage(obtainMessage(CMD_0));</span><br><span class="line">                    transitionTo(s2);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">default</span>:</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">super</span>.processMessage(msg);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> HANDLED;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">private</span> State s4 = <span class="keyword">new</span> NameState(<span class="string">&quot;S4&quot;</span>);</span><br><span class="line">    <span class="keyword">private</span> State s5 = <span class="keyword">new</span> NameState(<span class="string">&quot;S5&quot;</span>)&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">processMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">switch</span> (msg.what) &#123;</span><br><span class="line">                <span class="keyword">case</span> CMD_TRANSITION_TO_S3:</span><br><span class="line">                    transitionTo(s3);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">default</span>:</span><br><span class="line">                    <span class="keyword">super</span>.processMessage(msg);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> HANDLED;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">NameState</span> <span class="keyword">extends</span> <span class="title">State</span> </span>&#123;</span><br><span class="line">        String name;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">NameState</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.name = name;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">processMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">            System.out.println(name + <span class="string">&quot; processMessage --&gt; &quot;</span> + msg.toString());</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">super</span>.processMessage(msg);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">enter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>.enter();</span><br><span class="line">            System.out.println(<span class="string">&quot;enter --&gt; &quot;</span> + name);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>.exit();</span><br><span class="line">            System.out.println(<span class="string">&quot;exit  --&gt; &quot;</span> + name);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>OUTPUT<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#Init</span><br><span class="line">I/System.out: enter --&gt; S0</span><br><span class="line">I/System.out: enter --&gt; S4</span><br><span class="line">I/System.out: enter --&gt; S5</span><br><span class="line"></span><br><span class="line">#stateMachine.transitionToS3();</span><br><span class="line">I/System.out: exit  --&gt; S5</span><br><span class="line">I/System.out: exit  --&gt; S4</span><br><span class="line">I/System.out: enter --&gt; S1</span><br><span class="line">I/System.out: enter --&gt; S3</span><br><span class="line"></span><br><span class="line">#stateMachine.transitionToS2(); -&gt; deferMessage(obtainMessage(CMD_0)) + transition</span><br><span class="line">I/System.out: exit  --&gt; S3</span><br><span class="line">I/System.out: enter --&gt; S2</span><br><span class="line">I/System.out: S2 processMessage --&gt; &#123; ... what=0 target=... &#125;</span><br><span class="line"></span><br><span class="line">#stateMachine.transitionToS5(); -&gt; sendMessage(CMD_1) + deferMessage(obtainMessage(CMD_0)); + transition</span><br><span class="line">I/System.out: exit  --&gt; S2</span><br><span class="line">I/System.out: exit  --&gt; S1</span><br><span class="line">I/System.out: enter --&gt; S4</span><br><span class="line">I/System.out: enter --&gt; S5</span><br><span class="line">I/System.out: S5 processMessage --&gt; &#123; ... what=0 target=... &#125;</span><br><span class="line">I/System.out: S5 processMessage --&gt; &#123; ... what=1 target=... &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#Constructor"><span class="toc-text">Constructor</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#StateMachine-addState-State-state-State-parent"><span class="toc-text">StateMachine::addState(State state, State parent)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SmHandler-handleMessage-Message-msg"><span class="toc-text">SmHandler::handleMessage(Message msg)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SmHandler-processMsg-Message-msg"><span class="toc-text">SmHandler::processMsg(Message msg)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SmHandler-performTransitions-msgProcessedState-msg"><span class="toc-text">SmHandler::performTransitions(msgProcessedState, msg)</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#SmHandler-setupTempStateStackWithStatesToEnter-State-destState"><span class="toc-text">SmHandler::setupTempStateStackWithStatesToEnter(State destState)</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Demo"><span class="toc-text">Demo</span></a>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/android-statemachine/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/android/"><i class="fa fa-tags"></i>android</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/rxjava-backpressure/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/redux-learn/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

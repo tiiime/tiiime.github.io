@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>okio | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="learn,java," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2017-06-28
+    </span>
+    
+      <span>
+        | <a href="/categories/learn/"><i class="fa fa-bookmark"></i>learn</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    okio
+  </h1>
+  
+  <article class="passage-article">
+    <p>Okio 是对 Java io/nio 的一个补全</p>
+<h4 id="对比-Java-io"><a href="#对比-Java-io" class="headerlink" title="对比 Java io"></a>对比 Java io</h4><p>Java io :</p>
+<ul>
+<li>InputStream/OutputStream API  设计过于混乱, 不易实现</li>
+<li>用户需要关心数据存储过程</li>
+<li>可以使用 Decorator 提升性能,添加功能</li>
+<li>高层抽象存在,但是易用性不强</li>
+</ul>
+<h4 id="使用-okio-解决问题"><a href="#使用-okio-解决问题" class="headerlink" title="使用 okio 解决问题"></a>使用 okio 解决问题</h4><p>io 操作无非读写, 需要描述读写操作</p>
+<ul>
+<li><strong>Source</strong> for read.</li>
+<li><strong>Sink</strong> for write. </li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public interface Sink extends Closeable, Flushable &#123;</span><br><span class="line">  void write(Buffer source, long byteCount) throws IOException;</span><br><span class="line">  @Override void flush() throws IOException;</span><br><span class="line">  Timeout timeout();</span><br><span class="line">  @Override void close() throws IOException;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public interface Source extends Closeable &#123;</span><br><span class="line">  long read(Buffer sink, long byteCount) throws IOException;</span><br><span class="line">  Timeout timeout();</span><br><span class="line">  @Override void close() throws IOException;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>读写过程中又需要介质承载数据 </p>
+<ul>
+<li><strong>Buffer</strong></li>
+<li><strong>ByteString</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public final class Buffer implements BufferedSource, BufferedSink, Cloneable&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br><span class="line">public class ByteString implements Serializable, Comparable&lt;ByteString&gt; &#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Buffer-amp-ByteString"><a href="#Buffer-amp-ByteString" class="headerlink" title="Buffer &amp; ByteString"></a>Buffer &amp; ByteString</h4><p>Okio 使用 <code>Buffer</code> 和 <code>ByteString</code> 承载数据.</p>
+<ul>
+<li><strong>ByteString</strong> is an immutable sequence of bytes. </li>
+<li><strong>Buffer</strong>  is a mutable sequence of bytes.</li>
+</ul>
+<p>这两个类使用类了一些比较聪明的方法实现, 可以节省系统资源.<br>Buffer 内部使用一个 segment 的双向链表保存数据, 这样当你移动 buffer 内的数据时实际上只是重新分配 segment 而不是拷贝数据.</p>
+<h4 id="BufferedSink-amp-BufferedSource"><a href="#BufferedSink-amp-BufferedSource" class="headerlink" title="BufferedSink &amp; BufferedSource"></a>BufferedSink &amp; BufferedSource</h4><p>Buffer 实现了两个接口 <code>BufferedSink</code> 和 <code>BufferedSource</code> 以便读写数据.<br>查看这两个接口, 只是在 <code>Sink</code> 和 <code>Source</code> 之上又进行一层封装, 添加了读写特点定类型等等方法.<br>Buffer 完整的实现了这些功能.<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public interface BufferedSink extends Sink &#123; </span><br><span class="line">	..</span><br><span class="line">	BufferedSink writeUtf8(String string) throws IOException;</span><br><span class="line">	BufferedSink writeByte(int b) throws IOException;</span><br><span class="line">	..</span><br><span class="line">&#125;</span><br><span class="line">public interface BufferedSource extends Source &#123; </span><br><span class="line">	..</span><br><span class="line">	byte readByte() throws IOException;</span><br><span class="line">	short readShort() throws IOException;</span><br><span class="line">	..</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="层层递进的链式操作"><a href="#层层递进的链式操作" class="headerlink" title="层层递进的链式操作"></a>层层递进的链式操作</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">File file = // ...</span><br><span class="line">Sink fileSink = Okio.sink(file);</span><br><span class="line">Sink gzipSink = new GzipSink(fileSink);</span><br><span class="line">BufferedSink bufferedSink = Okio.buffer(gzipSink);</span><br><span class="line"></span><br><span class="line">bufferedSink.writeUtf8(&quot;Hello, hello, hello!&quot;);</span><br><span class="line"></span><br><span class="line">bufferedSink.close();</span><br></pre></td></tr></table></figure>
+<p>可以看到 Okio 轻松地将 <code>Hello, hello, hello!</code> 这段字符串经过种种变换后写入到文件中, Exciting! </p>
+<h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/square/okio">https://github.com/square/okio</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.piasy.com/2016/08/04/Understand-Okio/">https://blog.piasy.com/2016/08/04/Understand-Okio/</a></li>
+<li><a target="_blank" rel="noopener" href="https://speakerdeck.com/jakewharton/a-few-ok-libraries-droidcon-mtl-2015">https://speakerdeck.com/jakewharton/a-few-ok-libraries-droidcon-mtl-2015</a></li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E6%AF%94-Java-io"><span class="toc-text">对比 Java io</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-okio-%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98"><span class="toc-text">使用 okio 解决问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Buffer-amp-ByteString"><span class="toc-text">Buffer &amp; ByteString</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BufferedSink-amp-BufferedSource"><span class="toc-text">BufferedSink &amp; BufferedSource</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B1%82%E5%B1%82%E9%80%92%E8%BF%9B%E7%9A%84%E9%93%BE%E5%BC%8F%E6%93%8D%E4%BD%9C"><span class="toc-text">层层递进的链式操作</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ref"><span class="toc-text">Ref</span></a>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/okio/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/java/"><i class="fa fa-tags"></i>java</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/swift-10days/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/android-pbap/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

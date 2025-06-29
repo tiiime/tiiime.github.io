@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>Objective-C 内存管理 | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="code,objc," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2015-02-17
+    </span>
+    
+      <span>
+        | <a href="/categories/code/"><i class="fa fa-bookmark"></i>code</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    Objective-C 内存管理
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p><a href="/objc/2015/02/14/oc-learn/">目录</a></p>
+</blockquote>
+<hr>
+<p>##内存管理方式</p>
+<ul>
+<li>手动引用计数</li>
+<li>ARC自动引用计数</li>
+<li>垃圾回收</li>
+</ul>
+<hr>
+<p>###手动引用计数</p>
+<p>Cocoa 环境的 Objective-C 中，每个对象都有一个用来记录<strong>引用计数</strong>的整数<br>当某段代码使用到这个对象时就应该将这个整数<code>+1</code>,不需要时<code>-1</code>。</p>
+<p>使用<code>alloc</code>和<code>init</code>创建一个对象后，这个对象的引用计数值为1</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//操作引用计数值的方法:</span></span><br><span class="line"><span class="comment">//retainCount 可获取对象的引用计数</span></span><br><span class="line"><span class="comment">//retain 引用计数＋1</span></span><br><span class="line"><span class="comment">//release 引用计数-1</span></span><br><span class="line"><span class="comment">//dealloc 释放内存(通常不允许在程序内调用,当引用计数为0时系统会自动发送dealloc消息)</span></span><br><span class="line">A *a = [[A alloc] init];</span><br><span class="line">printf(<span class="string">&quot;retainCount = %d&quot;</span>, (<span class="keyword">int</span>)[a retainCount]);<span class="comment">//1</span></span><br><span class="line">[a <span class="keyword">retain</span>];</span><br><span class="line">printf(<span class="string">&quot;retainCount = %d&quot;</span>, (<span class="keyword">int</span>)[a retainCount]);<span class="comment">//2</span></span><br><span class="line">[a release];</span><br><span class="line">printf(<span class="string">&quot;retainCount = %d&quot;</span>, (<span class="keyword">int</span>)[a retainCount]);<span class="comment">//1</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>####自动释放<br>在代码中经常会使用很多临时对象，如果都要逐个释放内存会很麻烦<br>可以将所有需要发送<code>release</code>的对象记录下来，再需要释放时统一发送<code>release</code>消息</p>
+<p>使用方法如下</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//NSAutoreleasePool 自动释放池</span></span><br><span class="line"><span class="keyword">id</span> pool = [[<span class="built_in">NSAutoreleasePool</span> alloc] init];</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  正常的代码操作</span></span><br><span class="line"><span class="comment">  向临时对象发送autorelease</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">[pool release];<span class="comment">//自动释放池中所有对象都会销毁</span></span><br></pre></td></tr></table></figure>
+<p>通过<code>alloc init</code>生成的对象需要手动发送<code>autorelease</code>消息<br>除此之外还有一种创建临时对象的方法，声称对象后会被直接加入内部自动释放池</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//以NSString为例</span></span><br><span class="line">- (<span class="keyword">id</span>)initWithUTF8String:(<span class="keyword">const</span> <span class="keyword">char</span> *) bytes</span><br><span class="line">    <span class="comment">//生成后引用计数为1</span></span><br><span class="line">- (<span class="keyword">id</span>)stringWithUTF8String:(<span class="keyword">const</span> <span class="keyword">char</span> *) bytes</span><br><span class="line">    <span class="comment">//生成后实例对象会被加入自动释放池</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<hr>
+<p>###ARC自动引用计数</p>
+<ul>
+<li><p>ARC只管理Objective-C 的对象，无法控制<code>malloc</code>分配的内存</p>
+</li>
+<li><p>禁用和引用计数有关的函数<code>retain</code>,<code>release</code>,<code>autorelease</code>,<code>dealloc</code></p>
+</li>
+<li><p>ARC是编译期技术,例如:</p>
+</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">s = w;</span><br><span class="line"></span><br><span class="line"><span class="comment">//这刚代码编译后会生成以下代码</span></span><br><span class="line"></span><br><span class="line">[w <span class="keyword">retain</span>];</span><br><span class="line">id_old = s;</span><br><span class="line">s = w;</span><br><span class="line">[id_old release];</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>管理自动释放池的新语法</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@autoreleasepool</span>&#123;</span><br><span class="line">  <span class="comment">//do something</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//在非ARC模式下也可以使用 效果比NSAutoReleasePool好</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>在ARC中未指定初始值的变量都会被初始化为nil</p>
+</li>
+<li><p>ARC中dealloc方法定义</p>
+</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//未开启ARC时:</span></span><br><span class="line">- (<span class="keyword">void</span>)dealloc &#123;</span><br><span class="line">    [xxx release];</span><br><span class="line">    <span class="keyword">if</span>(fp != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        fclose(fp);</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="keyword">super</span> dealloc];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//ARC有效时</span></span><br><span class="line">- (<span class="keyword">void</span>)dealloc &#123;</span><br><span class="line"><span class="comment">//  [xxx release];</span></span><br><span class="line"><span class="comment">//  ARC不能管理的要手动释放</span></span><br><span class="line">    <span class="keyword">if</span>(fp != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        fclose(fp);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//  注意!不要调[super dealloc]</span></span><br><span class="line"><span class="comment">//  [super dealloc];</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<hr>
+<p>###循环引用和弱引用</p>
+<ul>
+<li>循环引用</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">People</span> : <span class="title">NSObject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@property</span> <span class="keyword">id</span> friend;</span><br><span class="line">- (<span class="keyword">void</span>)addFriend:(<span class="keyword">id</span>)friend;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">People</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)addFriend:(<span class="keyword">id</span>)friend</span><br><span class="line">&#123;</span><br><span class="line">    _friend = friend;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">id</span> a = [[People alloc] init];</span><br><span class="line">    <span class="keyword">id</span> b = [[People alloc] init];</span><br><span class="line"></span><br><span class="line">    [a addFriend:b];</span><br><span class="line">    [b addFriend:a];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//是指两个对象a,b分别持有对方的引用，这时实例a因为b持有a的引用</span></span><br><span class="line"><span class="comment">//retainCount != 0 不能被释放。</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>弱引用</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">__<span class="keyword">weak</span> <span class="keyword">id</span> temp;</span><br><span class="line"><span class="comment">//对应的有强引用 未声明weak的默认都是strong</span></span><br><span class="line">__<span class="keyword">strong</span></span><br></pre></td></tr></table></figure>
+<p>###ARC的一些限制</p>
+<ul>
+<li>ARC有效时,不可以在C语言的结构体中定义objc对象</li>
+</ul>
+<p>如果一定要使用的话可以加<code>__unsafe_unretained</code>修饰符，这样的话就需要手动管理这部分内存</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> C &#123;</span><br><span class="line">  __<span class="keyword">unsafe_unretained</span> <span class="keyword">id</span> a;</span><br><span class="line">  __<span class="keyword">unsafe_unretained</span> <span class="built_in">NSString</span> *str;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>###垃圾回收 <a href="/objc/2015/02/18/oc-05/">see</a></p>
+<hr>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/oc-04/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/objc/"><i class="fa fa-tags"></i>objc</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/oc-05/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/oc-03/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

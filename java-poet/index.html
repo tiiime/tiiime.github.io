@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>使用 Java Poet 生成 Retrofit API 接口 | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="work,java," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2016-12-07
+    </span>
+    
+      <span>
+        | <a href="/categories/work/"><i class="fa fa-bookmark"></i>work</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    使用 Java Poet 生成 Retrofit API 接口
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/square/javapoet">JavaPoet</a>: 一个用来生成 java 源文件的 library<br><a target="_blank" rel="noopener" href="https://github.com/FasterXML/jackson">Jackson</a>: 解析 jaon</p>
+</blockquote>
+<p>前段时间在重写公司应用的网络请求部分，iOS 那边需要上 https，趁这个机会把所有的网络请求统一用 Retrofit 实现。不过几十个接口改起来可不容易，幸好接口的文档还算完善，自己写了一个小程序根据文档生成 Retrofit 接口。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 虚构的登陆接口</span><br><span class="line">## URL: /api_version/path/login</span><br><span class="line">## Method: POST</span><br><span class="line">## Request:</span><br><span class="line">| 参数名 | 参数类型 | 参数说明 | 是否必须 | 备注 | 示例 |</span><br><span class="line">| :-- | :-- | :-- | :-- | :-- | :-- |</span><br><span class="line">| username | String | 用户名 | 是 |  | sunshine |</span><br><span class="line">| password | String | 密码 | 是 |  | sunshine |</span><br><span class="line">## Response:</span><br><span class="line">```javascript</span><br><span class="line">&#123;</span><br><span class="line">  &quot;res&quot;:&quot;0&quot;,</span><br><span class="line">  &quot;data&quot;:&quot;qweru9&quot;//resetKey</span><br><span class="line">&#125;</span><br><span class="line">```</span><br><span class="line">## res code</span><br><span class="line">| res | 说明 |</span><br><span class="line">| --: | :-- |</span><br><span class="line">| 0 | 成功 |</span><br><span class="line">| 100 | 密码不正确 |</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>大概步骤就是读取接口相关的信息，再使用 java poet 拼接。URL 和 METHOD 直接获取就好。参数列表写了个正则提取出表格部分，然后比较暴力直接从第三行开始解析参数和类型，顺便做了一步和URL的比对，将路径参数使用<code>@Path</code>注解标记。</p>
+<h4 id="方法签名部分"><a href="#方法签名部分" class="headerlink" title="方法签名部分"></a>方法签名部分</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> MethodSpec <span class="title">generate</span><span class="params">(ClassName result)</span> </span>&#123;</span><br><span class="line">  MethodSpec.Builder builder = MethodSpec.methodBuilder(apiName)</span><br><span class="line">    .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)</span><br><span class="line">    .returns(ParameterizedTypeName.get(ClassName.get(Observable.class), result));</span><br><span class="line"></span><br><span class="line">  params.stream()</span><br><span class="line">    <span class="comment">//过滤掉 token 相关 param</span></span><br><span class="line">    .filter(Param::filterToken)</span><br><span class="line">    .forEach(param -&gt; &#123;</span><br><span class="line">      ParameterSpec.Builder paramBuilder = ParameterSpec.builder(Utils.getType(param.type), param.name);</span><br><span class="line">      AnnotationSpec.Builder queryBuilder = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (isUrlParam(param.name)) &#123;</span><br><span class="line">        queryBuilder = AnnotationSpec.builder(Path.class);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 这里图省事直接按照 requestType 分配 `@Query` 或 `@Field` 注解</span></span><br><span class="line">        <span class="keyword">switch</span> (requestType) &#123;</span><br><span class="line">          <span class="keyword">case</span> <span class="string">&quot;GET&quot;</span>:</span><br><span class="line">            queryBuilder = AnnotationSpec.builder(Query.class);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">          <span class="keyword">case</span> <span class="string">&quot;POST&quot;</span>:</span><br><span class="line">            queryBuilder = AnnotationSpec.builder(Field.class);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      queryBuilder.addMember(<span class="string">&quot;value&quot;</span>, <span class="string">&quot;\&quot;&quot;</span> + param.name + <span class="string">&quot;\&quot;&quot;</span>);</span><br><span class="line">      paramBuilder.addAnnotation(queryBuilder.build());</span><br><span class="line"></span><br><span class="line">      builder.addParameter(paramBuilder.build());</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">  AnnotationSpec.Builder methodAnnotation = <span class="keyword">null</span>;</span><br><span class="line">  <span class="keyword">switch</span> (requestType) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;GET&quot;</span>:</span><br><span class="line">      methodAnnotation = AnnotationSpec.builder(GET.class);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;POST&quot;</span>:</span><br><span class="line">      builder.addAnnotation(FormUrlEncoded.class);</span><br><span class="line">      methodAnnotation = AnnotationSpec.builder(POST.class);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  methodAnnotation.addMember(<span class="string">&quot;value&quot;</span>, <span class="string">&quot;\&quot;&quot;</span> + url + <span class="string">&quot;\&quot;&quot;</span>);</span><br><span class="line"></span><br><span class="line">  builder.addAnnotation(methodAnnotation.build());</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> builder.build();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="返回值的解析"><a href="#返回值的解析" class="headerlink" title="返回值的解析"></a>返回值的解析</h4><p>返回值部分直接用 jackson 解析，递归判断下。 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> TypeSpec <span class="title">buildJavaModel</span><span class="params">(JsonNode node, String name, String packageName)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  Builder jsonSpec = TypeSpec.classBuilder(name);</span><br><span class="line">  jsonSpec.addModifiers(Modifier.PUBLIC);</span><br><span class="line"></span><br><span class="line">  node.fieldNames().forEachRemaining(fieldName -&gt; &#123;</span><br><span class="line">    JsonNode item = node.get(fieldName);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (fieldName.equals(<span class="string">&quot;res&quot;</span>)) &#123;</span><br><span class="line">      jsonSpec.superclass(ClassName.get(PACKAGE_NAME, <span class="string">&quot;Res&quot;</span>));</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (item.isArray() &amp;&amp; item.get(<span class="number">0</span>) != <span class="keyword">null</span>) &#123;</span><br><span class="line">        ClassName list = ClassName.get(<span class="string">&quot;java.util&quot;</span>, <span class="string">&quot;List&quot;</span>);</span><br><span class="line">        JsonNode listItem = item.get(<span class="number">0</span>);</span><br><span class="line">        TypeSpec spec = buildJavaModel(listItem, Utils.upperFirstChar(name) + <span class="string">&quot;Item&quot;</span>, packageName);</span><br><span class="line">        TypeName listOfValue = ParameterizedTypeName.get(list, ClassName.get(<span class="string">&quot;&quot;</span>, spec.name));</span><br><span class="line">        jsonSpec.addField(listOfValue, fieldName, Modifier.PUBLIC);</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (item.isObject()) &#123;</span><br><span class="line">        TypeSpec typeSpec = buildJavaModel(item, name + Utils.upperFirstChar(fieldName), packageName);</span><br><span class="line">        jsonSpec.addField(ClassName.get(PACKAGE_NAME, typeSpec.name), fieldName, Modifier.PUBLIC);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        jsonSpec.addField(Utils.getType(item), fieldName, Modifier.PUBLIC);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  TypeSpec v = jsonSpec.build();</span><br><span class="line">  JavaFile javaFile = JavaFile.builder(packageName, v)</span><br><span class="line">      .build();</span><br><span class="line"></span><br><span class="line">  result = ClassName.get(packageName, v.name);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    javaFile.writeTo(Paths.get(Main.PARENT_DIR + <span class="string">&quot;generate/&quot;</span>));</span><br><span class="line">  &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> v;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>七八十个老接口外加对应的 model 瞬间生成简直不能更爽，当然还有 model 复用和一些细节部分没有写的很完善，实际修改代码时改过来就好，工作量不大。</p>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E7%AD%BE%E5%90%8D%E9%83%A8%E5%88%86"><span class="toc-text">方法签名部分</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E8%A7%A3%E6%9E%90"><span class="toc-text">返回值的解析</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/java-poet/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/java/"><i class="fa fa-tags"></i>java</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/autoremote-and-eventghost/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/read-gradle-recipes-for-android/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

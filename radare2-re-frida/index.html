@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>使用 radare2/iaito 移除 frida 检测 | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="learn,逆向," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2022-12-08
+    </span>
+    
+      <span>
+        | <a href="/categories/learn/"><i class="fa fa-bookmark"></i>learn</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    使用 radare2/iaito 移除 frida 检测
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.seeflower.dev/archives/178/">eBPF on Android之使用stackplz拯救你的frida</a></p>
+</blockquote>
+<p>原理在引用的这篇文章里，这里主要记录下 <a target="_blank" rel="noopener" href="https://github.com/radareorg/radare2">radare2</a> 的使用方法，毕竟 IDA 太贵了。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/radareorg/radare2">radare2</a> 是一个开源逆向框架，提供命令行工具。<a target="_blank" rel="noopener" href="https://github.com/radareorg/iaito">iaito</a> 是 <a target="_blank" rel="noopener" href="https://github.com/radareorg/radare2">radare2</a> 的一个 GUI 工具，开源免费，万岁。</p>
+<p>接下来，有请我们今天的主角，<code>libmsaoaidsec.so</code>，看起来是 oaid 的 so，没想到是它在检测 frida。</p>
+<p>步骤:</p>
+<ol>
+<li>定位可疑调用位置</li>
+<li>找到关键检测逻辑</li>
+<li>使用 <a target="_blank" rel="noopener" href="https://github.com/radareorg/radare2">radare2</a> 修改 so</li>
+<li>替换 so，测试 frida</li>
+</ol>
+<h3 id="定位可疑调用位置"><a href="#定位可疑调用位置" class="headerlink" title="定位可疑调用位置"></a>定位可疑调用位置</h3><p>挑个看得顺眼的应用，并没有特别多逆向经验，直接根据原文，找 libmsaoaidsec.so 相关日志。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./stackplz --name com.zhihu.android stack --symbol strstr --regs --stack</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">stack_2022/12/08 06:21:05 StackMod      perf event ring buffer full, dropped 6 samples, libc.so + strstr                                                                                                            </span><br><span class="line">stack_2022/12/08 06:21:05 [libc.so + strstr] PID:10435, Comm:ZH_RxCachedThre, TID:10503, Regs:                                                                                                                      </span><br><span class="line">&#123;&quot;lr&quot;:&quot;0x6ed246da7c&quot;,&quot;pc&quot;:&quot;0x71f4897300&quot;,&quot;sp&quot;:&quot;0x6ed23447c0&quot;,&quot;x0&quot;:&quot;0x6ed23447d8&quot;,&quot;x1&quot;:&quot;0x6ed249804a&quot;,&quot;x10&quot;:&quot;0x1ea&quot;,&quot;x11&quot;:&quot;0x1&quot;,&quot;x12&quot;:&quot;0x6ed2343dda&quot;,&quot;x13&quot;:&quot;0xafbda102&quot;,&quot;x14&quot;:&quot;0x10&quot;,&quot;x15&quot;:&quot;0x0&quot;,&quot;x16&quot;:&quot;0x6ed2496ac0&quot;</span><br><span class="line">Stackinfo:                                                                                                                                </span><br><span class="line">  #00 pc 0000000000095300  /apex/com.android.runtime/lib64/bionic/libc.so (strstr)                                                        </span><br><span class="line">  #01 pc 000000000001aa78  /data/app/~~EpW7Q_NNKlVh9bZXN1dcWQ==/com.zhihu.android-Zt48AaNHSi4nYrZ8qtxQvg==/lib/arm64/libmsaoaidsec.so                                                                               </span><br><span class="line">  #02 pc 000000000001b870  /data/app/~~EpW7Q_NNKlVh9bZXN1dcWQ==/com.zhihu.android-Zt48AaNHSi4nYrZ8qtxQvg==/lib/arm64/libmsaoaidsec.so                                                                               </span><br><span class="line">  #03 pc 00000000000b1790  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+204)                                                                                                              </span><br><span class="line">  #04 pc 00000000000511ac  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+64)                                                                                                                       </span><br><span class="line">                                                                                                                                                                                                                    </span><br><span class="line">stack_2022/12/08 06:21:05 [libc.so + strstr] PID:10435, Comm:ZH_RxCachedThre, TID:10503, Regs:                                                                                                                      </span><br><span class="line">&#123;&quot;lr&quot;:&quot;0x6ed246da8c&quot;,&quot;pc&quot;:&quot;0x71f4897300&quot;,&quot;sp&quot;:&quot;0x6ed23447c0&quot;,&quot;x0&quot;:&quot;0x6ed23447d8&quot;,&quot;x1&quot;:&quot;0x6ed2498056&quot;,&quot;x10&quot;:&quot;0x1ea&quot;,&quot;x11&quot;:&quot;0x1&quot;,&quot;x12&quot;:&quot;0x6ed2343dda&quot;,&quot;x13&quot;:&quot;0xafbda102&quot;,&quot;x14&quot;:&quot;0x10&quot;,&quot;x15&quot;:&quot;0x0&quot;,&quot;x16&quot;:&quot;0x6ed2496ac0&quot;</span><br><span class="line">Stackinfo:                                                                                                                                                                                                          </span><br><span class="line">  #00 pc 0000000000095300  /apex/com.android.runtime/lib64/bionic/libc.so (strstr)                                                                                                                                  </span><br><span class="line">  #01 pc 000000000001aa88  /data/app/~~EpW7Q_NNKlVh9bZXN1dcWQ==/com.zhihu.android-Zt48AaNHSi4nYrZ8qtxQvg==/lib/arm64/libmsaoaidsec.so                                                                               </span><br><span class="line">  #02 pc 000000000001b870  /data/app/~~EpW7Q_NNKlVh9bZXN1dcWQ==/com.zhihu.android-Zt48AaNHSi4nYrZ8qtxQvg==/lib/arm64/libmsaoaidsec.so                                                                               </span><br><span class="line">  #03 pc 00000000000b1790  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+204)                                                                                                              </span><br><span class="line">  #04 pc 00000000000511ac  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+64)                                                                                                                       </span><br></pre></td></tr></table></figure>
+<p>得到两个信息 <code>libmsaoaidsec.so</code> 的两个地址 <code>1aa78</code> 和 <code>1aa88</code>，使用 <a target="_blank" rel="noopener" href="https://github.com/radareorg/radare2">radare2</a> 寻找关键逻辑。</p>
+<h3 id="找到关键检测逻辑"><a href="#找到关键检测逻辑" class="headerlink" title="找到关键检测逻辑"></a>找到关键检测逻辑</h3><p>复制出 <code>libmsaoaidsec.so</code>，使用 <a target="_blank" rel="noopener" href="https://github.com/radareorg/iaito">iaito</a> 打开。</p>
+<ol>
+<li>定位到 <code>1aa78</code> 地址所在函数为 <code>fcn.0001a940</code></li>
+</ol>
+<p><img src="locate.png" alt=""></p>
+<ol start="2">
+<li>交叉引用(xref)找到 <code>fcn.0001a940</code> 方法被 <code>fcn.0001aee4</code> 调用</li>
+</ol>
+<p><img src="usage1.png" alt=""></p>
+<ol start="3">
+<li>重复上述步骤，最终找到 <code>fcn.0001b88c</code>，正好和文章里提到的地址一样。<br><img src="usage2.png" alt=""></li>
+</ol>
+<h3 id="使用-radare2-修改-so"><a href="#使用-radare2-修改-so" class="headerlink" title="使用 radare2 修改 so"></a>使用 <a target="_blank" rel="noopener" href="https://github.com/radareorg/radare2">radare2</a> 修改 so</h3><ol>
+<li><p>找到 <code>fcn.0001b88c</code> 只有一处调用，将调用置为 <code>nop</code><br><img src="nop.png" alt=""></p>
+</li>
+<li><p>修改后的 so<br><img src="modified.png" alt=""></p>
+</li>
+</ol>
+<h3 id="替换-so，测试-frida"><a href="#替换-so，测试-frida" class="headerlink" title="替换 so，测试 frida"></a>替换 so，测试 frida</h3><p>保存修改好的 so，替换手机内原文件。打开 frida 测试一下，已经可以正常使用。</p>
+<p><img src="frida.png" alt=""></p>
+<h3 id="Over"><a href="#Over" class="headerlink" title="Over~"></a>Over~</h3>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%BD%8D%E5%8F%AF%E7%96%91%E8%B0%83%E7%94%A8%E4%BD%8D%E7%BD%AE"><span class="toc-text">定位可疑调用位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%BE%E5%88%B0%E5%85%B3%E9%94%AE%E6%A3%80%E6%B5%8B%E9%80%BB%E8%BE%91"><span class="toc-text">找到关键检测逻辑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-radare2-%E4%BF%AE%E6%94%B9-so"><span class="toc-text">使用 radare2 修改 so</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%BF%E6%8D%A2-so%EF%BC%8C%E6%B5%8B%E8%AF%95-frida"><span class="toc-text">替换 so，测试 frida</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Over"><span class="toc-text">Over~</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/radare2-re-frida/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/%E9%80%86%E5%90%91/"><i class="fa fa-tags"></i>逆向</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/cemu-zelda-2023/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/bypass-pixel-setup-on-pixelexperience/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

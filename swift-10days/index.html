@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>Swift 十日游 | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="code,swift,ios," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2017-07-23
+    </span>
+    
+      <span>
+        | <a href="/categories/code/"><i class="fa fa-bookmark"></i>code</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    Swift 十日游
+  </h1>
+  
+  <article class="passage-article">
+    <p>上周二接了个新活，写 iOS~ 虽然很久前就搞过黑苹果，看 oc 的书，不过都是折腾，以玩为主。这次的任务是个小应用，非常简单，准备用 swift 搞定。</p>
+<h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>需求比较简单，一个登录页面，成功跳转制定 web 界面。值得一提的东西也就是一个 js 与native 之间调用，和接入第三方 objc 的车牌识别库。</p>
+<p>大概功能如下:</p>
+<ul>
+<li>登录界面</li>
+<li>车牌识别</li>
+<li>js 调用</li>
+<li>objc lib 使用</li>
+</ul>
+<h3 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h3><h4 id="Swift"><a href="#Swift" class="headerlink" title="Swift"></a>Swift</h4><p>swift 和 kotlin 这两个语言还是有很多相似之处的，虽然一时不能掌握精髓，但是写出来个能跑得应用还是没问题的。有个网站可以简单看下 <a target="_blank" rel="noopener" href="http://nilhcem.com/swift-is-like-kotlin/">swift-is-like-kotlin</a>.</p>
+<p>写 swift 的大部分时间都在吐槽 xcode… 真是难用。快捷键不熟是一个原因，不过我认为 xcode 难用才是最主要的。下了个 AppCode 缓解下，然而苹果可视化操作又搞得太多了，基本不可能不用 xcode。写个功能搜  stackoverflow 不如直接搜 YouTube。  </p>
+<p>还有个东西比较烦人<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name: <span class="type">String</span>!</span><br><span class="line"><span class="operator">...</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;my name is <span class="subst">\(name)</span>&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;my name is <span class="subst">\(name<span class="operator">!</span>)</span>&quot;</span>)</span><br></pre></td></tr></table></figure><br>第一个输出会给 <code>name</code> 包装一层 <code>Optional</code>，不是很懂，我已经那么清楚的写了 <code>name</code> 不为空，为啥用的时候还要我再强调一次？怕异常吗？</p>
+<h4 id="网络请求"><a href="#网络请求" class="headerlink" title="网络请求"></a>网络请求</h4><p>iOS 这边使用网络不用声明权限，但是默认限制使用非 <code>https</code> 接口，要自己手动把 <code>http</code> 加入可信列表，如果有条件一定要上  <code>https</code> 啊。</p>
+<p>搜了一下，使用最多的请求库是 Alamofire。当时没找到使用广泛的类似 Retrofit 的框架(主要就三个接口，就没继续找)，不过刚刚又搜了下好像有个叫 <a target="_blank" rel="noopener" href="https://github.com/Moya/Moya">Moya</a> 的东西，用到再看吧。</p>
+<p>在写 token 过期重试的逻辑时又看到委托代理，最初接触这东西时真是一点概念都没有，回头再看只能感慨时光飞逝。好吧，只要实现 <code>RequestAdapter</code> 和 <code>RequestRetrier</code> 即可，一个为所有请求添加  token ， 一个控制失败重试。 </p>
+<h3 id="js-amp-native"><a href="#js-amp-native" class="headerlink" title="js &amp; native"></a>js &amp; native</h3><p>这边和 Android 几乎一样，有两种方法可以实现。</p>
+<ul>
+<li>重写 <code>shouldStartLoadWith</code> 拦截 URL</li>
+<li>使用 JavaScriptCore 向 WebView 注入 js 对象</li>
+</ul>
+<p>拦截 URL 就不说了，不喜欢，感觉很难用。<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// JsActionDelegate.swift</span></span><br><span class="line"><span class="keyword">@objc</span> <span class="class"><span class="keyword">protocol</span> <span class="title">JsActionDelegate</span>: <span class="title">JSExport</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">xxx</span>()</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">getXXX</span>()</span> -&gt; <span class="type">String</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// PlateScanJsBridge.swift</span></span><br><span class="line"><span class="keyword">@objc</span> <span class="class"><span class="keyword">class</span> <span class="title">JsBridgeImpl</span>: <span class="title">NSObject</span>, <span class="title">JsActionDelegate</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">xxx</span>()</span> &#123;</span><br><span class="line">        <span class="comment">// do what you want to do </span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">getXXX</span>()</span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;what you want to return&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ViewController</span></span><br><span class="line"><span class="keyword">let</span> model <span class="operator">=</span> <span class="type">JsBridgeImpl</span>()</span><br><span class="line"><span class="keyword">self</span>.getJsContext().setObject(model, forKeyedSubscript: <span class="string">&quot;ObjectNameForJS&quot;</span> <span class="keyword">as</span> <span class="type">NSCopying</span> &amp; <span class="type">NSObjectProtocol</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">func</span> <span class="title">getJsContext</span>()</span> -&gt; <span class="type">JSContext</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>.webview.value(forKeyPath: </span><br><span class="line">    <span class="string">&quot;documentView.webView.mainFrame.javaScriptContext&quot;</span></span><br><span class="line">    ) <span class="keyword">as!</span> <span class="type">JSContext</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p><strong>结论: @JsBridge 万岁！注解大法万岁！</strong></p>
+<h3 id="objc-library-调用"><a href="#objc-library-调用" class="headerlink" title="objc library 调用"></a>objc library 调用</h3><p>swift 与 objc 之间的调用我感觉已经很方便了，只要添加一个 <code>Bridge.h</code> 头文件即可，也可能和我的使用场景并不复杂有关。</p>
+<p>写到这部分时遇到一个困扰了我一天的问题，<code>EXC_BAD_ACCESS</code>。随便搜一下大概是访问错误内存，常见于对象提前释放，偶现。我也是哭了，最后一次写 <code>free()</code>应该是大二学 C++ 时… 于是开始了漫长的调试。出问题的代码正是 swift 调用 oc 的位置，还包含好几个 oc 的类型强转在 swift 不能使用。因为不是非常了解这两个语言，起初怀疑是参数对象被提前释放，这个垃圾第三方库传了一堆参数，给的 demo 代码也乱的一比，浪费了好久。最后查出的结果是 oc 函数内部取图片像素时越界，我………</p>
+<h3 id="发布"><a href="#发布" class="headerlink" title="发布"></a>发布</h3><p>申请证书ing，苹果爸爸限制真多</p>
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>好久没有这样玩过一个新的东西了，果然瞎折腾才是最好玩的。</p>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9C%80%E6%B1%82"><span class="toc-text">需求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E5%8F%91"><span class="toc-text">开发</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Swift"><span class="toc-text">Swift</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82"><span class="toc-text">网络请求</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#js-amp-native"><span class="toc-text">js &amp; native</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#objc-library-%E8%B0%83%E7%94%A8"><span class="toc-text">objc library 调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%91%E5%B8%83"><span class="toc-text">发布</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%90%8E"><span class="toc-text">最后</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/swift-10days/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/swift/"><i class="fa fa-tags"></i>swift</a>
+     
+      <a href="/tags/ios/"><i class="fa fa-tags"></i>ios</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/java-hidden-costs/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/okio/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

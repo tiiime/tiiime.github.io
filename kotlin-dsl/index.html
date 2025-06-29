@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>Kotlin DSL 应用 | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="kotlin,coroutines," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2018-05-26
+    </span>
+    
+  </div>
+  <h1 class="passage-title">
+    Kotlin DSL 应用
+  </h1>
+  
+  <article class="passage-article">
+    <p>kotlin 宣传时的一个卖点就是 dsl</p>
+<p>使用 kotlin ，配合 <a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/lambdas.html#function-literals-with-receiver">function literals with receiver</a> 特性可以构建类型安全，静态类型的 builder</p>
+<p>dsl 能做什么? Android 的 anko 库是一个非常好的例子，anko 提出使用 kotlin dsl 代替 xml 书写布局。 </p>
+<p>各种优势：</p>
+<ul>
+<li>It is not typesafe;</li>
+<li>It is not null-safe;</li>
+<li>It forces you to write almost the same code for every layout you make;</li>
+<li>XML is parsed on the device wasting CPU time and battery;</li>
+<li>Most of all, it allows no code reuse.</li>
+</ul>
+<p>ps. 一个问题，就是预览布局效果，xml 毕竟是从 android 最初一路走过来的，目前的表现没有太大问题；anko 刚起步，去年刚用时官方提供的预览插件基本不可以，不过看最近<a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/plugin/7734-anko-support">这个插件 (18.05.15) </a>有更新，有时间试下。</p>
+<p><strong>好，扯了这么多，其实我只是想说…终于在代码里用上这个特性了 23333</strong></p>
+<p>贴一下</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">webPage</span><span class="params">(<span class="keyword">init</span>: <span class="type">WXWebpageObject</span>.() -&gt; <span class="type">Unit</span>)</span></span>: WXWebpageObject = WXWebpageObject().apply(<span class="keyword">init</span>)</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">mediaMessage</span><span class="params">(<span class="keyword">init</span>: <span class="type">suspend</span> <span class="type">WXMediaMessage</span>.() -&gt; <span class="type">Unit</span>)</span></span>: WXMediaMessage = WXMediaMessage().apply &#123; <span class="keyword">init</span>() &#125;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">image</span><span class="params">(<span class="keyword">init</span>: <span class="type">suspend</span> <span class="type">WXImageObject</span>.() -&gt; <span class="type">Unit</span>)</span></span>: WXImageObject = WXImageObject().apply &#123; <span class="keyword">init</span>() &#125;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">miniProgram</span><span class="params">(<span class="keyword">init</span>: <span class="type">suspend</span> <span class="type">WXMiniProgramObject</span>.() -&gt; <span class="type">Unit</span>)</span></span>: WXMiniProgramObject = WXMiniProgramObject().apply &#123; <span class="keyword">init</span>() &#125;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">wechatRequestBuilder</span><span class="params">(<span class="keyword">init</span>: <span class="type">suspend</span> <span class="type">SendMessageToWX</span>.<span class="type">Req</span>.() -&gt; <span class="type">Unit</span>)</span></span>: SendMessageToWX.Req = SendMessageToWX.Req().apply &#123; <span class="keyword">init</span>() &#125;</span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> SendMessageToWX.Req.<span class="title">send</span><span class="params">()</span></span> = WXApi.wxApi.sendReq(<span class="keyword">this</span>)</span><br></pre></td></tr></table></figure>
+<p>国内这些分享集成真是要了老命，难用的一笔，说多了都是泪。<br>这块使用 dsl 构建分享 Message，配合 coroutines 异步请求网络数据,感觉上是不是好(bing)了(mei)点(you)，安利一波</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">shareMiniProgram</span><span class="params">(webUrl: <span class="type">String</span>, path: <span class="type">String</span>, title: <span class="type">String</span>, description: <span class="type">String</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">                             image: <span class="type">String</span>)</span></span> = async(UI) &#123;</span><br><span class="line">    wechatRequestBuilder &#123;</span><br><span class="line">        message = mediaMessage &#123;</span><br><span class="line">            mediaObject = miniProgram &#123;</span><br><span class="line">                webpageUrl = webUrl</span><br><span class="line">                miniprogramType = WXMiniProgramObject.MINIPTOGRAM_TYPE_RELEASE</span><br><span class="line">                userName = WECHAT_USER_NAME</span><br><span class="line">                <span class="keyword">this</span>.path = path</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            Application.app?.toast(<span class="string">&quot;download image&quot;</span>)</span><br><span class="line">            <span class="keyword">val</span> <span class="keyword">data</span> = async(CommonPool) &#123;</span><br><span class="line">                ImageLoader.loadImageSync(Application.app, image)</span><br><span class="line">            &#125;.await().ifNull &#123;</span><br><span class="line">                Application.app?.toast(<span class="string">&quot;image load failed&quot;</span>)</span><br><span class="line">            &#125; ?: <span class="keyword">return</span><span class="symbol">@mediaMessage</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">val</span> bitmap = <span class="keyword">data</span>.takeIf &#123;</span><br><span class="line">                <span class="keyword">data</span>.wechatSize() &lt; <span class="number">120</span> * <span class="number">1024</span></span><br><span class="line">            &#125; ?: <span class="keyword">data</span>.scale((<span class="number">120</span> * <span class="number">1024f</span>) / <span class="keyword">data</span>.wechatSize())</span><br><span class="line"></span><br><span class="line">            <span class="keyword">this</span>.title = title</span><br><span class="line">            <span class="keyword">this</span>.description = description</span><br><span class="line">            thumbData = bitmap.toByteArray()</span><br><span class="line">            transaction = generateShareId()</span><br><span class="line">        &#125;</span><br><span class="line">        scene = SendMessageToWX.Req.WXSceneSession</span><br><span class="line">    &#125;.send()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>赠品</strong>：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 微信图片处理</span><br><span class="line">https://gist.github.com/tiiime/8673ddd97320cf18a468140add036641</span><br><span class="line">// ifNull</span><br><span class="line">https://gist.github.com/tiiime/9a2edb18f7f214b42d24b50ec28d2f46</span><br></pre></td></tr></table></figure></p>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/kotlin-dsl/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/kotlin/"><i class="fa fa-tags"></i>kotlin</a>
+     
+      <a href="/tags/coroutines/"><i class="fa fa-tags"></i>coroutines</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/openwrt-clash/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/java-safe-stop-thread/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>

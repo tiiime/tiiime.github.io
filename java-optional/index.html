@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="tiiime" />
+  
+  
+  <title>Java Optional | 技不如人，甘拜下风</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="learn,java," />
+  
+
+  
+  <meta name="description" content="invoker">
+
+  
+    <link rel="alternate" href="/atom.xml" title="技不如人，甘拜下风" type="application/atom+xml">
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz","appkey":"WaR7nrzhliHj9aVwdQzkdlGd","comment":false,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2015-01-07",
+    passwords: [],
+    is_post: true,
+    lock: false,
+    author: "tiiime",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  
+<script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">invoker</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 技不如人，甘拜下风</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tiiime/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2016-09-06
+    </span>
+    
+      <span>
+        | <a href="/categories/learn/"><i class="fa fa-bookmark"></i>learn</a>
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    Java Optional
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p>Source:<a target="_blank" rel="noopener" href="http://www.oracle.com/technetwork/articles/java/java8-optional-2175753.html">Tired of Null Pointer Exceptions? Consider Using Java SE 8’s Optional!</a></p>
+</blockquote>
+<p>Optional<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Optional</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">Object</span></span></span><br></pre></td></tr></table></figure></p>
+<p>写 Java 程序很容易出现空指针异常，每次使用值之前都要做一次判空也是让人不胜其烦。听说 Optional 可以减轻这个负担，于是有了这篇文章来记录下。第一次见到 Optional 的概念是在 Scala，不过只是一带而过，没有太多的了解。趁着最近有时间好好看看。</p>
+<p>从 oracle 拷过来的例子：<br><img src="https://ooo.0o0.ooo/2016/09/15/57dac3bf53e27.gif" alt="A nested structure for representing a Computer"></p>
+<p>如果理想世界存在的话，我们的代码是下面这个样子的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String version = computer.getSoundcard().getUSB().getVersion();</span><br></pre></td></tr></table></figure>
+<p>怎么可能会有这种好事呢，对吧。这中间<code>computer</code>，<code>getSoundcard()</code>，<code>getUSB()</code> 都有可能返回<code>null</code>，一环出错程序必然 GG。在以前，为了程序正常运行我们大概会把代码写成下面这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">String version = <span class="string">&quot;UNKNOWN&quot;</span>;</span><br><span class="line"><span class="keyword">if</span>(computer != <span class="keyword">null</span>)&#123;</span><br><span class="line">  Soundcard soundcard = computer.getSoundcard();</span><br><span class="line">  <span class="keyword">if</span>(soundcard != <span class="keyword">null</span>)&#123;</span><br><span class="line">    USB usb = soundcard.getUSB();</span><br><span class="line">    <span class="keyword">if</span>(usb != <span class="keyword">null</span>)&#123;</span><br><span class="line">      version = usb.getVersion();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这才对嘛，呵呵哒！上面的代码不光写起来繁琐，更容易出错，顺便还降低了代码的可读性。真是罪大恶极。这个锅谁来背一下？</p>
+<h2 id="其他语言的经验"><a href="#其他语言的经验" class="headerlink" title="其他语言的经验"></a>其他语言的经验</h2><p>再看Java的新解决办法前，先了解下别人家的糖是什么样的。<br>Java 的后辈 Groovy 中使用<code>?.</code>解决这个问题。写起来大概这样：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String version = computer?.getSoundcard()?.getUSB()?.getVersion();</span><br></pre></td></tr></table></figure>
+<p>另外还有<code>?:</code>这个符号可以做默认值的设置：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String version = computer?.getSoundcard()?.getUSB()?.getVersion()?:<span class="string">&quot;UNKNOWN&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>挺好用哈！还有其他函数式语言 Haskell 和 Scala 又分别采取了各不相同的方法。Haskell 使用一个<code>Maybe</code>类型，它可以代表给定类型的值也可以什么都不是，没有空引用的概念。Scala 也有一个和这个很像的东西<code>Option[T]</code>，你需要自己显示的检查这个值到底只是空还是非空。这样你就不会漏掉任何一个判断了。</p>
+<h2 id="Optional-简介"><a href="#Optional-简介" class="headerlink" title="Optional 简介"></a>Optional 简介</h2><p>回到 Java 8，Java 8 引入了一个新的工具类<code>java.util.Optional&lt;T&gt;</code>，灵感来自 Haskell 和 Scala。你可以把它看作一个单一值的容器，里边可能有对象，也有可能是空的。</p>
+<p><img src="https://ooo.0o0.ooo/2016/09/15/57dac3bf72bf4.gif" alt="An optional sound card"></p>
+<p>使用 Optional 更新上面的例子</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Computer</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> Optional&lt;Soundcard&gt; soundcard;  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> Optional&lt;Soundcard&gt; <span class="title">getSoundcard</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Soundcard</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> Optional&lt;USB&gt; usb;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> Optional&lt;USB&gt; <span class="title">getUSB</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">USB</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">getVersion</span><span class="params">()</span></span>&#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码表示的含义是有个电脑，它可能有声卡也可能没有，如果有声卡的话，可能有一个 USB 端口(好绕)。<br>使用<code>Optional</code>的好处就是强迫你去思考如果返回为<code>null</code>时的应对策略。需要注意不是所有返回值都要用<code>Optional</code>包装，它的本意是帮你构建更易于理解的 API，从方法的签名就可以预知你需要处理一个<code>Optional</code>值，再也不会落下。</p>
+<h2 id="Optional-的使用模式"><a href="#Optional-的使用模式" class="headerlink" title="Optional 的使用模式"></a>Optional 的使用模式</h2><p>介绍已经讲完，来看看代码吧！<br>先 show 一下完全重写后的代码。有了 Java 8，我们可以采用新的方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String name = computer.flatMap(Computer::getSoundcard)</span><br><span class="line">                          .flatMap(Soundcard::getUSB)</span><br><span class="line">                          .map(USB::getVersion)</span><br><span class="line">                          .orElse(<span class="string">&quot;UNKNOWN&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>有关 <a target="_blank" rel="noopener" href="http://www.oracle.com/technetwork/articles/java/architect-lambdas-part1-2080972.html">Java 8 lambdas</a> 的内容可以在这查看。</p>
+<h3 id="如何创建一个-Optional-对象"><a href="#如何创建一个-Optional-对象" class="headerlink" title="如何创建一个 Optional 对象"></a>如何创建一个 Optional 对象</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个空的 Optional</span></span><br><span class="line">Optional&lt;Soundcard&gt; sc = Optional.empty(); </span><br><span class="line"></span><br><span class="line"><span class="comment">// And here is an Optional with a non-null value:</span></span><br><span class="line"><span class="comment">// 如果传入的 soundcard == null 会立即抛出空指针异常，不会等到你调用时才抛</span></span><br><span class="line">SoundCard soundcard = <span class="keyword">new</span> Soundcard();</span><br><span class="line">Optional&lt;Soundcard&gt; sc = Optional.of(soundcard);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 还可以这么创建</span></span><br><span class="line">Optional&lt;Soundcard&gt; sc = Optional.ofNullable(soundcard); </span><br></pre></td></tr></table></figure>
+<h3 id="对-Optional-做点啥操作"><a href="#对-Optional-做点啥操作" class="headerlink" title="对 Optional 做点啥操作"></a>对 Optional 做点啥操作</h3><p>使用 Optional 就不用像以前那样检查为不为<code>null</code>了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 可以使用`isPresent()`这个方法。(不推荐)</span></span><br><span class="line"><span class="keyword">if</span>(soundcard.isPresent())&#123;</span><br><span class="line">  System.out.println(soundcard.get());</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 也可以这样直接用，方便多了(推荐)</span></span><br><span class="line">Optional&lt;Soundcard&gt; soundcard = ...;</span><br><span class="line">soundcard.ifPresent(System.out::println);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="Default-Values-and-Actions"><a href="#Default-Values-and-Actions" class="headerlink" title="Default Values and Actions"></a>Default Values and Actions</h3><p>Optional 的典型应用场景就是判断一个值为空时执行一个操作。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 过去我们用三元表达式这么写</span></span><br><span class="line">Soundcard soundcard = </span><br><span class="line">  maybeSoundcard != <span class="keyword">null</span> ? maybeSoundcard </span><br><span class="line">            : <span class="keyword">new</span> Soundcard(<span class="string">&quot;basic_sound_card&quot;</span>);</span><br><span class="line"><span class="comment">// 时代在进步，兄弟！</span></span><br><span class="line"><span class="comment">// 当 Optional maybeSoundcard 为空时会执行 orElse() 方法</span></span><br><span class="line">Soundcard soundcard = maybeSoundcard.orElse(<span class="keyword">new</span> Soundcard(<span class="string">&quot;defaut&quot;</span>));</span><br><span class="line"><span class="comment">// 再或者直接抛出异常</span></span><br><span class="line">Soundcard soundcard = maybeSoundCard.orElseThrow(IllegalStateException::<span class="keyword">new</span>);</span><br></pre></td></tr></table></figure></p>
+<h3 id="使用-filter-过滤一些-values"><a href="#使用-filter-过滤一些-values" class="headerlink" title="使用 filter 过滤一些 values"></a>使用 filter 过滤一些 values</h3><p>某些场景下，你可能需要判断某个条件选择执行还是不执行一个方法。<br>像这样：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">USB usb = ...;</span><br><span class="line"><span class="keyword">if</span>(usb != <span class="keyword">null</span> &amp;&amp; <span class="string">&quot;3.0&quot;</span>.equals(usb.getVersion()))&#123;</span><br><span class="line">  System.out.println(<span class="string">&quot;ok&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 采用 Optional 模式重写后</span></span><br><span class="line">Optional&lt;USB&gt; maybeUSB = ...;</span><br><span class="line">maybeUSB.filter(usb -&gt; <span class="string">&quot;3.0&quot;</span>.equals(usb.getVersion())</span><br><span class="line">                    .ifPresent(() -&gt; System.out.println(<span class="string">&quot;ok&quot;</span>));</span><br></pre></td></tr></table></figure></p>
+<h3 id="Extracting-and-Transforming-Values-Using-the-map-Method"><a href="#Extracting-and-Transforming-Values-Using-the-map-Method" class="headerlink" title="Extracting and Transforming Values Using the map Method"></a>Extracting and Transforming Values Using the map Method</h3><p>使用<code>map</code>操作符提取转换 values。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(soundcard != <span class="keyword">null</span>)&#123;</span><br><span class="line">  USB usb = soundcard.getUSB();</span><br><span class="line">  <span class="keyword">if</span>(usb != <span class="keyword">null</span> &amp;&amp; <span class="string">&quot;3.0&quot;</span>.equals(usb.getVersion())&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;ok&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 我们的代码看起来越来越简洁了！</span></span><br><span class="line">maybeSoundcard.map(Soundcard::getUSB)</span><br><span class="line">      .filter(usb -&gt; <span class="string">&quot;3.0&quot;</span>.equals(usb.getVersion())</span><br><span class="line">      .ifPresent(() -&gt; System.out.println(<span class="string">&quot;ok&quot;</span>));</span><br></pre></td></tr></table></figure>
+<h3 id="使用-flatMap-进行链式调用"><a href="#使用-flatMap-进行链式调用" class="headerlink" title="使用 flatMap 进行链式调用"></a>使用 flatMap 进行链式调用</h3><p>我们已经介绍了一些操作符，下面就来重写这段代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String version = computer.getSoundcard().getUSB().getVersion();</span><br></pre></td></tr></table></figure></p>
+<p>看了上面的介绍，你可能直接就写出了这段代码:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String version = computer.map(Computer::getSoundcard)</span><br><span class="line">                  .map(Soundcard::getUSB)</span><br><span class="line">                  .map(USB::getVersion)</span><br><span class="line">                  .orElse(<span class="string">&quot;UNKNOWN&quot;</span>);</span><br></pre></td></tr></table></figure><br>不过很遗憾，编译不通过。为啥？因为 computer 对象的类型是<code>Optional&lt;Computer&gt;</code> ，调用<code>map</code>完全没问题。不过<code>getSoundcard（）</code>方法返回一个<code>Optional&lt;Soundcard&gt;</code>对象。这就意味着这个map操作的返回值的类型将是<code>Optional&lt;Optional&lt;Soundcard&gt;&gt;</code>。所以在接下来调用<code>getUSB()</code>时会出现问题。</p>
+<p><img src="https://ooo.0o0.ooo/2016/09/15/57dac3bf80e64.gif" alt="A two-level Optional"></p>
+<p><code>flatMap</code>操作符就是用来处理这种场景的。flatMap会对stream中所有元素执行参数func，并将所有返回值做合成一个新的stream返回。<br>Optional 当然也支持<code>flatMap</code>操作。</p>
+<p><img src="https://ooo.0o0.ooo/2016/09/15/57dac3bf787d5.gif" alt="Using map versus flatMap with Optional"></p>
+<p>我们的最终代码到这就可以完成了！<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String version = computer.flatMap(Computer::getSoundcard)</span><br><span class="line">                   .flatMap(Soundcard::getUSB)</span><br><span class="line">                   <span class="comment">// USB::getVersion 返回值是 String，所以使用 map                 </span></span><br><span class="line">                   .map(USB::getVersion)</span><br><span class="line">                   .orElse(<span class="string">&quot;UNKNOWN&quot;</span>);</span><br></pre></td></tr></table></figure></p>
+<p>我对<code>flatMap</code>的理解还不是很深，不能很好地描述出它的特性，下面一段代码可能会有所帮助。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    List&lt;Integer&gt; list1 = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    List&lt;Integer&gt; list2 = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    List&lt;List&lt;Integer&gt;&gt; listContainer = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    list1.add(<span class="number">10</span>);</span><br><span class="line">    list1.add(<span class="number">11</span>);</span><br><span class="line">    list1.add(<span class="number">12</span>);</span><br><span class="line">    list1.add(<span class="number">13</span>);</span><br><span class="line"></span><br><span class="line">    list2.add(<span class="number">20</span>);</span><br><span class="line">    list2.add(<span class="number">21</span>);</span><br><span class="line">    list2.add(<span class="number">22</span>);</span><br><span class="line">    list2.add(<span class="number">23</span>);</span><br><span class="line"></span><br><span class="line">    listContainer.add(list1);</span><br><span class="line">    listContainer.add(list2);</span><br><span class="line"></span><br><span class="line">    List res1 = listContainer.stream()</span><br><span class="line">        .flatMap(List::stream)</span><br><span class="line">        .collect(Collectors.toList());</span><br><span class="line"></span><br><span class="line">    List res2 = listContainer.stream()</span><br><span class="line">        .map(List::stream)</span><br><span class="line">        .collect(Collectors.toList());</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    res1.forEach(<span class="keyword">var</span> -&gt; &#123;</span><br><span class="line">      System.out.print(<span class="keyword">var</span> + <span class="string">&quot; &quot;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    res2.forEach(<span class="keyword">var</span> -&gt; &#123;</span><br><span class="line">      System.out.println();</span><br><span class="line">      System.out.print(<span class="keyword">var</span>);</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">var</span> <span class="keyword">instanceof</span> Stream) &#123;</span><br><span class="line">        System.out.println();</span><br><span class="line">        ((Stream) <span class="keyword">var</span>).forEach(item -&gt; &#123;</span><br><span class="line">          System.out.print(item + <span class="string">&quot; &quot;</span>);</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// res1</span><br><span class="line">10 11 12 13 20 21 22 23 </span><br><span class="line"></span><br><span class="line">// res2</span><br><span class="line">java.util.stream.ReferencePipeline$Head@b4c966a</span><br><span class="line">10 11 12 13 </span><br><span class="line">java.util.stream.ReferencePipeline$Head@4e50df2e</span><br><span class="line">20 21 22 23 </span><br></pre></td></tr></table></figure><br>可以看到，<code>flatMap</code>操作将接收到的 List 拆开，再将所有元素重新组合成一个Stream，而<code>map</code>是没有这步处理的。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>没啥好说的，快用 Java8！</p>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E8%AF%AD%E8%A8%80%E7%9A%84%E7%BB%8F%E9%AA%8C"><span class="toc-text">其他语言的经验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Optional-%E7%AE%80%E4%BB%8B"><span class="toc-text">Optional 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Optional-%E7%9A%84%E4%BD%BF%E7%94%A8%E6%A8%A1%E5%BC%8F"><span class="toc-text">Optional 的使用模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA-Optional-%E5%AF%B9%E8%B1%A1"><span class="toc-text">如何创建一个 Optional 对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9-Optional-%E5%81%9A%E7%82%B9%E5%95%A5%E6%93%8D%E4%BD%9C"><span class="toc-text">对 Optional 做点啥操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Default-Values-and-Actions"><span class="toc-text">Default Values and Actions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-filter-%E8%BF%87%E6%BB%A4%E4%B8%80%E4%BA%9B-values"><span class="toc-text">使用 filter 过滤一些 values</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Extracting-and-Transforming-Values-Using-the-map-Method"><span class="toc-text">Extracting and Transforming Values Using the map Method</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-flatMap-%E8%BF%9B%E8%A1%8C%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8"><span class="toc-text">使用 flatMap 进行链式调用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-text">结语</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: tiiime</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://invoker.me/java-optional/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/java/"><i class="fa fa-tags"></i>java</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2021 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <div class="site-layer-input-choose">
+          <a href="javascript:void(0);" title="Change Search Engine">Google</a>
+        </div>
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/android-unit-testing/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/android-scaletype/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115942570-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115942570-1');
+  </script>
+
+
+
+
+
+
+    
+  </body>
+</html>
