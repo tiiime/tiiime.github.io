@@ -246,10 +246,10 @@
 
       <div class="archive-paging">
     <a href="/archives/page/5/" data-enable="true">
-      <i class="fa fa-arrow-left"></i>
+      上一页
     </a>
     <a href="/archives/page/7/" data-enable="true">
-      <i class="fa fa-arrow-right"></i>
+       下一页
     </a>
   </div>
 </div>
@@ -262,6 +262,7 @@
         }
 
         .archive-paging a {
+            font-weight: bold;
             padding: 8px;
             color: #000;
             text-decoration: none;
@@ -277,6 +278,10 @@
             opacity: 1;
             cursor: pointer;
         }
+        .archive-paging a[data-enable="true"]:hover {
+            color: #F4511E;
+        }
+
     </style>
     </main>
     
