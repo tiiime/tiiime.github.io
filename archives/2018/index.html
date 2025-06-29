@@ -145,72 +145,135 @@
 </nav>
 <div id="site-process"></div>
     <main>
-      <div class="timeline">
-  <h2 class="timeline-title">归档: 79篇</h2>
-  
+      
+
+
+<div>
+  <div class="timeline">
+    <h2 class="timeline-title">归档: 79篇</h2>
     
-      <h3 class="timeline-subtitle">2018</h3>
-    
-    <div class="timeline-item">
-      <time>2018-05-26</time>
-      <a target="_self" href="/kotlin-dsl/">Kotlin DSL 应用</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2018-04-02</time>
-      <a target="_self" href="/java-safe-stop-thread/">Java 如何正确结束线程</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2018-03-17</time>
-      <a target="_self" href="/clockwise-matrix/">求解：顺时针输出二维数组</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2018-03-03</time>
-      <a target="_self" href="/flutter-for-android-part-3/">[翻译] Flutter for Android part 3</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2018-03-03</time>
-      <a target="_self" href="/flutter-for-android-part-2/">[翻译] Flutter for Android part 2</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2018-03-01</time>
-      <a target="_self" href="/flutter-for-android-part1/">[翻译] Flutter for Android part 1</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2018-02-25</time>
-      <a target="_self" href="/kotlin-iterator-sequence/">kotlin 关于 iterator 和 sequence 的区别</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2018-02-23</time>
-      <a target="_self" href="/translate-building-complex-android-animations-with-rxjava/">[翻译]使用 RxJava 构建 Android 复杂动画</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2018-01-17</time>
-      <a target="_self" href="/leakcanary-learn/">LeakCanary 源码学习</a>
-    </div>
-  
-    
-    <div class="timeline-item">
-      <time>2018-01-08</time>
-      <a target="_self" href="/android-statemachine-update/">android-statemachine-update</a>
-    </div>
-  
+      
+        <h3 class="timeline-subtitle">
+          2018
+        </h3>
+        
+          <div class="timeline-item">
+            <time>2018-05-26</time>
+            <a target="_self" href="/kotlin-dsl/">
+              Kotlin DSL 应用
+            </a>
+          </div>
+          
+      
+          <div class="timeline-item">
+            <time>2018-04-02</time>
+            <a target="_self" href="/java-safe-stop-thread/">
+              Java 如何正确结束线程
+            </a>
+          </div>
+          
+      
+          <div class="timeline-item">
+            <time>2018-03-17</time>
+            <a target="_self" href="/clockwise-matrix/">
+              求解：顺时针输出二维数组
+            </a>
+          </div>
+          
+      
+          <div class="timeline-item">
+            <time>2018-03-03</time>
+            <a target="_self" href="/flutter-for-android-part-3/">
+              [翻译] Flutter for Android part 3
+            </a>
+          </div>
+          
+      
+          <div class="timeline-item">
+            <time>2018-03-03</time>
+            <a target="_self" href="/flutter-for-android-part-2/">
+              [翻译] Flutter for Android part 2
+            </a>
+          </div>
+          
+      
+          <div class="timeline-item">
+            <time>2018-03-01</time>
+            <a target="_self" href="/flutter-for-android-part1/">
+              [翻译] Flutter for Android part 1
+            </a>
+          </div>
+          
+      
+          <div class="timeline-item">
+            <time>2018-02-25</time>
+            <a target="_self" href="/kotlin-iterator-sequence/">
+              kotlin 关于 iterator 和 sequence 的区别
+            </a>
+          </div>
+          
+      
+          <div class="timeline-item">
+            <time>2018-02-23</time>
+            <a target="_self" href="/translate-building-complex-android-animations-with-rxjava/">
+              [翻译]使用 RxJava 构建 Android 复杂动画
+            </a>
+          </div>
+          
+      
+          <div class="timeline-item">
+            <time>2018-01-17</time>
+            <a target="_self" href="/leakcanary-learn/">
+              LeakCanary 源码学习
+            </a>
+          </div>
+          
+      
+          <div class="timeline-item">
+            <time>2018-01-08</time>
+            <a target="_self" href="/android-statemachine-update/">
+              android-statemachine-update
+            </a>
+          </div>
+          
+  </div>
+
+
+
+      <div class="archive-paging">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/archives/2018/page/2/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
 </div>
+
+<style>
+        .archive-paging {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .archive-paging a {
+            padding: 8px;
+            color: #000;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .archive-paging a[data-enable="false"] {
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .archive-paging a[data-enable="true"] {
+            opacity: 1;
+            cursor: pointer;
+        }
+    </style>
     </main>
     
     <div class="site-footer-wrapper">
