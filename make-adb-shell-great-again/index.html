@@ -149,7 +149,7 @@
   <div class="passage">
   <div class="passage-meta">
     <span>
-      <i class="fa fa-calendar"></i>2024-12-12
+      <i class="fa fa-calendar"></i>2024-12-13
     </span>
     
       <span>
@@ -165,7 +165,9 @@
     <blockquote>
 <p>现已提供一键部署脚本！<a target="_blank" rel="noopener" href="https://github.com/tiiime/termux-setup">https://github.com/tiiime/termux-setup</a></p>
 </blockquote>
-<p>几分钟即可拥有一个花里胡哨的 adb shell~<br><a target="_blank" rel="noopener" href="https://asciinema.org/a/xz1c6nF78SARclkAMCBxp5BLR"><img src="https://asciinema.org/a/xz1c6nF78SARclkAMCBxp5BLR.svg" alt="asciicast"></a><br>原理就是 termux + ssh + fish shell + tmux。</p>
+<p>几分钟即可拥有一个花里胡哨的 adb shell~</p>
+<p><a target="_blank" rel="noopener" href="https://asciinema.org/a/xz1c6nF78SARclkAMCBxp5BLR"><br>  <img src="https://asciinema.org/a/xz1c6nF78SARclkAMCBxp5BLR.svg" alt="asciinema recording" style="pointer-events: none; user-select: none;"><br></a></p>
+<p>原理就是 termux + ssh + fish shell + tmux。</p>
 <h3 id="配置步骤"><a href="#配置步骤" class="headerlink" title="配置步骤"></a>配置步骤</h3><p>下载 <a target="_blank" rel="noopener" href="https://f-droid.org/packages/com.termux/">termux</a><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">安装 termux.apk</span><br><span class="line"><span class="meta">#</span><span class="bash"> 选择 china 镜像源</span></span><br><span class="line">termux-change-repo </span><br><span class="line"><span class="meta">#</span><span class="bash"> 更新</span></span><br><span class="line">apt update &amp;&amp; apt upgrade</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装 fish/tmux/openssh/bat/fd</span></span><br><span class="line">apt install fish tmux openssh fd bat</span><br><span class="line"><span class="meta">#</span><span class="bash"> 配置 fish 为默认 termux shell，输入 fish</span></span><br><span class="line">chsh</span><br><span class="line"><span class="meta">#</span><span class="bash"> 下次默认会自动进 fish，这次我们要手动进 fish</span></span><br><span class="line">fish</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装 fisher https://github.com/jorgebucaran/fisher</span></span><br><span class="line">curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source &amp;&amp; fisher install jorgebucaran/fisher</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装 fzf，`CTRL+R` 搜索历史命令...</span></span><br><span class="line">fisher install PatrickF1/fzf.fish</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装 zoxide，快速跳转 <span class="built_in">cd</span> 过的目录。z + 缩写，就能跳转目录</span></span><br><span class="line">fisher install kidonng/zoxide.fish</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改 termux 用户密码</span></span><br><span class="line">passwd</span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动 ssh 服务</span></span><br><span class="line">sshd</span><br></pre></td></tr></table></figure></p>
 <h3 id="使用电脑连接到手机"><a href="#使用电脑连接到手机" class="headerlink" title="使用电脑连接到手机"></a>使用电脑连接到手机</h3><p>配置工作完成，有两种方式可以在电脑上连接：  </p>
 <ol>
