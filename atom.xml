@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://invoker.me/"/>
-  <updated>2025-06-29T05:04:24.384Z</updated>
+  <updated>2025-06-30T09:36:02.600Z</updated>
   <id>https://invoker.me/</id>
   
   <generator uri="http://hexo.io/">Hexo</generator>
@@ -15,12 +15,12 @@
     <link href="https://invoker.me/make-adb-shell-great-again/"/>
     <id>https://invoker.me/make-adb-shell-great-again/</id>
     <published>2024-12-13T10:06:53.000Z</published>
-    <updated>2025-06-29T05:04:24.384Z</updated>
+    <updated>2025-06-30T09:36:02.600Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>现已提供一键部署脚本！<a href="https://github.com/tiiime/termux-setup">https://github.com/tiiime/termux-setup</a></p>
 </blockquote>
-<p>几分钟即可拥有一个花里胡哨的 adb shell~</p>
+<p>在开发时，常常使用 adb 调试应用，但是默认的 adb shell 环境太简陋了，啥都没有。<br>这里，借助 termux，几分钟即可拥有一个花里胡哨的 adb shell~ 超级提效！</p>
 <p><a href="https://asciinema.org/a/xz1c6nF78SARclkAMCBxp5BLR"><br>  <img src="https://asciinema.org/a/xz1c6nF78SARclkAMCBxp5BLR.svg" alt="asciinema recording" style="pointer-events: none; user-select: none;"><br></a></p>
 <p>原理就是 termux + ssh + fish shell + tmux。</p>
 <h3 id="配置步骤"><a href="#配置步骤" class="headerlink" title="配置步骤"></a>配置步骤</h3><p>下载 <a href="https://f-droid.org/packages/com.termux/">termux</a><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">安装 termux.apk</span><br><span class="line"><span class="meta">#</span><span class="bash"> 选择 china 镜像源</span></span><br><span class="line">termux-change-repo </span><br><span class="line"><span class="meta">#</span><span class="bash"> 更新</span></span><br><span class="line">apt update &amp;&amp; apt upgrade</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装 fish/tmux/openssh/bat/fd</span></span><br><span class="line">apt install fish tmux openssh fd bat</span><br><span class="line"><span class="meta">#</span><span class="bash"> 配置 fish 为默认 termux shell，输入 fish</span></span><br><span class="line">chsh</span><br><span class="line"><span class="meta">#</span><span class="bash"> 下次默认会自动进 fish，这次我们要手动进 fish</span></span><br><span class="line">fish</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装 fisher https://github.com/jorgebucaran/fisher</span></span><br><span class="line">curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source &amp;&amp; fisher install jorgebucaran/fisher</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装 fzf，`CTRL+R` 搜索历史命令...</span></span><br><span class="line">fisher install PatrickF1/fzf.fish</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装 zoxide，快速跳转 <span class="built_in">cd</span> 过的目录。z + 缩写，就能跳转目录</span></span><br><span class="line">fisher install kidonng/zoxide.fish</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改 termux 用户密码</span></span><br><span class="line">passwd</span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动 ssh 服务</span></span><br><span class="line">sshd</span><br></pre></td></tr></table></figure></p>
